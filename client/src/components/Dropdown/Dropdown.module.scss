@@ -1,0 +1,32 @@
+.container {
+  position: relative;
+
+  .children {
+    top: 100%;
+    right: 0;
+    position: absolute;
+    width: 225px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    list-style: none;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+    .child {
+      background-color: #fff;
+      border: 1px solid #e6e6e6;
+      padding: 10px;
+      border-radius: 7.5px;
+      width: 100%;
+      text-align: left;
+      border: none;
+      font-size: 16px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #e6e6e6;
+        transition: 0.3s background-color ease;
+      }
+    }
+  }
+}

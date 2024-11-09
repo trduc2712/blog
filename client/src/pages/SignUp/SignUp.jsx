@@ -1,18 +1,18 @@
-import styles from './Login.module.scss';
+import styles from './SignUp.module.scss';
 import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
-import Header from '../../components/Header/Header';
 
-const Login = () => {
+const SignUp = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = 'Đăng nhập';
+    document.title = 'Đăng ký';
   }, []);
 
   const handleSubmit = async (e) => {
@@ -20,17 +20,18 @@ const Login = () => {
 
     const data = {
       username: username,
-      password: password
+      password: password,
+      name: name
     }
 
-    if (username == '' || password == '') {
+    if (username == '' || password == '' || name == '') {
       setError('Vui lòng điền đầy đủ thông tin vào tất cả các trường bắt buộc.');
       return;
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, data, { withCredentials: true });
-      navigate('/');
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/sign-up`, data, { withCredentials: true });
+      navigate('/login');
     } catch (err) {
       if (err.response && err.response.data.error) {
         setError(err.response.data.error);
@@ -42,17 +43,17 @@ const Login = () => {
 
   return (
     <div>
-      {/* <Header isDashboard={false} /> */}
-      <h1>Đăng nhập</h1>
+      <h1>Đăng ký</h1>
       <form onSubmit={handleSubmit}>
         <input type='text' placeholder='Tên người dùng' value={username} onChange={(e) => setUsername(e.target.value)} />
         <input type='password' placeholder='Mật khẩu' value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type='submit'>Đăng nhập</button>
+        <input type='text' placeholder='Tên' value={name} onChange={(e) => setName(e.target.value)} />
+        <button type='submit'>Đăng ký</button>
       </form>
       {error && (<p style={{ color: 'red' }}>{error}</p>)}
-      <Link to='/sign-up'>Đăng ký</Link>
+      <Link to='/login'>Đăng nhập</Link>
     </div>
   )
 }
 
-export default Login;
+export default SignUp;
