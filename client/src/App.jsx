@@ -1,18 +1,21 @@
 import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import './App.css'
 import Home from './pages/Home/Home'
-import Login from './pages/Login/Login'
-import SignUp from './pages/SignUp/SignUp'
+import PostDetail from './pages/PostDetail/PostDetail'
+import { AuthProvider } from './contexts/AuthContext'
+import MyProfile from './pages/MyProfile/MyProfile';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/'element={<Home />} />
-        <Route path='/login'element={<Login />} />
-        <Route path='/sign-up'element={<SignUp />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/post/:slug' element={<PostDetail />} />
+            <Route path='/my-profile' element={< MyProfile/>} />
+          </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 

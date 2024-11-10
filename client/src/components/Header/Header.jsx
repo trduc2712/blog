@@ -1,30 +1,27 @@
 import styles from './Header.module.scss';
-import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 import Dropdown from '../Dropdown/Dropdown';
+import { useAuthContext } from '../../contexts/AuthContext';
+import { createImageObjectURL } from '../../utils/imageUtils';
+import { useState, useEffect } from 'react';
 
-const Header = ({ isDashboard }) => {
-  const [user, setUser] = useState(null);
-  
+const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
+  const [userAvatarSource, setUserAvatarSource] = useState(null);
+
+  const { user, handleLogout } = useAuthContext();
+
   const navigate = useNavigate();
 
-  useEffect(() =>  {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/user`, { withCredentials: true });
-        setUser(response.data.user);
-      } catch(err) {
-          if (err.response && err.response.data.error) {
-            console.log(err.response.data.error);
-          } else {
-            console.log(err.message);
-          }
-        }
-      };
+  useEffect(() => {
+    if (user && user.avatar) {
+      setUserAvatarSource(createImageObjectURL(user.avatar.data))
+    }
+  }, [user]);
 
-    fetchUser();
-  }, []);
+  const dropdownChildren = [
+    { label: 'Hồ sơ của tôi', onClick: () => { navigate('/my-profile'); } },
+    { label: 'Đăng xuất', onClick: handleLogout }
+  ];
 
   return (
     <div className={styles.container}>
@@ -39,12 +36,12 @@ const Header = ({ isDashboard }) => {
         {user ? (
           <>
             <button className={styles.createPostButton}>Tạo bài viết mới</button>
-            <Dropdown trigger={<img src={user.avatar} alt='Hình đại diện của người dùng' className={styles.avatar} />}/>
+            <Dropdown trigger={<img src={userAvatarSource} alt='Hình đại diện của người dùng' className={styles.avatar} />} children={dropdownChildren} />
           </>
         ) : (
           <>
-            <button onClick={() => navigate('/sign-up')} className={styles.signUpButton}>Đăng ký</button>
-            <button onClick={() => navigate('/login')} className={styles.loginButton}>Đăng nhập</button>
+            <button onClick={openModalSignUp} className={styles.signUpButton}>Đăng ký</button>
+            <button onClick={openModalLogin} className={styles.loginButton}>Đăng nhập</button>
           </>
         )}
       </div>

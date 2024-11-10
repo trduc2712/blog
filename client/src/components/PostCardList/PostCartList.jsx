@@ -1,5 +1,5 @@
-import styles from './Posts.module.scss';
-import Post from '../Post/Post';
+import styles from './PostCardList.module.scss';
+import PostCard from '../PostCard/PostCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -21,16 +21,13 @@ const Posts = () => {
       };
 
     fetchPosts();
-    posts.map((post) => {
-      console.log(post.userAvatar);
-    })
   }, []);
 
   return (
     <div className={styles.container}>
       {posts.map((post, index) => (
         <div key={index} className={styles.post}>
-          <Post
+          <PostCard
             title={post.title}
             postImage={post.post_image}
             userAvatar={post.user_avatar}
@@ -38,6 +35,7 @@ const Posts = () => {
             userName={post.user_name}
             categoryName={post.category_name}
             createdAt={post.created_at}
+            username={post.username}
           />
         </div>
       ))}

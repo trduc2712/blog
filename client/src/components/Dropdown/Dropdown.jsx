@@ -1,13 +1,10 @@
 import styles from './Dropdown.module.scss';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
-const Dropdown = ({ trigger }) => {
+const Dropdown = ({ trigger, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -25,16 +22,6 @@ const Dropdown = ({ trigger }) => {
     setIsOpen(!isOpen);
   }
 
-  const handleLogout = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/logout`, { withCredentials: true });
-      console.log(response.data.message);
-      navigate('/login');
-    } catch (err) {
-      console.log(err.message);
-    }
-  }
-
   return (
     <div className={styles.container} ref={dropdownRef}>
       <div className={styles.trigger} onClick={handleToggle}>
@@ -42,8 +29,15 @@ const Dropdown = ({ trigger }) => {
       </div>
       {isOpen && (
         <ul className={styles.children}>
-          <button className={styles.child}>Hồ sơ của bạn</button>
-          <button onClick={handleLogout} className={styles.child}>Đăng xuất</button>
+          {children.map((child, index) => (
+            <li
+              key={index}
+              className={styles.child}
+              onClick={child.onClick}
+            >
+              {child.label}
+            </li>
+          ))}
         </ul>
       )}
     </div>

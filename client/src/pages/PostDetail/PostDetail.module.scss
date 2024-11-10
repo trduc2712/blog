@@ -1,0 +1,17 @@
+.container {
+  .contentWrapper {
+    padding: 79px 40px 20px;
+
+    .content {
+      border: 1px solid #e6e6e6;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  
+      h1 {
+        margin: 20px 0;
+      }
+    }
+  }
+}
