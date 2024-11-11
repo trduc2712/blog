@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Login from '../../components/Modal/Login/Login';
 import SignUp from '../../components/Modal/SignUp/SignUp';
-import { formatFullDate } from '../../utils/dateUtils';
+import { formatFullDate } from '../../utils/date';
 import { useAuthContext } from '../../contexts/AuthContext';
 
 const PostDetail = () => {

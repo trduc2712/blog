@@ -1,24 +1,14 @@
 import styles from './PostCard.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { formatShortDate } from '../../utils/dateUtils';
-import { createImageObjectURL } from '../../utils/imageUtils';
+import { formatShortDate } from '../../utils/date';
 
 const PostCard = ({ title, postImage, slug, userName, userAvatar, categoryName, createdAt, username }) => {
-  const [imageSource, setImageSource] = useState(null);
-  const [userAvatarSource, setUserAvatarSource] = useState(null);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setImageSource(createImageObjectURL(postImage?.data));
-    setUserAvatarSource(createImageObjectURL(userAvatar?.data))
-  }, [postImage, userAvatar]);
-
+  const navigate = useNavigate()
+  
   return (
     <div className={styles.container}>
       <img
-        src={imageSource} alt="Hình đại diện của bài viết"
+        src={`data:image/jpeg;base64,${postImage}`} alt='Hình đại diện của bài viết'
         className={styles.postImage}
         onClick={() => navigate(`/post/${slug}`)}
       />
@@ -30,8 +20,8 @@ const PostCard = ({ title, postImage, slug, userName, userAvatar, categoryName, 
       <div style={{ display: 'flex', alignItems: 'center', marginTop: 'auto' }}>
         <div style={{ display: 'flex', alignItems: 'center' }} onClick={() => navigate(`/user/${username}`)}>
           <img
-            src={userAvatarSource}
-            alt="Hình đại diện của tác giả bài viết"
+            src={`data:image/jpeg;base64,${userAvatar}`}
+            alt='Hình đại diện của tác giả bài viết'
             className={styles.userAvatar}
           />
           <p className={styles.userName} >{userName}</p>

@@ -40,18 +40,111 @@
     }
 
     form {
-      display: flex;
-      flex-direction: column;
+      .formGroups {
+        .formGroup {
+          margin-bottom: 20px;
+          display: flex;
+          flex-direction: column;
 
-      input {
-        margin-bottom: 20px;
-        padding: 15px;
-        font-size: 16px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
+          label {
+            margin-bottom: 10px;
+          }
+
+          input {
+            border: 1px solid #ccc;
+            font-size: 16px;
+            padding: 15px;
+            border-radius: 5px;
+
+            &:focus {
+              outline: none;
+              border: 1px solid #1877f2;
+            }
+          }
+
+          .inputPassword {
+            display: flex;
+            align-items: center;
+            height: 50px;
+
+            input {
+              flex-grow: 1;
+              border-top-left-radius: 5px;
+              border-bottom-left-radius: 5px;
+              border-top-right-radius: 0;
+              border-bottom-right-radius: 0;
+              border-right: none;
+
+              &:focus {
+                outline: none;
+                border-right: 1px solid #1877f2;
+              }
+            }
+
+            .togglePassword {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              height: 100%;
+              border: 1px solid #ccc;
+              border-left: none;
+              border-top-right-radius: 5px;
+              border-bottom-right-radius: 5px;
+
+              &:hover {
+                cursor: pointer;
+              }
+
+              svg {
+                margin: 0 15px;
+                width: 24px;
+                height: 24px;
+              }
+            }
+          }
+        }
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: flex-end;
+
+        .cancelButton {
+          background-color: #e2e5e9;
+          font-size: 16px;
+          padding: 10px;
+          border: 1px solid #e2e5e9;
+          border-radius: 5px;
+          color: #000;
+          width: 100px;
+          margin-right: 10px;
+
+          &:hover {
+            cursor: pointer;
+            opacity: 0.8;
+            transition: 0.3s opacity ease;
+          }
+        }
+
+        .saveButton {
+          font-size: 16px;
+          padding: 10px;
+          background-color: #1877f2;
+          border: 1px solid #1877f2;
+          border-radius: 5px;
+          color: #fff;
+          width: 100px;
+
+          &:hover {
+            cursor: pointer;
+            opacity: 0.8;
+            transition: 0.3s opacity ease;
+          }
+        }
       }
 
       button {
+        width: 100%;
         padding: 15px;
         font-size: 16px;
         background-color: #1877f2;
