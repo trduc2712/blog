@@ -2,14 +2,13 @@ const User = require('../models/user');
 
 exports.signUp = async (req, res) => {
   const { username, password, name } = req.body;
-  const defaultAvatar = 'https://plus.unsplash.com/premium_photo-1666900440561-94dcb6865554?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cmFuZG9tfGVufDB8fDB8fHww';
-
+  const avatar = '';
   try {
-      const userExists = await User.getUserByUsername(username);
+      const userExists = await User.findUserByUsername(username);
       if (userExists.length > 0) {
           return res.status(400).json({ error: 'Tên người dùng đã tồn tại' });
       }
-      await User.registerUser(username, password, name, defaultAvatar);
+      await User.registerUser(username, password, name, avatar);
       return res.status(201).json({ message: 'Đăng ký thành công' });
   } catch (err) {
       return res.status(500).json({ error: 'Lỗi máy chủ' });

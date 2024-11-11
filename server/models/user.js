@@ -10,7 +10,7 @@ exports.registerUser = (username, password, name, avatar) => {
   });
 };
 
-exports.getUserByUsername = (username) => {
+exports.findUserByUsername = (username) => {
   return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM users WHERE username = ?';
 
@@ -29,4 +29,14 @@ exports.findUserByCredentials = (username, password) => {
           resolve(results);
       });
   });
+};
+
+exports.updateUser = (id, username, password, name, avatar) => {
+    return new Promise((resolve, reject) => {
+        const query = 'UPDATE users SET username = ?, password = ?, name = ?, avatar = ? WHERE id = ?';
+        db.query(query, [username, password, name, avatar, id], (err, results) => {
+            if (err) return reject(err);
+            resolve(results);
+        });
+    });
 };
