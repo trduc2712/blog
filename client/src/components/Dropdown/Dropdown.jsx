@@ -1,9 +1,9 @@
 import styles from './Dropdown.module.scss';
 import { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 
 const Dropdown = ({ trigger, children }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -15,12 +15,18 @@ const Dropdown = ({ trigger, children }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-    }
+    };
   }, []);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
-  }
+  };
+
+  const handleChildClick = (child) => {
+    setSelectedItem(child);
+    child.onClick();
+    setIsOpen(false);
+  };
 
   return (
     <div className={styles.container} ref={dropdownRef}>
@@ -32,8 +38,8 @@ const Dropdown = ({ trigger, children }) => {
           {children.map((child, index) => (
             <li
               key={index}
-              className={styles.child}
-              onClick={child.onClick}
+              className={`${styles.child} ${selectedItem?.label === child.label ? styles.selected : ''}`} // Thêm lớp 'selected' nếu phần tử được chọn
+              onClick={() => handleChildClick(child)}
             >
               {child.label}
             </li>
@@ -41,7 +47,7 @@ const Dropdown = ({ trigger, children }) => {
         </ul>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default Dropdown;

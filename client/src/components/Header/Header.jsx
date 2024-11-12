@@ -2,15 +2,16 @@ import styles from './Header.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import Dropdown from '../Dropdown/Dropdown';
 import { useAuthContext } from '../../contexts/AuthContext';
+
 const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
- const { user, handleLogout } = useAuthContext();
+  const { user, logout } = useAuthContext();
 
   const navigate = useNavigate();
 
   const dropdownChildren = [
     { label: 'Hồ sơ của tôi', onClick: () => { navigate('/my-profile'); } },
     { label: 'Bài viết của tôi', onClick: () => { navigate('my-posts'); } },
-    { label: 'Đăng xuất', onClick: handleLogout }
+    { label: 'Đăng xuất', onClick: logout }
   ];
 
   return (
@@ -25,7 +26,7 @@ const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
       <div className={styles.right}>
         {user ? (
           <>
-            <button className={styles.createPostButton}>Tạo bài viết mới</button>
+            <button className={styles.createPostButton} onClick={() => navigate('/create-post')}>Tạo bài viết mới</button>
             <Dropdown trigger={<img src={`data:image/jpeg;base64,${user.avatar}`} alt='Hình đại diện của người dùng' className={styles.avatar} />} children={dropdownChildren} />
           </>
         ) : (

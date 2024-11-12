@@ -1,7 +1,6 @@
 .container {
   display: flex;
   flex-direction: column;
-  padding: 10px;
   border-radius: 10px;
   background-color: #fff;
   border: 1px solid #e6e6e6;
@@ -9,59 +8,79 @@
   height: 100%;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
-  .postImage {
-    height: 175px;
-    width: 100%;
-    border-radius: 7.5px;
-    object-fit: cover;
-    display: block;
+  .header {
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border-radius: 20px;
 
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  .categoryName {
-    margin-bottom: 10px;
-  }
+    .thumbnail {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      width: 100%;
+      border: none;
+      border-radius: 10px 10px 0 0;
+      object-fit: cover;
+      display: block;
   
-  .title {
-    margin-bottom: 10px;
-
-    a {
-      text-decoration: none;
-      color: #000;
-
       &:hover {
-        color: #1877f2;
-        transition: 0.3s color ease;
+        cursor: pointer;
       }
     }
   }
 
-  .userAvatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: block;
+  .body {
+    padding: 10px;
 
-    &:hover {
-      cursor: pointer;
-      opacity: 0.8;
-      transition: 0.3s opacity ease;
+    .categoryName {
+      margin-bottom: 10px;
+    }
+    
+    .title {
+      margin-bottom: 10px;
+  
+      a {
+        text-decoration: none;
+        color: #000;
+  
+        &:hover {
+          color: #1877f2;
+          transition: 0.3s color ease;
+        }
+      }
     }
   }
 
-  .userName {
-    margin-left: 10px;
+  .footer {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
 
-    &:hover {
-      cursor: pointer;
-      color: #1877f2;
-      transition: 0.3s color ease;
+    .userAvatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      margin-top: auto;
+  
+      &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+        transition: 0.3s opacity ease;
+      }
+    }
+  
+    .userName {
+      margin-left: 10px;
+  
+      &:hover {
+        cursor: pointer;
+        color: #1877f2;
+        transition: 0.3s color ease;
+      }
     }
   }
 }

@@ -1,9 +1,9 @@
 import styles from './Home.module.scss';
 import { useEffect, useState } from 'react';
 import Header from '../../components/Header/Header';
-import Posts from '../../components/PostCardList/PostCartList';
-import Login from '../../components/Modal/Login/Login';
-import SignUp from '../../components/Modal/SignUp/SignUp';
+import PostCartList from '../../components/PostCardList/PostCartList';
+import Login from '../../components/Login/Login';
+import SignUp from '../../components/SignUp/SignUp';
 
 const Home = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -26,7 +26,7 @@ const Home = () => {
         openModalSignUp={openModalSignUp}
       />
       <div className={styles.content}>
-        <Posts />
+        <PostCartList />
       </div>
       <Login isOpen={isModalLoginOpen} onClose={closeModalLogin} />
       <SignUp isOpen={isModalSignUpOpen} onClose={closeModalSignUp} />

@@ -1,26 +1,44 @@
-import styles from './Login.module.scss';
+import styles from './SignUp.module.scss';
 import { useState } from 'react';
-import { useAuthContext } from '../../../contexts/AuthContext';
+import { useAuthContext } from '../../contexts/AuthContext';
 
-const Login = ({ isOpen, onClose }) => {
+const SignUp = ({ isOpen, onClose }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
 
-  const { error, setError, handleLogin } = useAuthContext();
+  const { error, setError, signUp } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (username == '' || password == '') {
+    const validUsernamePattern = /^[a-zA-Z0-9]*$/;
+    const validNamePattern = /^[a-zA-ZÀ-ỹà-ý ]*$/;
+    const validPasswordPattern = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+
+    if (username == '' || password == '' || name == '') {
       setError('Vui lòng điền đầy đủ thông tin vào tất cả các trường bắt buộc.');
       return;
     }
+    if (!validUsernamePattern.test(username)) {
+      setError('Tên người dùng không được chứa ký tự đặc biệt.');
+      return;
+    }
+    if (!validNamePattern.test(name)) {
+      setError('Tên không dược chứa ký tự đặc biệt');
+      return;
+    }
+    if (!validPasswordPattern.test(password)) {
+      setError('Mật khẩu phải có ít nhất 6 ký tự và bao gồm chữ cái và số.');
+      return;
+    }
 
-    await handleLogin(username, password);
+    await signUp(username, password, name);
 
     setUsername('');
     setPassword('');
+    setName('');
     setError('');
     onClose();
   }
@@ -37,6 +55,7 @@ const Login = ({ isOpen, onClose }) => {
       onClick={() => {
         setUsername('');
         setPassword('');
+        setName('');
         setError('');
         onClose();
       }}
@@ -46,21 +65,22 @@ const Login = ({ isOpen, onClose }) => {
           onClick={() => {
             setUsername('');
             setPassword('');
+            setName('');
             setError('');
             onClose();
           }}
           className={styles.closeButton}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#000" className="bi bi-x" viewBox="0 0 16 16">
-            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='#000' className='bi bi-x' viewBox='0 0 16 16'>
+            <path d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708'/>
           </svg>
         </button>
-        <h2>Đăng nhập</h2>
+        <h2>Đăng ký</h2>
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroups}>
             <div className={styles.formGroup}>
               <label htmlFor='username'>Tên người dùng</label>
-              <input
+              <input 
                 type='text'
                 placeholder='Tên người dùng'
                 value={username}
@@ -70,8 +90,8 @@ const Login = ({ isOpen, onClose }) => {
               />
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor='password'>Mật khẩu</label>
-              <div className={styles.inputPassword}>
+            <label htmlFor='password'>Mật khẩu</label>
+              <div className={styles.inputPasswordWrapper}>
                 <input
                   type={isPasswordVisible ? 'text' : 'password'}
                   placeholder='Mật khẩu'
@@ -96,8 +116,19 @@ const Login = ({ isOpen, onClose }) => {
                 </div>
               </div>
             </div>
+            <div className={styles.formGroup}>
+              <label htmlFor='name'>Tên</label>
+              <input 
+                type='text'
+                placeholder='Tên'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onClick={() => setError('')}
+                id='name'
+              />
+            </div>
           </div>
-          <button type='submit'>Đăng nhập</button>
+          <button type='submit'>Đăng ký</button>
         </form>
         {error && (<p style={{ color: 'red', marginTop: '20px', textAlign: 'center' }}>{error}</p>)}
       </div>
@@ -105,4 +136,4 @@ const Login = ({ isOpen, onClose }) => {
   )
 }
 
-export default Login;
+export default SignUp;

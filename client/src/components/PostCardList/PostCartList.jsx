@@ -1,26 +1,22 @@
 import styles from './PostCardList.module.scss';
 import PostCard from '../PostCard/PostCard';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getAllPosts as getAllPostsService } from '../../services/postService';
 
-const Posts = () => {
+const PostCartList = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const getAllPosts = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, { withCredentials: true });
-        setPosts(response.data.posts);
-      } catch(err) {
-          if (err.response && err.response.data.error) {
-            console.log(err.response.data.error);
-          } else {
-            console.log(err.message);
-          }
-        }
-      };
+        const posts = await getAllPostsService();
+        setPosts(posts);
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
-    fetchPosts();
+    getAllPosts();
   }, []);
 
   return (
@@ -29,7 +25,7 @@ const Posts = () => {
         <div key={index} className={styles.post}>
           <PostCard
             title={post.title}
-            postImage={post.post_image}
+            thumbnail={post.thumbnail}
             userAvatar={post.user_avatar}
             slug={post.slug}
             userName={post.user_name}
@@ -43,4 +39,4 @@ const Posts = () => {
   )
 }
 
-export default Posts;
+export default PostCartList;

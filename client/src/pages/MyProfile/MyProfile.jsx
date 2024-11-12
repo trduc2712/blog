@@ -1,8 +1,8 @@
 import styles from './MyProfile.module.scss';
 import Header from '../../components/Header/Header';
 import { useEffect, useState } from 'react';
-import Login from '../../components/Modal/Login/Login';
-import SignUp from '../../components/Modal/SignUp/SignUp';
+import Login from '../../components/Login/Login';
+import SignUp from '../../components/SignUp/SignUp';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { fileToBase64 } from '../../utils/file';
 
@@ -86,11 +86,11 @@ const MyProfile = () => {
                 onChange={handleAvatarChange}
               />
               <label htmlFor="avatar">
-              <img
-                src={`data:image/jpeg;base64,${avatar}`} 
-                alt="Hình đại diện của người dùng"
-                className={styles.avatar}
-              />
+                <img
+                  src={`data:image/jpeg;base64,${avatar}`} 
+                  alt="Hình đại diện của người dùng"
+                  className={styles.avatar}
+                />
               </label>
               <div className={styles.formGroups}>
                 <div className={styles.formGroup}>
@@ -105,7 +105,7 @@ const MyProfile = () => {
                 </div>
                 <div className={styles.formGroup}>
                   <label htmlFor='password'>Mật khẩu</label>
-                  <div className={styles.inputPassword}>
+                  <div className={styles.inputPasswordWrapper}>
                     <input 
                       id='password' 
                       type={isPasswordVisible ? 'text' : 'password'}

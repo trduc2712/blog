@@ -1,5 +1,11 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import {
+  getLoggedInUser as getLoggedInUserService,
+  updateUser as updateUserService,
+  signUp as signUpService,
+  login as loginService,
+  logout as logoutService
+} from '../services/authService';
 
 const AuthContext = createContext();
 
@@ -9,64 +15,69 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
-  const fetchUser = async () => {
+  const getLoggedInUser = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/get-logged-in-user`, { withCredentials: true });
-      setUser(response.data.user);
+      const loggedInUser = await getLoggedInUserService();
+      setUser(loggedInUser);
     } catch (err) {
-      setError(err.message);
+      console.log(err.error);
     }
   };
 
   useEffect(() => {
-    fetchUser();
+    getLoggedInUser();
   }, []);
 
   const updateUser = async (username, password, name, avatar) => {
     try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/users/update-user/${user.id}`,
-        { username, password, name, avatar },
-        { withCredentials: true }
-      );
-
-      setUser(response.data.user);
-      fetchUser();
-      console.log('Thông tin người dùng đã được cập nhật trong AuthContext');
+      const updatedUser = await updateUserService(username, password, name, avatar, user.id);
+      setUser(updatedUser);
+      getLoggedInUser();
     } catch (err) {
-      setError(err.message);
+      console.log(err.error);
     }
   };
 
-  const handleSignUp = async (username, password, name) => {
+  const signUp = async (username, password, name) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/sign-up`, { username, password, name }, { withCredentials: true });
-      setUser(response.data.user);
+      await signUpService(username, password, name);
     } catch (err) {
-      setError(err.response?.data?.error || err.message);
+      setError(err.error);
     }
   };
 
-  const handleLogin = async (username, password) => {
+  const login = async (username, password) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, { username, password }, { withCredentials: true });
-      setUser(response.data.user);
+      const loggedInUser = await loginService(username, password);
+      setUser(loggedInUser);
     } catch (err) {
-      setError(err.response?.data?.error || err.message);
+      setError(err.error);
     }
   };
 
-  const handleLogout = async () => {
+  const logout = async () => {
     try {
-      await axios.get(`${import.meta.env.VITE_API_URL}/auth/logout`, { withCredentials: true });
+      await logoutService();
       setUser(null);
     } catch (err) {
-      setError(err.message);
+      setError(err.error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, error, setError, handleSignUp, handleLogin, handleLogout, updateUser }}>
+    <AuthContext.Provider
+      value=
+      {{ 
+        user, 
+        setUser, 
+        error, 
+        setError, 
+        signUp, 
+        login, 
+        logout, 
+        updateUser 
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
