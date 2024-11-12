@@ -30,3 +30,21 @@ exports.getPostBySlug = async (req, res) => {
         res.status(500).json({ error: 'Lỗi máy chủ' });
     }
 };
+
+exports.createPost = async (req, res) => {
+    const { title, content, userId, thumbnail, categorySlug, slug } = req.body;
+    
+    if (!userId) {
+        return res.status(400).json({ error: 'Thiếu user ID' });
+    }
+    if (!categorySlug) {
+        return res.status(400).json({ error: 'Thiếu category slug' });
+    }
+
+    try {
+        await Post.createPost(title, content, userId, thumbnail, categorySlug, slug);
+        return res.status(201).json({ message: 'Tạo bài viết thành công' });
+    } catch (err) {
+        return res.status(500).json({ error: 'Lỗi máy chủ' });
+    }     
+  };

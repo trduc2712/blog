@@ -5,14 +5,14 @@ exports.signUp = async (req, res) => {
   const avatar = '';
   try {
       const userExists = await User.findUserByUsername(username);
-      if (userExists.length > 0) {
+      if (userExists) {
           return res.status(400).json({ error: 'Tên người dùng đã tồn tại' });
       }
-      await User.registerUser(username, password, name, avatar);
+      await User.createUser(username, password, name, avatar);
       return res.status(201).json({ message: 'Đăng ký thành công' });
   } catch (err) {
       return res.status(500).json({ error: 'Lỗi máy chủ' });
-  }
+  }     
 };
 
 exports.login = async (req, res) => {

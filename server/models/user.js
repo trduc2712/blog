@@ -1,6 +1,6 @@
 const db = require('../config/database');
 
-exports.registerUser = (username, password, name, avatar) => {
+exports.createUser = (username, password, name, avatar) => {
   return new Promise((resolve, reject) => {
       const query = 'INSERT INTO users (username, password, name, avatar) VALUES (?, ?, ?, ?)';
       db.query(query, [username, password, name, avatar], (err, results) => {
