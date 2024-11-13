@@ -1,7 +1,7 @@
 import styles from './Home.module.scss';
 import { useEffect, useState } from 'react';
 import Header from '../../components/Header/Header';
-import PostCartList from '../../components/PostCardList/PostCartList';
+import PostCardList from '../../components/PostCardList/PostCartList';
 import Login from '../../components/Login/Login';
 import SignUp from '../../components/SignUp/SignUp';
 
@@ -10,8 +10,8 @@ const Home = () => {
   const [isModalSignUpOpen, setIsModalSignUpOpen] = useState(false);
 
   const openModalLogin = () => setIsModalLoginOpen(true);
-  const openModalSignUp = () => setIsModalSignUpOpen(true);
   const closeModalLogin = () => setIsModalLoginOpen(false);
+  const openModalSignUp = () => setIsModalSignUpOpen(true);
   const closeModalSignUp = () => setIsModalSignUpOpen(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const Home = () => {
         openModalSignUp={openModalSignUp}
       />
       <div className={styles.content}>
-        <PostCartList />
+        <PostCardList />
       </div>
       <Login isOpen={isModalLoginOpen} onClose={closeModalLogin} />
       <SignUp isOpen={isModalSignUpOpen} onClose={closeModalSignUp} />

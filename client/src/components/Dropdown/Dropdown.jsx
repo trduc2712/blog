@@ -38,7 +38,7 @@ const Dropdown = ({ trigger, children }) => {
           {children.map((child, index) => (
             <li
               key={index}
-              className={`${styles.child} ${selectedItem?.label === child.label ? styles.selected : ''}`} // Thêm lớp 'selected' nếu phần tử được chọn
+              className={styles.child}
               onClick={() => handleChildClick(child)}
             >
               {child.label}

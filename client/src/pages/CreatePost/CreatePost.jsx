@@ -12,6 +12,8 @@ import { stringToSlug } from '../../utils/string';
 import { fileToBase64 } from '../../utils/file';
 import { createPost as createPostService } from '../../services/postService';
 import { useNavigate } from 'react-router-dom';
+import useModal from '../../hooks/useModal';
+import Modal from '../../components/Modal/Modal';
 
 const CreatePost = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -23,8 +25,11 @@ const CreatePost = () => {
   const [categoryName, setCategoryName] = useState('Danh mục');
   const [thumbnail, setThumbnail] = useState('');
   const [userId, setUserId] = useState('');
+  const [modalContent, setModalContent] = useState({});
 
   const { user } = useAuthContext();
+
+  const { isOpen, openModal, closeModal } = useModal();
 
   const dropdownChildren = [];
   const openModalLogin = () => setIsModalLoginOpen(true);
@@ -57,6 +62,23 @@ const CreatePost = () => {
 
   const handleContentChange = (value) => {
     setContent(value);
+  };
+
+  const openConfirmPublishModal = () => {
+    setModalContent({
+      title: 'Thông báo',
+      cancelLabel: 'Không',
+      confirmLabel: 'Có',
+      message: 'Bạn có chắc chắn muốn đăng bài viết không?',
+      onConfirm: () => {
+        handlePublish();
+        closeModal();
+      },
+      onCancel: () => {
+        closeModal();
+      }
+    });
+    openModal();
   };
 
   const modules = {
@@ -175,7 +197,7 @@ const CreatePost = () => {
             className={styles.quill}
           />
           <div className={styles.publishButtonWrapper}>
-            <div className={styles.publishButton} onClick={handlePublish}>
+            <div className={styles.publishButton} onClick={openConfirmPublishModal}>
               Xuất bản
             </div>
           </div>
@@ -188,6 +210,17 @@ const CreatePost = () => {
       </div>
       <Login isOpen={isModalLoginOpen} onClose={closeModalLogin} />
       <SignUp isOpen={isModalSignUpOpen} onClose={closeModalSignUp} />
+      <Modal
+        title={modalContent.title}
+        isOpen={isOpen}
+        onClose={closeModal}
+        cancelLabel={modalContent.cancelLabel}
+        confirmLabel={modalContent.confirmLabel}
+        onConfirm={modalContent.onConfirm}
+        onCancel={modalContent.onCancel}
+        message={modalContent.message}
+        buttonLabel={modalContent.buttonLabel}
+      />
     </div>
   );
 };

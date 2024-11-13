@@ -2,17 +2,40 @@ import styles from './Header.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import Dropdown from '../Dropdown/Dropdown';
 import { useAuthContext } from '../../contexts/AuthContext';
+import useModal from '../../hooks/useModal';
+import { useState } from 'react';
+import Modal from '../Modal/Modal';
 
 const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
   const { user, logout } = useAuthContext();
+  const [modalContent, setModalContent] = useState({});
 
   const navigate = useNavigate();
+
+  const { isOpen, openModal, closeModal } = useModal();
 
   const dropdownChildren = [
     { label: 'Hồ sơ của tôi', onClick: () => { navigate('/my-profile'); } },
     { label: 'Bài viết của tôi', onClick: () => { navigate('my-posts'); } },
-    { label: 'Đăng xuất', onClick: logout }
+    { label: 'Đăng xuất', onClick: () => { openConfirmLogoutModal(); }  }
   ];
+
+  const openConfirmLogoutModal = () => {
+    setModalContent({
+      title: 'Thông báo',
+      cancelLabel: 'Không',
+      confirmLabel: 'Có',
+      message: 'Bạn có chắc chắn muốn đăng xuất không?',
+      onConfirm: () => {
+        logout();
+        closeModal();
+      },
+      onCancel: () => {
+        closeModal();
+      }
+    });
+    openModal();
+  };
 
   return (
     <div className={styles.container}>
@@ -36,6 +59,17 @@ const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
           </>
         )}
       </div>
+      <Modal
+        title={modalContent.title}
+        isOpen={isOpen}
+        onClose={closeModal}
+        cancelLabel={modalContent.cancelLabel}
+        confirmLabel={modalContent.confirmLabel}
+        onConfirm={modalContent.onConfirm}
+        onCancel={modalContent.onCancel}
+        message={modalContent.message}
+        buttonLabel={modalContent.buttonLabel}
+      />
     </div>
   )
 }

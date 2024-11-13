@@ -24,3 +24,29 @@ export const createPost = async (title, content, userId, thumbnail, categorySlug
     }
   }
 };
+
+export const getPostCount = async () => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/count`, { withCredentials: true });
+    return response.data.count;
+  } catch (err) {
+    if (err.response && err.response.data.error) {
+      console.log(err.response.data.error);
+    } else {
+      console.log(err.message);
+    }
+  }
+}
+
+export const getPostWithPagination = async (page, limit) => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/paginate?page=${page}&limit=${limit}`, { withCredentials: true });
+    return response.data.posts;
+  } catch(err) {
+    if (err.response && err.response.data.error) {
+      console.log(err.response.data.error);
+    } else {
+      console.log(err.message);
+    }
+  }
+};

@@ -2,7 +2,7 @@ import styles from './PostCard.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatShortDate } from '../../utils/date';
 
-const PostCard = ({ title, thumbnail, slug, userName, userAvatar, categoryName, createdAt, username }) => {
+const PostCard = ({ title, thumbnail, slug, userName, userAvatar, categoryName, createdAt, username, categorySlug }) => {
   const navigate = useNavigate()
   
   return (
@@ -16,7 +16,7 @@ const PostCard = ({ title, thumbnail, slug, userName, userAvatar, categoryName, 
       </div>
       <div className={styles.body}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <p className={styles.categoryName} >{categoryName}</p>
+          <Link className={styles.categoryName} to={`/category/${categorySlug}`}>{categoryName}</Link>
           <p className={styles.createdAt}>{formatShortDate(createdAt)}</p>
         </div>
         <h3 className={styles.title} ><Link to={`/post/${slug}`}>{title}</Link></h3>

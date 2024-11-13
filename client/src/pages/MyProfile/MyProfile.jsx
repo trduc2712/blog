@@ -5,6 +5,8 @@ import Login from '../../components/Login/Login';
 import SignUp from '../../components/SignUp/SignUp';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { fileToBase64 } from '../../utils/file';
+import useModal from '../../hooks/useModal';
+import Modal from '../../components/Modal/Modal';
 
 const MyProfile = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -14,13 +16,39 @@ const MyProfile = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
+  const [modalContent, setModalContent] = useState({});
   
   const { user, updateUser } = useAuthContext();
+
+  const { isOpen, openModal, closeModal } = useModal();
 
   const openModalLogin = () => setIsModalLoginOpen(true);
   const openModalSignUp = () => setIsModalSignUpOpen(true);
   const closeModalLogin = () => setIsModalLoginOpen(false);
   const closeModalSignUp = () => setIsModalSignUpOpen(false);
+
+  const openConfirmUpdateModal = () => {
+    setModalContent({
+      title: 'Thông báo',
+      cancelLabel: 'Không',
+      confirmLabel: 'Có',
+      message: 'Bạn có chắc chắn muốn lưu các thay đổi này?',
+      onConfirm: () => {
+        updateUser(username, password, name, avatar);
+        closeModal();
+      },
+      onCancel: () => {
+        if (user) {
+          setUsername(user.username);
+          setPassword(user.password);
+          setName(user.name);
+          setAvatar(user.avatar);
+        };
+        closeModal();
+      }
+    });
+    openModal();
+  };
 
   useEffect(() => {
     document.title = 'Hồ sơ của tôi | Blog';
@@ -48,18 +76,7 @@ const MyProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    updateUser(username, password, name, avatar)
-  };
-
-  const handleCancel = (e) => {
-    e.preventDefault();
-
-    if (user) {
-      setUsername(user.username);
-      setPassword(user.password);
-      setName(user.name);
-      setAvatar(user.avatar);
-    }
+    openConfirmUpdateModal();
   };
 
   const togglePasswordVisibility = () => {
@@ -139,7 +156,6 @@ const MyProfile = () => {
                 </div>
               </div>
               <div className={styles.buttons}>
-                <button className={styles.cancelButton} onClick={handleCancel}>Hủy</button>
                 <button type='submit' className={styles.saveButton}>Lưu</button>
               </div>
             </form>
@@ -152,6 +168,17 @@ const MyProfile = () => {
       </div>
       <Login isOpen={isModalLoginOpen} onClose={closeModalLogin} />
       <SignUp isOpen={isModalSignUpOpen} onClose={closeModalSignUp} />
+      <Modal
+        title={modalContent.title}
+        isOpen={isOpen}
+        onClose={closeModal}
+        cancelLabel={modalContent.cancelLabel}
+        confirmLabel={modalContent.confirmLabel}
+        onConfirm={modalContent.onConfirm}
+        onCancel={modalContent.onCancel}
+        message={modalContent.message}
+        buttonLabel={modalContent.buttonLabel}
+      />
     </div>
   )
 }

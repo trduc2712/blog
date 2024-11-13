@@ -3,6 +3,7 @@
   z-index: 999;
   
   .children {
+    padding: 10px 0;
     top: 100%;
     right: 0;
     position: absolute;
@@ -27,11 +28,6 @@
         background-color: #e6e6e6;
         transition: 0.3s background-color ease;
       }
-    }
-
-    .selected {
-      background-color: #adb5bd;
-      color: #fff;
     }
   }
 }

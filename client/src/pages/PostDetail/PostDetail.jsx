@@ -42,7 +42,6 @@ const PostDetail = () => {
   useEffect(() => {
     if (post) {
       document.title = post.title + " | Blog";
-      console.log(post);
     }
   }, [post]);
 

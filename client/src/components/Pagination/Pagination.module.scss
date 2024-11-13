@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #e6e6e6;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  overflow: hidden;
+
+  .disabled {
+    opacity: 0.4;
+    cursor: default !important;
+
+    &:hover {
+      background-color: #fff !important;
+
+      svg {
+        background-color: #fff !important;
+      }
+    }
+  }
+
+  .active {
+    background-color: #1877f2;
+    color: #fff;
+    
+    p {
+      background-color: #1877f2;
+      color: #fff;
+    }
+
+    &:hover {
+      background-color: #1877f2 !important;
+      color: #fff !important;
+      
+      p {
+        background-color: #1877f2 !important;
+        color: #fff !important;
+      }
+    }
+  }
+
+  .prevButton, .nextButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    padding: 10px;
+
+    &:hover {
+      background-color: #ccc;
+      cursor: pointer;
+
+      svg {
+        background-color: #ccc;
+      }
+    }
+  }
+
+  .pageButtons {
+    display: flex;
+    height: 36px;
+
+    .pageButton {
+      padding: 10px;
+      width: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      border: none;
+      font-size: 16px;
+      color: #1877f2;
+
+      &:hover {
+        background-color: #ccc;
+        cursor: pointer;
+
+        p {
+          background-color: #ccc;
+        }
+      }
+    }
+  }
+}
