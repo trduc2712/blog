@@ -2,6 +2,19 @@
   .contentWrapper {
     padding: 79px 40px 20px;
 
+    .notLoggedIn {
+      border: 1px solid #e6e6e6;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: calc(100vw - 80px);
+      height: calc(100vh - 100px);
+    }
+
     .content {
       border: 1px solid #e6e6e6;
       background-color: #fff;
@@ -18,35 +31,14 @@
           display: flex;
   
           input[type='text'] {
-            border: 1px solid #ccc;
+            border: none;
             font-size: 16px;
-            padding: 10px;
+            padding: 10px 10px 10px 0;
             border-radius: 5px;
             flex-grow: 1;
   
             &:focus {
               outline: none;
-            }
-          }
-
-          .thumbnailLabel {
-            height: 100%;
-            width: 150px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: 20px;
-            border-radius: 5px;
-            border: 1px solid #adb5bd;
-            padding: 10px;
-            background-color: #adb5bd;
-            border: 1px solid #adb5bd;
-            color: #fff;
-            
-            &:hover {
-              opacity: 0.8;
-              transition: 0.3s opacity ease;
-              cursor: pointer;
             }
           }
 
@@ -69,10 +61,15 @@
               cursor: pointer;
             }
 
-            svg {
-              margin-left: 5px;
-              color: #fff;
-              background-color: #adb5bd;
+            .bi {
+              margin-left: 5px !important;
+              color: #fff !important;
+              background-color: #adb5bd !important;
+
+              &::before {
+                color: #fff !important;
+                background-color: #adb5bd !important;
+              }
             }
           }
         }
@@ -80,16 +77,30 @@
 
       .thumbnailWrapper {
         margin-bottom: 20px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
         width: 100%;
         height: 500px;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+        overflow: hidden;
 
-        img {
+        .thumbnailLabel {      
+          padding: 10px;
+
+          &:hover {
+            color: #1877f2;
+            transition: 0.3s color ease;
+            cursor: pointer;
+          }
+        }
+
+        .thumbnail {
           object-fit: cover;
-          border-radius: 5px;
           height: 100%;
           width: 100%;
+          border: none;
         }
       }
 
@@ -109,12 +120,13 @@
           img {
             display: block;
             margin: 20px auto;
+            border-radius: 5px;
           }
         }
 
         .ql-toolbar {
           border-bottom: none;
-          padding: 15px;
+          padding: 10px;
           font-size: 16px;
           border-radius: 5px 5px 0 0;
         }

@@ -4,6 +4,7 @@ import Header from '../../components/Header/Header';
 import PostCardList from '../../components/PostCardList/PostCartList';
 import Login from '../../components/Login/Login';
 import SignUp from '../../components/SignUp/SignUp';
+import ToastList from '../../components/ToastList/ToastList';
 
 const Home = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -17,7 +18,7 @@ const Home = () => {
   useEffect(() => {
     document.title = 'Trang chủ | Blog';
   }, []);
- 
+
   return (
     <div className={styles.container}>
       <Header
@@ -30,8 +31,9 @@ const Home = () => {
       </div>
       <Login isOpen={isModalLoginOpen} onClose={closeModalLogin} />
       <SignUp isOpen={isModalSignUpOpen} onClose={closeModalSignUp} />
+      <ToastList />
     </div>
-  )
-}
+  );
+};
 
 export default Home;

@@ -5,6 +5,18 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .notPosts {
+    border: 1px solid #e6e6e6;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100vw - 80px);
+    height: calc(100vh - 100px);
+  }
+
   .pagination {
     display: flex;
     justify-content: center;
@@ -18,6 +30,11 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100vw - 80px);
+  height: calc(100vh - 100px);
 
   .pagination {
     display: none;

@@ -2,6 +2,19 @@
   .contentWrapper {
     padding: 79px 40px 20px;
 
+    .notLoggedIn {
+      border: 1px solid #e6e6e6;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: calc(100vw - 80px);
+      height: calc(100vh - 100px);
+    }
+
     .content {
       border: 1px solid #e6e6e6;
       background-color: #fff;
@@ -76,15 +89,10 @@
                 border-left: none;
                 border-top-right-radius: 5px;
                 border-bottom-right-radius: 5px;
+                padding: 15px;
 
                 &:hover {
                   cursor: pointer;
-                }
-
-                svg {
-                  margin: 0 15px;
-                  width: 24px;
-                  height: 24px;
                 }
               }
             }

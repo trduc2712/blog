@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 
 const Dropdown = ({ trigger, children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -23,7 +22,6 @@ const Dropdown = ({ trigger, children }) => {
   };
 
   const handleChildClick = (child) => {
-    setSelectedItem(child);
     child.onClick();
     setIsOpen(false);
   };

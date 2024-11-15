@@ -14,6 +14,8 @@ import { createPost as createPostService } from '../../services/postService';
 import { useNavigate } from 'react-router-dom';
 import useModal from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
+import { useToastContext } from '../../contexts/ToastContext';
+import ToastList from '../../components/ToastList/ToastList';
 
 const CreatePost = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -28,6 +30,7 @@ const CreatePost = () => {
   const [modalContent, setModalContent] = useState({});
 
   const { user } = useAuthContext();
+  const { addToast } = useToastContext();
 
   const { isOpen, openModal, closeModal } = useModal();
 
@@ -65,6 +68,13 @@ const CreatePost = () => {
   };
 
   const openConfirmPublishModal = () => {
+    if (!thumbnail) {
+      addToast({
+        title: 'Thông báo',
+        message: 'Vui lòng chọn thumbnail'
+      });
+      return;
+    }
     setModalContent({
       title: 'Thông báo',
       cancelLabel: 'Không',
@@ -73,6 +83,10 @@ const CreatePost = () => {
       onConfirm: () => {
         handlePublish();
         closeModal();
+        addToast({
+          title: 'Thông báo',
+          message: 'Đăng bài viết thành công'
+        })
       },
       onCancel: () => {
         closeModal();
@@ -156,27 +170,11 @@ const CreatePost = () => {
               />
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="thumbnail" className={styles.thumbnailLabel}>
-                Thumbnail
-              </label>
-              <input 
-                type='file'
-                id='thumbnail'
-                style={{ display: 'none' }}
-                onChange={handleChangeThumbnail}
-              />
-            </div>
-            <div className={styles.formGroup}>
               <Dropdown 
                 trigger={
                   <div className={styles.categoriesList}>
                     {categoryName == 'Danh mục' ? (
-                      <>
-                        {categoryName}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                          <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                        </svg>
-                      </>
+                      'Danh mục'
                     ) : (
                       <>{categoryName}</>
                     )}
@@ -185,8 +183,22 @@ const CreatePost = () => {
               />
             </div>
           </div>
-          <div className={styles.thumbnailWrapper} style={{ display: `${thumbnail ? 'block' : 'none'}` }}>
-            <img src={`data:image/jpeg;base64,${thumbnail}`} />
+          <div className={styles.thumbnailWrapper}>
+            {!thumbnail && 
+              <label htmlFor="thumbnail" className={styles.thumbnailLabel}>
+                Nhấn để chọn thumbnail
+              </label>
+            }
+            {!thumbnail && 
+              <input 
+                type='file'
+                id='thumbnail'
+                style={{ display: 'none' }}
+                onChange={handleChangeThumbnail}
+                className={styles.inputThumbnail}
+              />
+            }
+            {thumbnail && <img src={`data:image/jpeg;base64,${thumbnail}`} className={styles.thumbnail} />}
           </div>
           <ReactQuill
             value={content}
@@ -198,12 +210,12 @@ const CreatePost = () => {
           />
           <div className={styles.publishButtonWrapper}>
             <div className={styles.publishButton} onClick={openConfirmPublishModal}>
-              Xuất bản
+              Đăng
             </div>
           </div>
         </div>
         ) : (
-          <div className={styles.content}>
+          <div className={styles.notLoggedIn}>
             Chưa đăng nhập
           </div>
         )}
@@ -221,6 +233,7 @@ const CreatePost = () => {
         message={modalContent.message}
         buttonLabel={modalContent.buttonLabel}
       />
+      <ToastList />
     </div>
   );
 };

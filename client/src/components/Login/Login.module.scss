@@ -24,8 +24,6 @@
       justify-content: center;
       align-items: center;
       float: right;
-      width: 35px;
-      height: 35px;
       border-radius: 5px;
       border: none;
 
@@ -91,15 +89,10 @@
               border-left: none;
               border-top-right-radius: 5px;
               border-bottom-right-radius: 5px;
+              padding: 10px;
 
               &:hover {
                 cursor: pointer;
-              }
-
-              svg {
-                margin: 0 15px;
-                width: 24px;
-                height: 24px;
               }
             }
           }

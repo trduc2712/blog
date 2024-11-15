@@ -38,10 +38,10 @@ export const getPostCount = async () => {
   }
 }
 
-export const getPostWithPagination = async (page, limit) => {
+export const getPostsWithPagination = async (page, limit) => {
   try {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/paginate?page=${page}&limit=${limit}`, { withCredentials: true });
-    return response.data.posts;
+    return response.data.posts.length > 0 ? response.data.posts : null;
   } catch(err) {
     if (err.response && err.response.data.error) {
       console.log(err.response.data.error);
@@ -50,3 +50,15 @@ export const getPostWithPagination = async (page, limit) => {
     }
   }
 };
+
+export const deletePostById = async (id) => {
+  try {
+    await axios.delete(`${import.meta.env.VITE_API_URL}/posts/${id}`, { withCredentials: true });
+  } catch (err) {
+    if (err.response && err.response.data.error) {
+      console.log(err.response.data.error);
+    } else {
+      console.log(err.message);
+    }
+  }
+}

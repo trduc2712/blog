@@ -12,7 +12,7 @@
   flex-direction: column;
 
   .header {
-    width: 400px;
+    width: 450px;
     padding: 20px;
     display: flex;
     align-items: center;
@@ -23,8 +23,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 35px;
-      height: 35px;
       border-radius: 5px;
       border: none;
 
@@ -36,7 +34,7 @@
   }
 
   .body {
-    width: 400px;
+    width: 450px;
     padding: 40px 20px;
     border-bottom: 1px solid #e6e6e6;
     border-top: 1px solid #e6e6e6;
@@ -45,7 +43,7 @@
   .footer {
     display: flex;
     justify-content: flex-end;
-    width: 400px;
+    width: 450px;
     padding: 20px;
     border-radius: 0 0 10px 10px;
 

@@ -2,10 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #e6e6e6;
   border-radius: 5px;
   background-color: #fff;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   overflow: hidden;
 
   .disabled {
@@ -15,7 +13,7 @@
     &:hover {
       background-color: #fff !important;
 
-      svg {
+      i {
         background-color: #fff !important;
       }
     }
@@ -47,24 +45,26 @@
     align-items: center;
     border: none;
     padding: 10px;
+    color: #1877f2;
 
     &:hover {
       background-color: #ccc;
       cursor: pointer;
 
-      svg {
+      i {
         background-color: #ccc;
+        color: #1877f2 !important;
       }
     }
   }
 
   .pageButtons {
     display: flex;
-    height: 36px;
+    height: 44px;
 
     .pageButton {
       padding: 10px;
-      width: 36px;
+      width: 44px;
       display: flex;
       justify-content: center;
       align-items: center;

@@ -1,0 +1,53 @@
+.container {
+  table {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    border-collapse: separate;
+    border-spacing: 0px;
+    overflow: hidden;
+    width: 100%;
+    
+    thead {
+      padding: 10px;
+
+      tr {
+        th {
+          padding: 10px;
+          border-bottom: 1px solid #ccc;
+
+          &:not(:last-child) {
+            border-right: 1px solid #ccc;
+          }
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        &:last-child td {
+          border-bottom: none;
+        }
+
+        td {
+          padding: 10px;
+          border-bottom: 1px solid #ccc;
+          text-align: center;
+          
+          &:not(:last-child) {
+            border-right: 1px solid #ccc;
+          }
+
+          a {
+            color: #000;
+            text-decoration: none;
+
+            &:hover {
+              color: #1877f2;
+              transition: 0.3s color ease;
+            }
+          }
+        }
+      }
+    }
+  }
+}

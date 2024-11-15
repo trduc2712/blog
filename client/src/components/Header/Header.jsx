@@ -2,6 +2,7 @@ import styles from './Header.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import Dropdown from '../Dropdown/Dropdown';
 import { useAuthContext } from '../../contexts/AuthContext';
+import { useToastContext } from '../../contexts/ToastContext';
 import useModal from '../../hooks/useModal';
 import { useState } from 'react';
 import Modal from '../Modal/Modal';
@@ -13,12 +14,18 @@ const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
   const navigate = useNavigate();
 
   const { isOpen, openModal, closeModal } = useModal();
+  const { addToast } = useToastContext();
 
-  const dropdownChildren = [
-    { label: 'Hồ sơ của tôi', onClick: () => { navigate('/my-profile'); } },
-    { label: 'Bài viết của tôi', onClick: () => { navigate('my-posts'); } },
-    { label: 'Đăng xuất', onClick: () => { openConfirmLogoutModal(); }  }
-  ];
+  const dropdownChildren = [];
+
+  if (!isDashboard) {
+    dropdownChildren.push(
+      { label: 'Hồ sơ của tôi', onClick: () => { navigate('/my-profile'); } },
+      { label: 'Bài viết của tôi', onClick: () => { navigate('my-posts'); } },
+      { label: 'Đăng xuất', onClick: () => { openConfirmLogoutModal(); } });
+  } else {
+    dropdownChildren.push({ label: 'Đăng xuất', onClick: () => { openConfirmLogoutModal(); }  });
+  }
 
   const openConfirmLogoutModal = () => {
     setModalContent({
@@ -29,6 +36,10 @@ const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
       onConfirm: () => {
         logout();
         closeModal();
+        addToast({
+          title: "Thông báo",
+          message: "Đăng xuất thành công",
+        });
       },
       onCancel: () => {
         closeModal();
@@ -49,7 +60,7 @@ const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
       <div className={styles.right}>
         {user ? (
           <>
-            <button className={styles.createPostButton} onClick={() => navigate('/create-post')}>Tạo bài viết mới</button>
+            {!isDashboard && (<button className={styles.createPostButton} onClick={() => navigate('/create-post')}>Tạo bài viết mới</button>)}
             <Dropdown trigger={<img src={`data:image/jpeg;base64,${user.avatar}`} alt='Hình đại diện của người dùng' className={styles.avatar} />} children={dropdownChildren} />
           </>
         ) : (

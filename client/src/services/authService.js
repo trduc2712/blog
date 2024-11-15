@@ -12,7 +12,7 @@ export const getLoggedInUser = async () => {
 export const updateUser = async (username, password, name, avatar, userId) => {
   try {
     const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}/users/update-user/${userId}`,
+      `${import.meta.env.VITE_API_URL}/users/${userId}`,
       { username, password, name, avatar },
       { withCredentials: true }
     );
