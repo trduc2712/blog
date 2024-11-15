@@ -30,6 +30,7 @@ exports.login = async (req, res) => {
           avatar: user[0].avatar,
           username: user[0].username,
           password: user[0].password,
+          role: user[0].role,
       };
 
       res.json({
@@ -60,4 +61,12 @@ exports.logout = (req, res) => {
       res.clearCookie('connect.sid');
       res.json({ message: 'Đăng xuất thành công' });
   });
+};
+
+exports.checkAdmin = (req, res, next) => {
+    if (req.session.user.role === 'ADMIN') {
+        return next();
+    } else {
+        return res.status(403).json({ message: 'Không được phép truy cập' });
+    }
 };

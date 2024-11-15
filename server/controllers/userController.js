@@ -34,3 +34,56 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ error: 'Lỗi máy chủ' });
   }
 };
+
+exports.getUserCount = async (req, res) => {
+  try {
+      const count = await Post.getUserCount();
+      if (count == 0) {
+          return res.status(404).json({ error: 'Không có người dùng nào' });
+      }
+      res.json({
+          message: 'Lấy số lượng người dùng thành công',
+          count: count
+      });
+  } catch (err) {
+      res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+}
+
+exports.getUserWithPagination = async (req, res) => {
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
+
+  try {
+      const totalUsers = await User.getUserCount();
+      
+      const users = await User.getUserWithPagination(page, limit);
+
+      if (users.length === 0) {
+          return res.status(404).json({ error: 'Không có người dùng nào' });
+      }
+
+      res.json({
+          message: `Lấy các người dùng ở trang ${page} thành công`,
+          users: users,
+          totalUsers: totalUsers,
+          currentPage: page,
+          totalPages: Math.ceil(totalUsers / limit)
+      });
+  } catch (err) {
+      res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+};
+
+exports.deleteUserById = async (req, res) => {
+  const userId = parseInt(req.params.id);
+  if (!userId) {
+      return res.status(400).json({ error: 'Thiếu ID của người dùng' });
+  }
+  try {
+      await User.deleteUserById(userId);
+      return res.status(200).json({ message: 'Xóa người dùng thành công' });
+  } catch (err) {
+      return res.status(500).json({ error: 'Lỗi máy chủ' });
+  }  
+}

@@ -72,7 +72,7 @@ exports.getPostCount = () => {
     });
 };
 
-exports.getPostWithPagination = (page, limit) => {
+exports.getPostsWithPagination = (page, limit) => {
     return new Promise((resolve, reject) => {
         const offset = (page - 1) * limit;
         const query = `
@@ -97,3 +97,13 @@ exports.getPostWithPagination = (page, limit) => {
         })
     })
 }
+
+exports.deletePostById = (id) => {
+    return new Promise((resolve, reject) => {
+        const query = 'DELETE FROM posts WHERE id = ?';
+        db.query(query, [id], (err, results) => {
+            if (err) return reject(err);
+            resolve(results);
+        });
+    });
+};

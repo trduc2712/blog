@@ -16,7 +16,7 @@ exports.getAllPosts = async (req, res) => {
 };
 
 exports.getPostBySlug = async (req, res) => {
-    const { slug } = req.params;
+    const slug = req.params.slug;
     try {
         const post = await Post.getPostBySlug(slug);
         if (!post) {
@@ -57,14 +57,14 @@ exports.getPostCount = async (req, res) => {
     }
 }
 
-exports.getPostWithPagination = async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 6;
+exports.getPostsWithPagination = async (req, res) => {
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
 
     try {
         const totalPosts = await Post.getPostCount();
         
-        const posts = await Post.getPostWithPagination(page, limit);
+        const posts = await Post.getPostsWithPagination(page, limit);
 
         if (posts.length === 0) {
             return res.status(404).json({ error: 'Không có bài viết nào' });
@@ -82,3 +82,15 @@ exports.getPostWithPagination = async (req, res) => {
     }
 };
 
+exports.deletePostById = async (req, res) => {
+    const postId = parseInt(req.params.id);
+    if (!postId) {
+        return res.status(400).json({ error: 'Thiếu ID của bài viết' });
+    }
+    try {
+        await Post.deletePostById(postId);
+        return res.status(200).json({ message: 'Xóa bài viết thành công' });
+    } catch (err) {
+        return res.status(500).json({ error: 'Lỗi máy chủ' });
+    }  
+}

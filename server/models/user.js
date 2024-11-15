@@ -40,3 +40,43 @@ exports.updateUser = (id, username, password, name, avatar) => {
         });
     });
 };
+
+exports.getUserCount = () => {
+  return new Promise((resolve, reject) => {
+      const query = 'SELECT COUNT(*) AS count FROM users';
+      db.query(query, (err, results) => {
+          if (err) return reject(err);
+          resolve(results[0].count);
+      });
+  });
+};
+
+exports.getUserWithPagination = (page, limit) => {
+  return new Promise((resolve, reject) => {
+      const offset = (page - 1) * limit;
+      const query = `
+          SELECT 
+              users.id, 
+              users.username, 
+              users.password, 
+              users.name,
+              users.avatar,
+              users.role
+          FROM users
+          LIMIT ? OFFSET ?`;
+      db.query(query, [limit, offset], (err, results) => {
+          if (err) return reject(err);
+          resolve(results);
+      })
+  })
+}
+
+exports.deleteUserById = (id) => {
+  return new Promise((resolve, reject) => {
+      const query = 'DELETE FROM users WHERE id = ?';
+      db.query(query, [id], (err, results) => {
+          if (err) return reject(err);
+          resolve(results);
+      });
+  });
+};
