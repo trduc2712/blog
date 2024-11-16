@@ -8,8 +8,9 @@
     display: flex;
 
     .sidebar {
+      position: fixed;
       padding: 20px;
-      width: 15%;
+      width: 20%;
       height: 100%;
       border-right: 1px solid #ccc;
 
@@ -30,7 +31,7 @@
         
         .sidebarItem {
           padding: 15px;
-          border-radius: 7.5px;
+          border-radius: 5px;
 
           &:hover {
             background-color: #e6e6e6;
@@ -50,8 +51,9 @@
     }
 
     .content {
+      margin-left: 20%;
       padding: 20px;
-      width: 85%;
+      width: 80%;
       height: 100%;
     }
   }

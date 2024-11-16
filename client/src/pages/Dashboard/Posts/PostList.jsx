@@ -1,4 +1,4 @@
-import styles from './Posts.module.scss';
+import styles from './PostList.module.scss';
 import Table from '../../../components/Table/Table';
 import Pagination from '../../../components/Pagination/Pagination';
 import { useState, useEffect } from 'react';
@@ -8,7 +8,7 @@ import {
   getPostsWithPagination as getPostsWithPaginationService
 } from '../../../services/postService';
 
-const Posts = () => {
+const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -41,7 +41,6 @@ const Posts = () => {
     };
 
     getPostsWithPagination();
-    console.log(posts);
   }, [currentPage]);
 
   const handlePageChange = (page) => {
@@ -50,6 +49,7 @@ const Posts = () => {
 
   return (
     <div className={styles.container}>
+      <h2>Danh sách bài viết</h2>
       <Link className={styles.addButton} to='/dashboard/posts/add'>Thêm bài viết</Link>
       <Table columnLabels={columnLabels} initialData={posts} />
       <div className={styles.pagination}>
@@ -63,4 +63,4 @@ const Posts = () => {
   )
 }
 
-export default Posts;
+export default PostList;

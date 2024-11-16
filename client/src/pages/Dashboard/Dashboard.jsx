@@ -1,9 +1,10 @@
 import styles from './Dashboard.module.scss';
 import Header from '../../components/Header/Header';
 import { useEffect, useState } from 'react';
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Login from '../../components/Login/Login';
 import SignUp from '../../components/SignUp/SignUp';
+import ToastList from '../../components/ToastList/ToastList';
 
 const Dashboard = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -19,8 +20,6 @@ const Dashboard = () => {
   const location = useLocation();
   
   useEffect(() => {
-    document.title = 'Trang quản trị | Blog';
-
     if (location.pathname.includes('posts')) {
       setCurrentRoute('posts');
     } else if (location.pathname.includes('users')) {
@@ -29,6 +28,10 @@ const Dashboard = () => {
       setCurrentRoute('categories');
     }
   }, [location.pathname]);
+
+  useEffect(() => {
+    document.title = 'Trang quản trị | Blog';
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -66,6 +69,7 @@ const Dashboard = () => {
       </div>
       <Login isOpen={isModalLoginOpen} onClose={closeModalLogin} />
       <SignUp isOpen={isModalSignUpOpen} onClose={closeModalSignUp} />
+      <ToastList />
     </div>
   )
 }

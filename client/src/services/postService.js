@@ -62,3 +62,26 @@ export const deletePostById = async (id) => {
     }
   }
 }
+
+export const getPostById = async (id) => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${id}`, { withCredentials: true });
+    return response.data.post;
+  } catch {
+    console.log(err.message);
+  }
+};
+
+export const updatePost = async (id, title, content, userId, thumbnail, categorySlug, slug) => {
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/posts/${id}`,
+      { title, content, userId, thumbnail, categorySlug, slug },
+      { withCredentials: true }
+    );
+
+    return response.data.post;
+  } catch (err) {
+    throw new Error(err);
+  }
+};

@@ -4,28 +4,37 @@ import Dropdown from '../Dropdown/Dropdown';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { useToastContext } from '../../contexts/ToastContext';
 import useModal from '../../hooks/useModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '../Modal/Modal';
 
 const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
   const { user, logout } = useAuthContext();
   const [modalContent, setModalContent] = useState({});
+  const [dropdownChildren, setDropdownChildren] = useState([]);
 
   const navigate = useNavigate();
 
   const { isOpen, openModal, closeModal } = useModal();
   const { addToast } = useToastContext();
 
-  const dropdownChildren = [];
+  useEffect(() => {
+    const items = [];
+    if (!isDashboard) {
+      if (user) {
+        if (user.role == 'ADMIN') items.push({ label: 'Trang quản trị', onClick: () => navigate('/dashboard') });
+      }
+      items.push(
+        { label: 'Hồ sơ của tôi', onClick: () => navigate('/my-profile') },
+        { label: 'Bài viết của tôi', onClick: () => navigate('/my-posts') },
+      );
+    } else {
+      items.push({ label: 'Trang chủ', onClick: () => navigate('/') });
+    }
+    
+    items.push({ label: 'Đăng xuất', onClick: () => { openConfirmLogoutModal(); } });
 
-  if (!isDashboard) {
-    dropdownChildren.push(
-      { label: 'Hồ sơ của tôi', onClick: () => { navigate('/my-profile'); } },
-      { label: 'Bài viết của tôi', onClick: () => { navigate('my-posts'); } },
-      { label: 'Đăng xuất', onClick: () => { openConfirmLogoutModal(); } });
-  } else {
-    dropdownChildren.push({ label: 'Đăng xuất', onClick: () => { openConfirmLogoutModal(); }  });
-  }
+    setDropdownChildren(items);
+  }, [user, isDashboard]);
 
   const openConfirmLogoutModal = () => {
     setModalContent({

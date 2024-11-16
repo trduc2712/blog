@@ -106,8 +106,8 @@
 
       .quill :global {
         .ql-container {
-          border: 1px solid #ccc;
-          border-radius: 0 0 6px 6px;
+          border-top: none;
+          border-radius: 0 0 5px 5px;
         }
 
         .ql-editor {
@@ -125,7 +125,6 @@
         }
 
         .ql-toolbar {
-          border-bottom: none;
           padding: 10px;
           font-size: 16px;
           border-radius: 5px 5px 0 0;

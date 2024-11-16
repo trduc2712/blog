@@ -1,5 +1,5 @@
 import styles from './Login.module.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { useToastContext } from '../../contexts/ToastContext';
 
@@ -19,12 +19,13 @@ const Login = ({ isOpen, onClose }) => {
       return;
     }
 
-    await login(username, password);
-
-    addToast({
-      title: "Thông báo",
-      message: "Đăng nhập thành công",
-    });
+    const isSuccess = await login(username, password);
+    if (isSuccess) {
+      addToast({
+        title: "Thông báo",
+        message: "Đăng nhập thành công",
+      });
+    }
 
     setUsername('');
     setPassword('');

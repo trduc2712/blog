@@ -1,0 +1,146 @@
+.container {
+  .avatarWrapper {
+    margin: 20px 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .avatar {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1px solid #ccc;
+
+      &:hover {
+        opacity: 0.8;
+        transition: 0.3s opacity ease;
+      }
+    }
+  }
+
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    label {
+      margin-bottom: 10px;
+    }
+
+    input {
+      border: 1px solid #ccc;
+      font-size: 16px;
+      padding: 15px;
+      border-radius: 5px;
+
+      &:focus {
+        outline: none;
+        border: 1px solid #1877f2;
+      }
+    }
+
+    .inputPasswordWrapper {
+      display: flex;
+      align-items: center;
+      height: 50px;
+
+      input {
+        flex-grow: 1;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: none;
+
+        &:focus {
+          outline: none;
+          border-right: 1px solid #1877f2;
+        }
+      }
+
+      .togglePassword {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        border: 1px solid #ccc;
+        border-left: none;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        padding: 15px;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .rolePicker {
+    .roleList {
+      display: flex;
+      z-index: 1000;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 5px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .roles {
+      position: sticky;
+      margin-top: 5px;
+      padding: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      z-index: 100;
+
+      .role {
+        padding: 15px;
+        list-style: none;
+
+        &:hover {
+          background-color: #e6e6e6;
+          transition: 0.3s background-color ease;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .updateButtonWrapper {
+    margin-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .updateButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      padding: 10px;
+      background-color: #1877f2;
+      border: 1px solid #1877f2;
+      border-radius: 5px;
+      color: #fff;
+      width: 100px;
+
+      &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+        transition: 0.3s opacity ease;
+      }
+    }
+  }
+}

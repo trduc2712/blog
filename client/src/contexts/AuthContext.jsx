@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import {
   getLoggedInUser as getLoggedInUserService,
-  updateUser as updateUserService,
+  updateCurrentUser as updateCurrentUserService,
   signUp as signUpService,
   login as loginService,
   logout as logoutService
@@ -28,9 +28,9 @@ export const AuthProvider = ({ children }) => {
     getLoggedInUser();
   }, []);
 
-  const updateUser = async (username, password, name, avatar) => {
+  const updateCurrentUser = async (username, password, name, avatar) => {
     try {
-      const updatedUser = await updateUserService(username, password, name, avatar, user.id);
+      const updatedUser = await updateCurrentUserService(username, password, name, avatar, user.id);
       setUser(updatedUser);
       getLoggedInUser();
     } catch (err) {
@@ -50,8 +50,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const loggedInUser = await loginService(username, password);
       setUser(loggedInUser);
+      return true;
     } catch (err) {
       setError(err.error);
+      return false;
     }
   };
 
@@ -75,7 +77,7 @@ export const AuthProvider = ({ children }) => {
         signUp, 
         login, 
         logout, 
-        updateUser 
+        updateCurrentUser 
       }}
     >
       {children}

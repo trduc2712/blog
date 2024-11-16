@@ -7,7 +7,7 @@ import ToastList from '../ToastList/ToastList';
 import Modal from '../Modal/Modal';
 import { deletePostById as deletePostByIdService } from '../../services/postService';
 import { deleteUserById as deleteUserByIdService } from '../../services/userService';
-
+import { deleteCategoryById as deleteCategoryByIdService } from '../../services/categoryService';
 const Table = ({ columnLabels, initialData }) => {
   const [data, setData] = useState([]);
   const [modalContent, setModalContent] = useState({});
@@ -71,6 +71,22 @@ const Table = ({ columnLabels, initialData }) => {
     }
   };
 
+  const deleteCategoryById = async (id) => {
+    try {
+      await deleteCategoryByIdService(id);
+      setData((prevData) => prevData.filter((item) => item.id != id));
+      addToast({
+        title: 'Thông báo',
+        message: `Xóa ${entityName} thành công`
+      });
+    } catch (err) {
+      addToast({
+        title: 'Thông báo',
+        message: `Xóa ${entityName} thất bại`
+      });
+    }
+  };
+
   const openConfirmDeleteModal = (rowId) => {
     setModalContent({
       title: 'Thông báo',
@@ -82,6 +98,8 @@ const Table = ({ columnLabels, initialData }) => {
           deletePostById(rowId);
         } else if (currentRoute == 'users') {
           deleteUserById(rowId);
+        } else if (currentRoute == 'categories') {
+          deleteCategoryById(rowId);
         }
         closeModal();
       },

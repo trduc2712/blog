@@ -20,7 +20,7 @@ const MyProfile = () => {
   const [avatar, setAvatar] = useState('');
   const [modalContent, setModalContent] = useState({});
   
-  const { user, updateUser } = useAuthContext();
+  const { user, updateCurrentUser } = useAuthContext();
   const { addToast } = useToastContext();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -37,11 +37,11 @@ const MyProfile = () => {
       confirmLabel: 'Có',
       message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
       onConfirm: () => {
-        updateUser(username, password, name, avatar);
+        updateCurrentUser(username, password, name, avatar);
         closeModal();
         addToast({
           title: "Thông báo",
-          message: "Cập nhật thông tin thành công",
+          message: "Cập nhật người dùng thành công",
         });
       },
       onCancel: () => {
@@ -50,6 +50,7 @@ const MyProfile = () => {
           setPassword(user.password);
           setName(user.name);
           setAvatar(user.avatar);
+          setRole(user.role);
         };
         closeModal();
       }
@@ -109,13 +110,15 @@ const MyProfile = () => {
                 style={{ display: 'none' }}
                 onChange={handleAvatarChange}
               />
-              <label htmlFor="avatar">
-                <img
-                  src={`data:image/jpeg;base64,${avatar}`} 
-                  alt="Hình đại diện của người dùng"
-                  className={styles.avatar}
-                />
-              </label>
+              <div className={styles.avatarWrapper}>
+                <label htmlFor="avatar">
+                  <img
+                    src={`data:image/jpeg;base64,${avatar}`} 
+                    alt="Hình đại diện của người dùng"
+                    className={styles.avatar}
+                  />
+                </label>
+              </div>
               <div className={styles.formGroups}>
                 <div className={styles.formGroup}>
                   <label htmlFor='username'>Tên người dùng</label>

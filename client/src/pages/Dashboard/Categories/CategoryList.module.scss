@@ -1,0 +1,28 @@
+.container {
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  .pagination {
+    margin-top: 20px;
+  }
+
+  .addButton {
+    float: right;
+    min-width: 100px;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    background-color: #1877f2;
+    border: 1px solid #1877f2;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+
+    &:hover {
+      cursor: pointer;
+      opacity: 0.8;
+      transition: 0.3s opacity ease;
+    }
+  }
+}

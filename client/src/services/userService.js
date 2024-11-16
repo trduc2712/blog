@@ -37,3 +37,35 @@ export const deleteUserById = async (id) => {
     }
   }
 };
+
+export const getAllUsers = async () => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`, { withCredentials: true });
+    return response.data.users;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const getUserById = async (id) => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${id}`, { withCredentials: true });
+    return response.data.user;
+  } catch {
+    console.log(err.message);
+  }
+};
+
+export const updateUser = async (id, username, password, name, avatar, role) => {
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/users/${id}`,
+      { username, password, name, avatar, role },
+      { withCredentials: true }
+    );
+
+    return response.data.user;
+  } catch (err) {
+    throw new Error(err);
+  }
+};

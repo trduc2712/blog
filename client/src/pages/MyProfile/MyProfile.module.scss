@@ -22,19 +22,24 @@
       border-radius: 10px;
       box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
-      .avatar {
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-        display: block;
-        border-radius: 50%;
-        margin: 20px auto;
-        border: 1px solid #ccc;
-    
-        &:hover {
-          cursor: pointer;
-          opacity: 0.8;
-          transition: 0.3s opacity ease;
+      .avatarWrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+        .avatar {
+          width: 150px;
+          height: 150px;
+          object-fit: cover;
+          border-radius: 50%;
+          margin: 20px auto;
+          border: 1px solid #ccc;
+      
+          &:hover {
+            cursor: pointer;
+            opacity: 0.8;
+            transition: 0.3s opacity ease;
+          }
         }
       }
 

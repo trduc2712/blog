@@ -7,9 +7,11 @@ import PostDetail from './pages/PostDetail/PostDetail';
 import MyProfile from './pages/MyProfile/MyProfile';
 import CreatePost from './pages/CreatePost/CreatePost';
 import Dashboard from './pages/Dashboard/Dashboard';
-import Posts from './pages/Dashboard/Posts/Posts';
+import PostList from './pages/Dashboard/Posts/PostList';
 import EditPost from './pages/Dashboard/Posts/EditPost/EditPost';
-import Users from './pages/Dashboard/Users/Users';
+import UserList from './pages/Dashboard/Users/UserList';
+import EditUser from './pages/Dashboard/Users/EditUser/EditUser';
+import CategoryList from './pages/Dashboard/Categories/CategoryList';
 
 function App() {
   return (
@@ -19,9 +21,11 @@ function App() {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/dashboard' element={<Dashboard />}>
-              <Route path='posts' element={<Posts />} />
+              <Route path='posts' element={<PostList />} />
               <Route path='posts/edit/:postId' element={<EditPost />} />
-              <Route path='users' element={<Users />} />
+              <Route path='users' element={<UserList />} />
+              <Route path='users/edit/:userId' element={<EditUser />} />
+              <Route path='categories' element={<CategoryList />} />
             </Route>
             <Route path='/post/:slug' element={<PostDetail />} />
             <Route path='/my-profile' element={<MyProfile />} />

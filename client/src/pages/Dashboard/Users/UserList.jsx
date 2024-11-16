@@ -1,4 +1,4 @@
-import styles from './Users.module.scss';
+import styles from './UserList.module.scss';
 import Table from '../../../components/Table/Table';
 import Pagination from '../../../components/Pagination/Pagination';
 import { useState, useEffect } from 'react';
@@ -36,12 +36,10 @@ const Users = () => {
           setTotalPages(Math.ceil(userCount / usersPerPage));
         }
       } catch (err) {
-        console.log(err);
       }
     };
 
     getUsersWithPagination();
-    console.log(users);
   }, [currentPage]);
 
   const handlePageChange = (page) => {
@@ -50,6 +48,7 @@ const Users = () => {
 
   return (
     <div className={styles.container}>
+      <h2>Danh sách người dùng</h2>
       <Link className={styles.addButton} to='/dashboard/users/add'>Thêm người dùng</Link>
       <Table columnLabels={columnLabels} initialData={users} />
       <div className={styles.pagination}>
