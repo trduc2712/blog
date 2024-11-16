@@ -16,8 +16,7 @@ exports.getAllPosts = () => {
                 categories.slug AS category_slug
             FROM posts
             JOIN users ON posts.user_id = users.id
-            JOIN categories ON posts.category_slug = categories.slug
-        `;
+            JOIN categories ON posts.category_slug = categories.slug`;
         db.query(query, (err, results) => {
             if (err) return reject(err);
             resolve(results);
@@ -33,7 +32,6 @@ exports.getPostBySlug = (slug) => {
                 posts.title,
                 posts.thumbnail,
                 posts.content,
-                posts.thumbnail AS thumbnail, 
                 posts.slug,
                 posts.created_at,
                 posts.updated_at,
@@ -104,6 +102,49 @@ exports.deletePostById = (id) => {
         db.query(query, [id], (err, results) => {
             if (err) return reject(err);
             resolve(results);
+        });
+    });
+};
+
+exports.updatePost = (id, title, content, userId, thumbnail, categorySlug, slug) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            UPDATE 
+                posts 
+            SET 
+                title = ?, 
+                content = ?, 
+                user_id = ?,
+                thumbnail = ?,
+                category_slug = ?,
+                slug = ?
+            WHERE id = ?`;
+        db.query(query, [title, content, userId, thumbnail, categorySlug, slug, id], (err, results) => {
+            if (err) return reject(err);
+            resolve(results);
+        });
+    });
+};
+
+exports.getPostById = (id) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT
+                posts.id,
+                posts.title,
+                posts.thumbnail,
+                posts.content,
+                posts.slug,
+                users.name AS user_name,
+                categories.name AS category_name
+            FROM posts
+            JOIN users ON posts.user_id = users.id
+            JOIN categories ON posts.category_slug = categories.slug
+            WHERE posts.id = ?
+        `;
+        db.query(query, [id], (err, results) => {
+            if (err) return reject(err);
+            resolve(results[0]);
         });
     });
 };

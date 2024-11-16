@@ -2,7 +2,7 @@ const db = require('../config/database');
 
 exports.createUser = (username, password, name, avatar) => {
   return new Promise((resolve, reject) => {
-      const query = 'INSERT INTO users (username, password, name, avatar) VALUES (?, ?, ?, ?)';
+      const query = `INSERT INTO users (username, password, name, avatar, role) VALUES (?, ?, ?, ?, 'USER')`;
       db.query(query, [username, password, name, avatar], (err, results) => {
           if (err) return reject(err);
           resolve(results);
@@ -31,7 +31,7 @@ exports.findUserByCredentials = (username, password) => {
   });
 };
 
-exports.updateUser = (id, username, password, name, avatar) => {
+exports.updateCurrentUser = (id, username, password, name, avatar) => {
     return new Promise((resolve, reject) => {
         const query = 'UPDATE users SET username = ?, password = ?, name = ?, avatar = ? WHERE id = ?';
         db.query(query, [username, password, name, avatar, id], (err, results) => {
@@ -51,7 +51,7 @@ exports.getUserCount = () => {
   });
 };
 
-exports.getUserWithPagination = (page, limit) => {
+exports.getUsersWithPagination = (page, limit) => {
   return new Promise((resolve, reject) => {
       const offset = (page - 1) * limit;
       const query = `
@@ -75,6 +75,56 @@ exports.deleteUserById = (id) => {
   return new Promise((resolve, reject) => {
       const query = 'DELETE FROM users WHERE id = ?';
       db.query(query, [id], (err, results) => {
+          if (err) return reject(err);
+          resolve(results);
+      });
+  });
+};
+
+exports.getAllUsers = () => {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM users';
+  
+        db.query(query, (err, results) => {
+          if (err) return reject({ error: 'Lỗi máy chủ' });
+          resolve(results);
+        });
+    });
+};
+
+exports.getUserById = (id) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT
+                id,
+                username,
+                password,
+                name,
+                avatar,
+                role
+            FROM users
+            WHERE id = ?
+        `;
+        db.query(query, [id], (err, results) => {
+            if (err) return reject(err);
+            resolve(results[0]);
+        });
+    });
+};
+
+exports.updateUser = (id, username, password, name, avatar, role) => {
+  return new Promise((resolve, reject) => {
+      const query = `
+          UPDATE 
+              users 
+          SET 
+              username = ?, 
+              password = ?, 
+              name = ?,
+              avatar = ?,
+              role = ?
+          WHERE id = ?`;
+      db.query(query, [username, password, name, avatar, role, id], (err, results) => {
           if (err) return reject(err);
           resolve(results);
       });

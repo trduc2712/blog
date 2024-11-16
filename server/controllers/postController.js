@@ -94,3 +94,45 @@ exports.deletePostById = async (req, res) => {
         return res.status(500).json({ error: 'Lỗi máy chủ' });
     }  
 }
+
+exports.getPostById = async (req, res) => {
+    const id = req.params.id;
+    
+    try {
+        const post = await Post.getPostById(id);
+        if (!post) {
+            return res.status(404).json({ error: 'Bài viết không tồn tại' });
+        }
+        res.json({
+            message: 'Lấy bài viết thành công',
+            post: post
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Lỗi máy chủ' });
+    }
+};
+
+exports.updatePost = async (req, res) => {
+    const id = req.params.id;
+
+    console.log('id la: ', id);
+    
+    const { title, content, userId, thumbnail, categorySlug, slug } = req.body; 
+  
+    try {
+        const result = await Post.updatePost(id, title, content, userId, thumbnail, categorySlug, slug);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Không tìm thấy bài viết' });
+        }
+    
+        const updatedPost = await Post.getPostById(id);
+        res.json({
+            message: 'Cập nhật thông tin bài viết thành công',
+            post: updatedPost,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Lỗi máy chủ' });
+    }
+};
+  
