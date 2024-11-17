@@ -50,7 +50,6 @@ const PostList = () => {
   return (
     <div className={styles.container}>
       <h2>Danh sách bài viết</h2>
-      <Link className={styles.addButton} to='/dashboard/posts/add'>Thêm bài viết</Link>
       <Table columnLabels={columnLabels} initialData={posts} />
       <div className={styles.pagination}>
         <Pagination

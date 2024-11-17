@@ -25,7 +25,7 @@ const PostDetail = () => {
   useEffect(() => {
     const fetchPostBySlug = async (slug) => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${slug}`, { withCredentials: true });
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/slug/${slug}`, { withCredentials: true });
         setPost(response.data.post);
       } catch(err) {
         if (err.response && err.response.data.error) {
@@ -60,7 +60,7 @@ const PostDetail = () => {
             <p>{post.category_name}</p>
             <p>Cập nhật lần cuối: {formatFullDate(post.updated_at)}</p>
           </div>
-          <h1>{post.title}</h1>
+          <h2>{post.title}</h2>
           <p dangerouslySetInnerHTML={{ __html: post.content }} className={styles.postContent} />
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
             <strong>{post.user_name}</strong>

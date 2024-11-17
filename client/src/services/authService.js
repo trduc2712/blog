@@ -5,7 +5,7 @@ export const getLoggedInUser = async () => {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/get-logged-in-user`, { withCredentials: true });
     return response.data.user;
   } catch (err) {
-    throw new Error(err);
+    console.log(err.response.data.error);
   }
 };
 
@@ -16,27 +16,29 @@ export const updateCurrentUser = async (username, password, name, avatar, userId
       { username, password, name, avatar },
       { withCredentials: true }
     );
-
     return response.data.user;
   } catch (err) {
-    throw new Error(err);
+    console.log(err.response.data.error);
   }
 };
 
-export const signUp = async (username, password, name) => {
+export const signUp = async (username, password, name, avatar, role, setError) => {
   try {
-    await axios.post(`${import.meta.env.VITE_API_URL}/auth/sign-up`, { username, password, name }, { withCredentials: true });
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/sign-up`, { username, password, name, avatar, role }, { withCredentials: true });
+    return response.data.message;
   } catch (err) {
-    throw new Error(err);
+    console.log(err.response.data.error);
+    setError(err.response.data.error);
   }
 };
 
-export const login = async (username, password) => {
+export const login = async (username, password, setError) => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, { username, password }, { withCredentials: true });
     return response.data.user;
   } catch (err) {
-    throw new Error(err);
+    console.log(err.response.data.error);
+    setError(err.response.data.error);
   }
 };
 
@@ -44,6 +46,6 @@ export const logout = async () => {
   try {
     await axios.get(`${import.meta.env.VITE_API_URL}/auth/logout`, { withCredentials: true });
   } catch (err) {
-    throw new Error(err);
+    console.log(err.response.data.error);
   }
 };

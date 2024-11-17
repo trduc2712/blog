@@ -3,11 +3,7 @@
     padding: 79px 40px 20px;
 
     .notLoggedIn {
-      border: 1px solid #e6e6e6;
-      background-color: #fff;
-      padding: 20px;
       border-radius: 10px;
-      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -16,23 +12,18 @@
     }
 
     .content {
-      border: 1px solid #e6e6e6;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-
       .avatarWrapper {
         width: 100%;
         display: flex;
         justify-content: center;
 
         .avatar {
+          display: block;
           width: 150px;
           height: 150px;
           object-fit: cover;
           border-radius: 50%;
-          margin: 20px auto;
+          margin: 20px auto 10px;
           border: 1px solid #ccc;
       
           &:hover {
@@ -50,54 +41,26 @@
             display: flex;
             flex-direction: column;
 
-            label {
-              margin-bottom: 10px;
-            }
-  
-            input {
-              border: 1px solid #ccc;
-              font-size: 16px;
-              padding: 15px;
-              border-radius: 5px;
-
-              &:focus {
-                outline: none;
-                border: 1px solid #1877f2;
-              }
-            }
-
             .inputPasswordWrapper {
+              position: relative;
               display: flex;
               align-items: center;
-              height: 50px;
-
+    
               input {
                 flex-grow: 1;
-                border-top-left-radius: 5px;
-                border-bottom-left-radius: 5px;
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
-                border-right: none;
-
-                &:focus {
-                  outline: none;
-                  border-right: 1px solid #1877f2;
-                }
               }
-
+    
               .togglePassword {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 100%;
-                border: 1px solid #ccc;
-                border-left: none;
-                border-top-right-radius: 5px;
-                border-bottom-right-radius: 5px;
-                padding: 15px;
-
-                &:hover {
-                  cursor: pointer;
+                position: absolute;
+                right: 11px;
+    
+                i {
+                  opacity: 0.7;
+    
+                  &:hover {
+                    opacity: 1;
+                    transition: 0.3s opacity ease;
+                  }
                 }
               }
             }
@@ -125,20 +88,8 @@
             }
           }
   
-          .saveButton {
-            font-size: 16px;
-            padding: 10px;
-            background-color: #1877f2;
-            border: 1px solid #1877f2;
-            border-radius: 5px;
-            color: #fff;
+          .create {
             width: 100px;
-  
-            &:hover {
-              cursor: pointer;
-              opacity: 0.8;
-              transition: 0.3s opacity ease;
-            }
           }
         }
       }

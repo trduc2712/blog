@@ -1,16 +1,16 @@
 .container {
   position: relative;
-  z-index: 999;
+  z-index: 1000;
   
   .children {
+    position: absolute;
     margin-top: 5px;
     padding: 10px 0;
     top: 100%;
     right: 0;
-    position: absolute;
-    width: 200px;
+    width: 150px;
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 7.5px;
     list-style: none;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     overflow-y: auto;
@@ -18,16 +18,21 @@
     .child {
       background-color: #fff;
       border: 1px solid #e6e6e6;
-      padding: 15px;
+      padding: 10px;
       width: 100%;
       text-align: left;
       border: none;
       font-size: 16px;
+      cursor: pointer;
 
       &:hover {
-        cursor: pointer;
         background-color: #e6e6e6;
         transition: 0.3s background-color ease;
+
+        p {
+          background-color: #e6e6e6;
+          transition: 0.3s background-color ease;
+        }
       }
     }
   }

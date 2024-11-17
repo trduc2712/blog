@@ -16,12 +16,8 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   const getLoggedInUser = async () => {
-    try {
-      const loggedInUser = await getLoggedInUserService();
-      setUser(loggedInUser);
-    } catch (err) {
-      console.log(err.error);
-    }
+    const loggedInUser = await getLoggedInUserService();
+    setUser(loggedInUser);
   };
 
   useEffect(() => {
@@ -29,47 +25,42 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const updateCurrentUser = async (username, password, name, avatar) => {
-    try {
-      const updatedUser = await updateCurrentUserService(username, password, name, avatar, user.id);
-      setUser(updatedUser);
-      getLoggedInUser();
-    } catch (err) {
-      console.log(err.error);
-    }
+    const updatedUser = await updateCurrentUserService(username, password, name, avatar, user.id);
+    setUser(updatedUser);
+    getLoggedInUser();
   };
 
-  const signUp = async (username, password, name) => {
-    try {
-      await signUpService(username, password, name);
-    } catch (err) {
-      setError(err.error);
+  const signUp = async (username, password, name, avatar, role) => {
+    const message = await signUpService(username, password, name, avatar, role, setError);
+    if (message) {
+      return true;
+    } else {
+      return false;
     }
   };
 
   const login = async (username, password) => {
     try {
-      const loggedInUser = await loginService(username, password);
-      setUser(loggedInUser);
-      return true;
+      const loggedInUser = await loginService(username, password, setError);
+      if (loggedInUser) {
+        setUser(loggedInUser);
+        return true;
+      } else {
+        return false;
+      }
     } catch (err) {
-      setError(err.error);
       return false;
     }
   };
 
   const logout = async () => {
-    try {
-      await logoutService();
-      setUser(null);
-    } catch (err) {
-      setError(err.error);
-    }
+    await logoutService();
+    setUser(null);
   };
 
   return (
     <AuthContext.Provider
-      value=
-      {{ 
+      value={{ 
         user, 
         setUser, 
         error, 

@@ -5,7 +5,6 @@ import Login from '../../components/Login/Login';
 import SignUp from '../../components/SignUp/SignUp';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import Dropdown from '../../components/Dropdown/Dropdown';
 import { getAllCategories as getAllCategoriesService } from '../../services/categoryService';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { stringToSlug } from '../../utils/string';
@@ -27,6 +26,7 @@ const CreatePost = () => {
   const [categoryName, setCategoryName] = useState('Danh mục');
   const [thumbnail, setThumbnail] = useState('');
   const [userId, setUserId] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
 
   const { user } = useAuthContext();
@@ -68,10 +68,11 @@ const CreatePost = () => {
   };
 
   const openConfirmPublishModal = () => {
-    if (!thumbnail) {
+    if (!title || !thumbnail || !categorySlug || !content) {
       addToast({
+        type: 'warning',
         title: 'Thông báo',
-        message: 'Vui lòng chọn thumbnail'
+        message: 'Vui lòng điền đầy đủ thông tin.'
       });
       return;
     }
@@ -84,6 +85,7 @@ const CreatePost = () => {
         handlePublish();
         closeModal();
         addToast({
+          type: 'success',
           title: 'Thông báo',
           message: 'Đăng bài viết thành công'
         })
@@ -97,13 +99,9 @@ const CreatePost = () => {
 
   const modules = {
     toolbar: [
-      [{ 'header': [2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline'],
       [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      ['clean'],
-      ['link'],
-      ['blockquote'],
-      [{ 'color': [] }],
       ['image'],
       ['undo', 'redo'],
     ],
@@ -123,6 +121,13 @@ const CreatePost = () => {
 
   const handlePublish = () => {
     const slug = stringToSlug(title);
+
+    console.log('title: ', title);
+    console.log('content: ', content);
+    console.log('userId: ', userId);
+    console.log('thumbnail: ', thumbnail);
+    console.log('categorySlug: ', categorySlug);
+    console.log('slug: ', slug);
 
     const createPost = async (title, content, userId, thumbnail, categorySlug, slug) => {
       try {
@@ -158,9 +163,10 @@ const CreatePost = () => {
       <div className={styles.contentWrapper}>
         {user ? (
           <div className={styles.content}>
-          <h1>Tạo bài viết mới</h1>
+          <h2>Tạo bài viết mới</h2>
           <div className={styles.formGroups}>
             <div className={styles.formGroup} style={{ flexGrow: '1' }}>
+              <label htmlFor="title">Tiêu đề</label>
               <input 
                 type='text'
                 placeholder='Tiêu đề bài viết'
@@ -169,20 +175,31 @@ const CreatePost = () => {
                 id='title'
               />
             </div>
-            <div className={styles.formGroup}>
-              <Dropdown 
-                trigger={
-                  <div className={styles.categoriesList}>
-                    {categoryName == 'Danh mục' ? (
-                      'Danh mục'
-                    ) : (
-                      <>{categoryName}</>
-                    )}
-                  </div>} 
-                children={dropdownChildren} 
-              />
-            </div>
           </div>
+          <div className={styles.categoryPicker}>
+            <label htmlFor='category' onClick={() => setIsDropdownOpen(!isDropdownOpen)}>Danh mục</label>
+            <div className={styles.categoriesList} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>{categoryName}</div>
+            {isDropdownOpen && (
+              <div className={styles.categories}>
+                {categories.map((category, index) => (
+                  <li 
+                    key={index}
+                    className={styles.category} 
+                    onClick={() => 
+                      {
+                        setIsDropdownOpen(!isDropdownOpen);
+                        setCategoryName(category.name);
+                        setCategorySlug(stringToSlug(category.name));
+                      }
+                    }
+                  >
+                    {category.name}
+                  </li>
+                ))}
+              </div>
+            )}
+          </div>
+          <label htmlFor="thumbnail">Thumbnail</label>
           <div className={styles.thumbnailWrapper}>
             {!thumbnail && 
               <label htmlFor="thumbnail" className={styles.thumbnailLabel}>
@@ -200,23 +217,29 @@ const CreatePost = () => {
             }
             {thumbnail && <img src={`data:image/jpeg;base64,${thumbnail}`} className={styles.thumbnail} />}
           </div>
-          <ReactQuill
-            value={content}
-            modules={modules}
-            onChange={handleContentChange}
-            placeholder="Nội dung bài viết"
-            spellCheck={false}
-            className={styles.quill}
-          />
-          <div className={styles.publishButtonWrapper}>
-            <div className={styles.publishButton} onClick={openConfirmPublishModal}>
+          <label htmlFor="thumbnail">Nội dung</label>
+          <div className={styles.quillWrapper} spellcheck="false">
+            <ReactQuill
+              value={content}
+              modules={modules}
+              onChange={handleContentChange}
+              placeholder=''
+              spellCheck={false}
+              className={styles.quill}
+            />
+          </div>
+          <div className={styles.publishWrapper}>
+            <button className={styles.cancel} onClick={() => navigate('/')}>
+              Hủy
+            </button>
+            <button className={styles.publish} onClick={openConfirmPublishModal}>
               Đăng
-            </div>
+            </button>
           </div>
         </div>
         ) : (
           <div className={styles.notLoggedIn}>
-            Chưa đăng nhập
+            <p>Chưa đăng nhập.</p>
           </div>
         )}
       </div>

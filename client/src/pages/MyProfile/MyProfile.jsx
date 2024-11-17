@@ -40,8 +40,9 @@ const MyProfile = () => {
         updateCurrentUser(username, password, name, avatar);
         closeModal();
         addToast({
+          type: 'success',
           title: "Thông báo",
-          message: "Cập nhật người dùng thành công",
+          message: "Cập nhật thông tin cá nhân thành công.",
         });
       },
       onCancel: () => {
@@ -101,7 +102,7 @@ const MyProfile = () => {
       <div className={styles.contentWrapper}>
         {user ? (
           <div className={styles.content}>
-            <h1>Hồ sơ của tôi</h1>
+            <h2>Hồ sơ của tôi</h2>
             <form onSubmit={handleSubmit}>
               <input
                 type="file"
@@ -159,13 +160,13 @@ const MyProfile = () => {
                 </div>
               </div>
               <div className={styles.buttons}>
-                <button type='submit' className={styles.saveButton}>Lưu</button>
+                <button type='submit' className={styles.create}>Lưu</button>
               </div>
             </form>
           </div>
         ) : (
           <div className={styles.notLoggedIn}>
-            <p>Chưa đăng nhập</p>
+            <p>Chưa đăng nhập.</p>
           </div>
         )}
       </div>

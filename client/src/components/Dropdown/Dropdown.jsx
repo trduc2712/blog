@@ -39,7 +39,7 @@ const Dropdown = ({ trigger, children }) => {
               className={styles.child}
               onClick={() => handleChildClick(child)}
             >
-              {child.label}
+              <p>{child.label}</p>
             </li>
           ))}
         </ul>

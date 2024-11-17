@@ -28,6 +28,7 @@ const EditPost = () => {
   const [post, setPost] = useState();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
+  
   const { postId } = useParams();
 
   const { addToast } = useToastContext();
@@ -127,6 +128,7 @@ const EditPost = () => {
         handleUpdate();
         closeModal();
         addToast({
+          type: 'success',
           title: 'Thông báo',
           message: 'Cập nhật bài viết thành công'
         })
@@ -192,7 +194,7 @@ const EditPost = () => {
         )}
       </div>
       <div className={styles.formGroup}>
-        <label htmlFor='thumbnail' style={{ marginTop: '20px' }}>Thumbnail</label>
+        <label htmlFor='thumbnail'>Thumbnail</label>
         <div className={styles.thumbnailWrapper}>
           <img src={`data:image/jpeg;base64,${thumbnail}`} alt='Hình đại diện của bài viết' className={styles.thumbnail} />
           <input

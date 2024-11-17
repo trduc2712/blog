@@ -60,10 +60,10 @@ const PostCardList = () => {
               </div>
             )
           )) : (
-            <div className={styles.notPosts}>Không có bài viết nào</div>
+            <p className={styles.noPosts}>Đang tải...</p>
           )
         ) : (
-          'Chưa đăng nhập'
+          <p>Chưa đăng nhập.</p>
         )}
       </div>
       {posts.length > 0 && (

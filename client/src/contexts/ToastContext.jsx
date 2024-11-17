@@ -7,8 +7,8 @@ export const useToastContext = () => useContext(ToastContext);
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
 
-  const addToast = useCallback(({ title, message }) => {
-    const newToast = { id: new Date().getTime(), title, message };
+  const addToast = useCallback(({ type, title, message }) => {
+    const newToast = { id: new Date().getTime(), type, title, message };
     setToasts((prevToasts) => [...prevToasts, newToast]);
   }, []);
 

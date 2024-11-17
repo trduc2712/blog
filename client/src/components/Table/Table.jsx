@@ -44,11 +44,13 @@ const Table = ({ columnLabels, initialData }) => {
       await deletePostByIdService(id);
       setData((prevData) => prevData.filter((item) => item.id != id));
       addToast({
+        type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thành công`
       });
     } catch (err) {
       addToast({
+        type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thất bại`
       });
@@ -60,11 +62,13 @@ const Table = ({ columnLabels, initialData }) => {
       await deleteUserByIdService(id);
       setData((prevData) => prevData.filter((item) => item.id != id));
       addToast({
+        type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thành công`
       });
     } catch (err) {
       addToast({
+        type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thất bại`
       });
@@ -76,11 +80,13 @@ const Table = ({ columnLabels, initialData }) => {
       await deleteCategoryByIdService(id);
       setData((prevData) => prevData.filter((item) => item.id != id));
       addToast({
+        type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thành công`
       });
     } catch (err) {
       addToast({
+        type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thất bại`
       });
@@ -113,7 +119,12 @@ const Table = ({ columnLabels, initialData }) => {
   const handleDeleteRow = (rowId) => {
     openConfirmDeleteModal(rowId);
   }
-  
+
+  const isBase64 = (str) => {
+    const base64Pattern = /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/;
+    return base64Pattern.test(str);
+  }
+
   return (
     <div className={styles.container}>
       <table>
@@ -137,7 +148,7 @@ const Table = ({ columnLabels, initialData }) => {
               </tr>
             ))
           ) : (
-            <tr><td colSpan={columnCounts}>Không có dữ liệu</td></tr>
+            <tr><td colSpan={columnCounts}>Đang tải...</td></tr>
           )}
         </tbody>
       </table>

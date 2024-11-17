@@ -7,14 +7,17 @@
   }
 
   .categoryPicker, .userPicker {
+    margin-bottom: 20px;
+    
     .categoriesList, .usersList {
+      font-size: 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 100%;
       margin-top: 10px;
       border: 1px solid #ccc;
-      padding: 15px;
+      padding: 10px;
       border-radius: 5px;
 
       &:hover {
@@ -23,15 +26,16 @@
     }
 
     .categories, .users {
+      border-radius: 5px;
       position: sticky;
       margin-top: 5px;
       padding: 10px 0;
       border: 1px solid #ccc;
-      border-radius: 5px;
       z-index: 100;
 
       .category, .user {
-        padding: 15px;
+        padding: 10px;
+        font-size: 14px;
         list-style: none;
 
         &:hover {
@@ -47,23 +51,6 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
-
-    label {
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
-
-    input[type='text'] {
-      border: 1px solid #ccc;
-      font-size: 16px;
-      padding: 15px;
-      border-radius: 5px;
-
-      &:focus {
-        outline: none;
-        border: 1px solid #1877f2;
-      }
-    }
   }
 
   .thumbnailWrapper {
@@ -96,6 +83,10 @@
       }
   
       .ql-editor {
+        padding: 10px;
+        overflow: scroll; 
+        scrollbar-width: none;
+        border-radius: 5px;
         border: 1px solid #ccc;
         padding: 15px;
         font-size: 16px;
@@ -137,24 +128,5 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-
-    .updateButton {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 16px;
-      padding: 10px;
-      background-color: #1877f2;
-      border: 1px solid #1877f2;
-      border-radius: 5px;
-      color: #fff;
-      width: 100px;
-
-      &:hover {
-        cursor: pointer;
-        opacity: 0.8;
-        transition: 0.3s opacity ease;
-      }
-    }
   }
 }

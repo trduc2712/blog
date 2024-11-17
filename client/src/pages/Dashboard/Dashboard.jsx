@@ -26,7 +26,7 @@ const Dashboard = () => {
       setCurrentRoute('users');
     } else if (location.pathname.includes('categories')) {
       setCurrentRoute('categories');
-    }
+    } else setCurrentRoute('overview');
   }, [location.pathname]);
 
   useEffect(() => {
@@ -44,22 +44,28 @@ const Dashboard = () => {
         <div className={styles.sidebar}>
           <ul className={styles.sidebarItems}>
             <li 
+              className={`${styles.sidebarItem} ${currentRoute == 'overview' ? styles.active : ''}`} 
+              onClick={() => navigate('/dashboard')}
+            >
+              <p>Tổng quan</p>
+            </li>
+            <li 
               className={`${styles.sidebarItem} ${currentRoute == 'posts' ? styles.active : ''}`} 
               onClick={() => navigate('/dashboard/posts')}
             >
-              Bài viết
+              <p>Bài viết</p>
             </li>
             <li 
               className={`${styles.sidebarItem} ${currentRoute == 'users' ? styles.active : ''}`} 
               onClick={() => navigate('/dashboard/users')}
             >
-              Người dùng
+              <p>Người dùng</p>
             </li>
             <li 
               className={`${styles.sidebarItem} ${currentRoute == 'categories' ? styles.active : ''}`} 
               onClick={() => navigate('/dashboard/categories')}
             >
-              Danh mục
+              <p>Danh mục</p>
             </li>
           </ul>
         </div>

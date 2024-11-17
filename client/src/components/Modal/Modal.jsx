@@ -7,18 +7,18 @@ const Modal = ({ isOpen, title, onClose, cancelLabel, confirmLabel, message, onC
     <div className={styles.overlay}>
       <div className={styles.header}>
         <h3>{title}</h3>
-        <button className={styles.closeButton} onClick={onClose}>
-          <i className="bi bi-x"></i>
-        </button>
+        <div className={styles.close} onClick={onClose}>
+          <i className='bi bi-x'></i>
+        </div>
       </div>
       <div className={styles.body}>
         <p>{message}</p>
       </div>
       <div className={styles.footer}>
-        <button className={styles.cancelButton} onClick={onCancel}>
+        <button className={styles.cancel} onClick={onCancel}>
           {cancelLabel}
         </button>
-        <button className={styles.confirmButton} onClick={onConfirm} >
+        <button className={styles.confirm} onClick={onConfirm} >
           {confirmLabel}
         </button>
       </div>

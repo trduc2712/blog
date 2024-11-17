@@ -2,7 +2,7 @@ import styles from './CategoryList.module.scss';
 import Table from '../../../components/Table/Table';
 import Pagination from '../../../components/Pagination/Pagination';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
   getCategoryCount as getCategoryCountService,
   getCategoriesWithPagination as getCategoriesWithPaginationService
@@ -13,6 +13,8 @@ const Categories = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const categoriesPerPage = 10;
+
+  const navigate = useNavigate();
 
   const columnLabels = ['ID', 'Tên', 'Slug'];
 
@@ -43,7 +45,7 @@ const Categories = () => {
   return (
     <div className={styles.container}>
       <h2>Danh sách danh mục</h2>
-      <Link className={styles.addButton} to='/dashboard/categories/add'>Thêm danh mục</Link>
+      <button className={styles.addButton} onClick={() => navigate('/dashboard/categories/create')}>Thêm danh mục</button>
       <Table columnLabels={columnLabels} initialData={categories} />
       <div className={styles.pagination}>
         <Pagination

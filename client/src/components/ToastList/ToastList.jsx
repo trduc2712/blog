@@ -10,7 +10,7 @@ const ToastList = () => {
     if (toasts.length > 0) {
       const timer = setTimeout(() => {
         removeToast(toasts[0].id);
-      }, 2000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [toasts, removeToast]);
@@ -21,6 +21,7 @@ const ToastList = () => {
         <Toast
           key={toast.id}
           id={toast.id}
+          type={toast.type}
           title={toast.title}
           message={toast.message}
           onClose={() => removeToast(toast.id)}

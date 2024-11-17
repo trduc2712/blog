@@ -5,7 +5,7 @@ export const getAllCategories = async () => {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/categories`, { withCredentials: true });
     return response.data.categories;
   } catch (err) {
-    throw new Error(err);
+    console.log(err.response.data.error);
   }
 };
 
@@ -14,10 +14,10 @@ export const getCategoryCount = async () => {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/categories/count`, { withCredentials: true });
     return response.data.count;
   } catch (err) {
+    console.log(err.response.data.error);
     if (err.response && err.response.data.error) {
       console.log(err.response.data.error);
     } else {
-      console.log(err.message);
     }
   }
 }
@@ -30,7 +30,6 @@ export const getCategoriesWithPagination = async (page, limit) => {
     if (err.response && err.response.data.error) {
       console.log(err.response.data.error);
     } else {
-      console.log(err.message);
     }
   }
 };
@@ -39,10 +38,42 @@ export const deleteCategoryById = async (id) => {
   try {
     await axios.delete(`${import.meta.env.VITE_API_URL}/categories/${id}`, { withCredentials: true });
   } catch (err) {
+    console.log(err.response.data.error);
     if (err.response && err.response.data.error) {
       console.log(err.response.data.error);
     } else {
-      console.log(err.message);
     }
   }
-}
+};
+
+
+export const getCategoryById = async (id) => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/categories/${id}`, { withCredentials: true });
+    return response.data.category;
+  } catch (err) {
+    console.log(err.response.data.error);
+  }
+};
+
+export const updateCategory = async (id, name, slug) => {
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}/categories/${id}`,
+      { id, name, slug },
+      { withCredentials: true }
+    );
+
+    return response.data.category;
+  } catch (err) {
+    console.log(err.response.data.error);
+  }
+};
+
+export const createCategory = async (name, slug) => {
+  try {
+    await axios.post(`${import.meta.env.VITE_API_URL}/categories`, { name, slug }, { withCredentials: true });
+  } catch (err) {
+    console.log(err.response.data.error);
+  }
+};

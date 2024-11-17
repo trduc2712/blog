@@ -5,11 +5,7 @@ export const getAllPosts = async () => {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, { withCredentials: true });
     return response.data.posts;
   } catch(err) {
-    if (err.response && err.response.data.error) {
-      console.log(err.response.data.error);
-    } else {
-      console.log(err.message);
-    }
+    console.log(err.response.data.error);
   }
 };
 
@@ -17,11 +13,7 @@ export const createPost = async (title, content, userId, thumbnail, categorySlug
   try {
     await axios.post(`${import.meta.env.VITE_API_URL}/posts`, { title, content, userId, thumbnail, categorySlug, slug }, { withCredentials: true });
   } catch (err) {
-    if (err.response && err.response.data.error) {
-      console.log(err.response.data.error);
-    } else {
-      console.log(err.message);
-    }
+    console.log(err.response.data.error);
   }
 };
 
@@ -30,11 +22,7 @@ export const getPostCount = async () => {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/count`, { withCredentials: true });
     return response.data.count;
   } catch (err) {
-    if (err.response && err.response.data.error) {
-      console.log(err.response.data.error);
-    } else {
-      console.log(err.message);
-    }
+    console.log(err.response.data.error);
   }
 }
 
@@ -43,11 +31,7 @@ export const getPostsWithPagination = async (page, limit) => {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/paginate?page=${page}&limit=${limit}`, { withCredentials: true });
     return response.data.posts.length > 0 ? response.data.posts : null;
   } catch(err) {
-    if (err.response && err.response.data.error) {
-      console.log(err.response.data.error);
-    } else {
-      console.log(err.message);
-    }
+    console.log(err.response.data.error);
   }
 };
 
@@ -55,20 +39,16 @@ export const deletePostById = async (id) => {
   try {
     await axios.delete(`${import.meta.env.VITE_API_URL}/posts/${id}`, { withCredentials: true });
   } catch (err) {
-    if (err.response && err.response.data.error) {
-      console.log(err.response.data.error);
-    } else {
-      console.log(err.message);
-    }
+    console.log(err.response.data.error);
   }
 }
 
 export const getPostById = async (id) => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${id}`, { withCredentials: true });
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts/id/${id}`, { withCredentials: true });
     return response.data.post;
-  } catch {
-    console.log(err.message);
+  } catch (err) {
+    console.log(err.response.data.error);
   }
 };
 
@@ -82,6 +62,6 @@ export const updatePost = async (id, title, content, userId, thumbnail, category
 
     return response.data.post;
   } catch (err) {
-    throw new Error(err);
+    console.log(err.response.data.error);
   }
 };

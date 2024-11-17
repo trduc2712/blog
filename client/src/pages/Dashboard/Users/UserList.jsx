@@ -2,7 +2,7 @@ import styles from './UserList.module.scss';
 import Table from '../../../components/Table/Table';
 import Pagination from '../../../components/Pagination/Pagination';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
   getUsersWithPagination as getUsersWithPaginationService,
   getUserCount as getUserCountService
@@ -15,6 +15,8 @@ const Users = () => {
   const usersPerPage = 10;
 
   const columnLabels = ['ID', 'Tên người dùng', 'Tên', 'Vai trò'];
+
+  const navigate = useNavigate();
 
   const removeProperties = (obj, propertiesToRemove) => {
     let result = { ...obj };
@@ -49,7 +51,7 @@ const Users = () => {
   return (
     <div className={styles.container}>
       <h2>Danh sách người dùng</h2>
-      <Link className={styles.addButton} to='/dashboard/users/add'>Thêm người dùng</Link>
+      <button className={styles.addButton} onClick={() => navigate('/dashboard/users/create')}>Thêm người dùng</button>
       <Table columnLabels={columnLabels} initialData={users} />
       <div className={styles.pagination}>
         <Pagination

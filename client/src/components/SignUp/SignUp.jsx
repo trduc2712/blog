@@ -1,6 +1,7 @@
 import styles from './SignUp.module.scss';
 import { useState } from 'react';
 import { useAuthContext } from '../../contexts/AuthContext';
+import { useToastContext } from '../../contexts/ToastContext';
 
 const SignUp = ({ isOpen, onClose }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -9,6 +10,7 @@ const SignUp = ({ isOpen, onClose }) => {
   const [name, setName] = useState('');
 
   const { error, setError, signUp } = useAuthContext();
+  const { addToast } = useToastContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,11 +20,11 @@ const SignUp = ({ isOpen, onClose }) => {
     const validPasswordPattern = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
     if (username == '' || password == '' || name == '') {
-      setError('Vui lòng điền đầy đủ thông tin vào tất cả các trường bắt buộc.');
+      setError('Vui lòng điền đầy đủ thông tin vào tất cả các trường bắt buộc');
       return;
     }
     if (!validUsernamePattern.test(username)) {
-      setError('Tên người dùng không được chứa ký tự đặc biệt.');
+      setError('Tên người dùng không được chứa ký tự đặc biệt');
       return;
     }
     if (!validNamePattern.test(name)) {
@@ -30,11 +32,20 @@ const SignUp = ({ isOpen, onClose }) => {
       return;
     }
     if (!validPasswordPattern.test(password)) {
-      setError('Mật khẩu phải có ít nhất 6 ký tự và bao gồm chữ cái và số.');
+      setError('Mật khẩu phải có ít nhất 6 ký tự và bao gồm chữ cái và số');
       return;
     }
 
-    await signUp(username, password, name);
+    const avatar = '';
+    const role = '';
+    const isSuccess = await await signUp(username, password, name, avatar, role);
+    if (isSuccess) {
+      addToast({
+        type: 'success',
+        title: "Thông báo",
+        message: "Đăng ký thành công",
+      });
+    } else return;
 
     setUsername('');
     setPassword('');

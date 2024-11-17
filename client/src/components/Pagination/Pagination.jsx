@@ -19,23 +19,23 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
 
   return (
     <div className={styles.container}>
-      <button
+      <div
         className={`${styles.prevButton} ${currentPage == 1 ? styles.disabled : ''}`}
         disabled={currentPage == 1}
         onClick={() => onPageChange(currentPage - 1)}
       >
         <i className="bi bi-chevron-left"></i>
-      </button>
+      </div>
       <div className={styles.pageButtons}>
         {renderPagesNumber()}
       </div>
-      <button 
+      <div 
         className={`${styles.nextButton} ${currentPage == totalPages ? styles.disabled : ''}`} 
         disabled={currentPage == totalPages}
         onClick={() => onPageChange(currentPage + 1)}
       >
         <i className="bi bi-chevron-right"></i>
-      </button>
+      </div>
     </div>
   )
 }

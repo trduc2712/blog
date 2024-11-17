@@ -1,59 +1,32 @@
-import { useParams } from 'react-router-dom';
-import styles from './EditUser.module.scss';
-import { useEffect, useState } from 'react';
-import { 
-  getUserById as getUserByIdService,
-  updateUser as updateUserService,
-} from '../../../../services/userService';
+import styles from './CreateUser.module.scss';
+import { useState } from 'react';
 import { fileToBase64 } from '../../../../utils/file';
 import { useToastContext } from '../../../../contexts/ToastContext';
 import ToastList from '../../../../components/ToastList/ToastList';
 import useModal from '../../../../hooks/useModal';
 import Modal from '../../../../components/Modal/Modal';
+import { useNavigate } from 'react-router-dom';
+import { signUp } from '../../../../services/authService';
 
-
-const EditUser = () => {
-  const { userId } = useParams();
+const CreateUser = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [user, setUser] = useState();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState('USER');
   const [modalContent, setModalContent] = useState('');
 
   const { addToast } = useToastContext();
   
   const { isOpen, openModal, closeModal } = useModal();
 
+  const navigate = useNavigate();
+
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   }
-
-  useEffect(() => {
-    const getUserById = async (id) => {
-      try {
-        const user = await getUserByIdService(id);
-        setUser(user);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    getUserById(userId);
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      setUsername(user.username);
-      setPassword(user.password);
-      setAvatar(user.avatar);
-      setName(user.name);
-      setRole(user.role);
-    }
-  }, [user]);
 
   const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
@@ -67,20 +40,29 @@ const EditUser = () => {
     setAvatar(base64);
   };
 
-  const openConfirmUpdateModal = () => {
+  const openConfirmCreateModal = () => {
+    if (!username || !password || !name || !avatar) {
+      addToast({
+        type: 'success',
+        title: 'Thông báo',
+        message: 'Vui lòng điền đầy đủ thông tin yêu cầu'
+      });
+      return;
+    }
     setModalContent({
       title: 'Thông báo',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
-      message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
+      message: 'Bạn có chắc chắn muốn tạo người dùng mới này không?',
       onConfirm: () => {
-        handleUpdate();
+        handleCreate();
         closeModal();
         addToast({
           type: 'success',
           title: 'Thông báo',
-          message: 'Cập nhật thông tin người dùng thành công.'
-        })
+          message: 'Tạo mới người dùng thành công'
+        });
+        navigate('/dashboard/users');
       },
       onCancel: () => {
         closeModal();
@@ -89,27 +71,28 @@ const EditUser = () => {
     openModal();
   };
 
-  const handleUpdate = () => {
-    const updateUser = async (userId, username, password, name, avatar, role) => {
+  const handleCreate = () => {
+    const createUser = async (username, password, name, avatar, role) => {
       try {
-        const updatedUser = await updateUserService(userId, username, password, name, avatar, role);
-        setUser(updatedUser);
+        const user = await signUp(username, password, name, avatar, role);
+        setUser(user);
       } catch (err) {
         console.log(err.error);
       }
     };
 
-    updateUser(userId, username, password, name, avatar, role);
+    createUser(username, password, name, avatar, role);
   };
-
-  if (!user) return (<div className={styles.container}>Đang tải...</div>);
 
   return (
     <div className={styles.container}>
-      <h2>Sửa người dùng</h2>
+      <h2>Thêm người dùng</h2>
       <div className={styles.avatarWrapper}>
         <label htmlFor="avatar">
-          <img className={styles.avatar} src={`data:image/jpeg;base64,${avatar}`} alt="Hình đại diện của người dùng" />
+          <img className={styles.avatar} 
+            src={`data:image/jpeg;base64,${avatar}`} 
+            alt="Hình đại diện của người dùng"
+          />
           <input 
             type="file" 
             name="avatar" 
@@ -174,8 +157,8 @@ const EditUser = () => {
           </div>
         )}
       </div>
-      <div className={styles.updateButtonWrapper}>
-        <button className={styles.updateButton} onClick={openConfirmUpdateModal}>Cập nhật</button>
+      <div className={styles.createButtonWrapper}>
+        <button className={styles.createButton} onClick={openConfirmCreateModal}>Thêm</button>
       </div>
       <Modal
         title={modalContent.title}
@@ -193,4 +176,4 @@ const EditUser = () => {
   )
 }
 
-export default EditUser;
+export default CreateUser;
