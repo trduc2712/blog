@@ -1,60 +1,74 @@
-const db = require('../config/database');
+import { query as _query } from '../config/db.js';
 
-exports.createUser = (username, password, name, avatar) => {
+export function createUser(username, password, name, avatar, role) {
+  if (!role) role = 'USER';
   return new Promise((resolve, reject) => {
-      const query = `INSERT INTO users (username, password, name, avatar, role) VALUES (?, ?, ?, ?, 'USER')`;
-      db.query(query, [username, password, name, avatar], (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-      });
-  });
-};
-
-exports.findUserByUsername = (username) => {
-  return new Promise((resolve, reject) => {
-      const query = 'SELECT * FROM users WHERE username = ?';
-
-      db.query(query, [username], (err, results) => {
-        if (err) return reject({ error: 'Lỗi máy chủ' });
-        resolve(results[0]);
-      });
-  });
-};
-
-exports.findUserByCredentials = (username, password) => {
-  return new Promise((resolve, reject) => {
-      const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
-      db.query(query, [username, password], (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-      });
-  });
-};
-
-exports.updateCurrentUser = (id, username, password, name, avatar) => {
-    return new Promise((resolve, reject) => {
-        const query = 'UPDATE users SET username = ?, password = ?, name = ?, avatar = ? WHERE id = ?';
-        db.query(query, [username, password, name, avatar, id], (err, results) => {
-            if (err) return reject(err);
-            resolve(results);
-        });
+    const query = `INSERT INTO users (username, password, name, avatar, role) VALUES (?, ?, ?, ?, ?)`;
+    _query(query, [username, password, name, avatar, role], (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
     });
-};
-
-exports.getUserCount = () => {
-  return new Promise((resolve, reject) => {
-      const query = 'SELECT COUNT(*) AS count FROM users';
-      db.query(query, (err, results) => {
-          if (err) return reject(err);
-          resolve(results[0].count);
-      });
   });
-};
+}
 
-exports.getUsersWithPagination = (page, limit) => {
+export function getUserByUsername(username) {
   return new Promise((resolve, reject) => {
-      const offset = (page - 1) * limit;
-      const query = `
+    const query = 'SELECT * FROM users WHERE username = ?';
+
+    _query(query, [username], (err, results) => {
+      if (err) return reject({ error: 'Lỗi máy chủ' });
+      resolve(results[0]);
+    });
+  });
+}
+
+export function getUserByCredentials(username, password) {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
+    _query(query, [username, password], (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
+    });
+  });
+}
+
+export function updateUser(id, username, password, name, avatar, role) {
+  return new Promise((resolve, reject) => {
+    const query = `
+            UPDATE 
+                users 
+            SET 
+                username = ?, 
+                password = ?, 
+                name = ?,
+                avatar = ?,
+                role = ?
+            WHERE id = ?`;
+    _query(
+      query,
+      [username, password, name, avatar, role, id],
+      (err, results) => {
+        if (err) return reject(err);
+        resolve(results);
+      }
+    );
+  });
+}
+
+export function getUserCount() {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT COUNT(*) AS count FROM users';
+    _query(query, (err, results) => {
+      if (err) return reject(err);
+      resolve(results[0].count);
+    });
+  });
+}
+
+export function getUsersWithPagination(page, limit) {
+  return new Promise((resolve, reject) => {
+    const offset = (page - 1) * limit;
+    const query = `
           SELECT 
               users.id, 
               users.username, 
@@ -64,37 +78,37 @@ exports.getUsersWithPagination = (page, limit) => {
               users.role
           FROM users
           LIMIT ? OFFSET ?`;
-      db.query(query, [limit, offset], (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-      })
-  })
+    _query(query, [limit, offset], (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
+    });
+  });
 }
 
-exports.deleteUserById = (id) => {
+export function deleteUserById(id) {
   return new Promise((resolve, reject) => {
-      const query = 'DELETE FROM users WHERE id = ?';
-      db.query(query, [id], (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-      });
-  });
-};
-
-exports.getAllUsers = () => {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM users';
-  
-        db.query(query, (err, results) => {
-          if (err) return reject({ error: 'Lỗi máy chủ' });
-          resolve(results);
-        });
+    const query = 'DELETE FROM users WHERE id = ?';
+    _query(query, [id], (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
     });
-};
+  });
+}
 
-exports.getUserById = (id) => {
-    return new Promise((resolve, reject) => {
-        const query = `
+export function getAllUsers() {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM users';
+
+    _query(query, (err, results) => {
+      if (err) return reject({ error: 'Lỗi máy chủ' });
+      resolve(results);
+    });
+  });
+}
+
+export function getUserById(id) {
+  return new Promise((resolve, reject) => {
+    const query = `
             SELECT
                 id,
                 username,
@@ -105,28 +119,9 @@ exports.getUserById = (id) => {
             FROM users
             WHERE id = ?
         `;
-        db.query(query, [id], (err, results) => {
-            if (err) return reject(err);
-            resolve(results[0]);
-        });
+    _query(query, [id], (err, results) => {
+      if (err) return reject(err);
+      resolve(results[0]);
     });
-};
-
-exports.updateUser = (id, username, password, name, avatar, role) => {
-  return new Promise((resolve, reject) => {
-      const query = `
-          UPDATE 
-              users 
-          SET 
-              username = ?, 
-              password = ?, 
-              name = ?,
-              avatar = ?,
-              role = ?
-          WHERE id = ?`;
-      db.query(query, [username, password, name, avatar, role, id], (err, results) => {
-          if (err) return reject(err);
-          resolve(results);
-      });
   });
-};
+}

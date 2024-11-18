@@ -1,138 +1,157 @@
-const Post = require('../models/post');
+import {
+  getPostById as getPostByIdFromModel,
+  getPostBySlug as getPostBySlugFromModel,
+  createPost as createPostFromModel,
+  getAllPosts as getAllPostsFromModel,
+  getPostCount as getPostCountFromModel,
+  getPostsWithPagination as getPostsWithPaginationFromModel,
+  deletePostById as deletePostByIdFromModel,
+  updatePost as updatePostFromModel,
+} from '../models/post.js';
 
-exports.getAllPosts = async (req, res) => {
-    try {
-        const posts = await Post.getAllPosts();
-        if (posts.length === 0) {
-            return res.status(404).json({ error: 'Không có bài viết nào' });
-        }
-        res.json({
-            message: 'Lấy tất cả bài viết thành công',
-            posts: posts
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Lỗi máy chủ' });
-    }
-};
-
-exports.getPostBySlug = async (req, res) => {
-    const slug = req.params.slug;
-    try {
-        const post = await Post.getPostBySlug(slug);
-        if (!post) {
-            return res.status(404).json({ error: 'Bài viết không tồn tại' });
-        }
-        res.json({
-            message: 'Lấy bài viết thành công',
-            post: post
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Lỗi máy chủ' });
-    }
-};
-
-exports.createPost = async (req, res) => {
-    const { title, content, userId, thumbnail, categorySlug, slug } = req.body;
-
-    try {
-        await Post.createPost(title, content, userId, thumbnail, categorySlug, slug);
-        return res.status(201).json({ message: 'Tạo bài viết thành công' });
-    } catch (err) {
-        return res.status(500).json({ error: 'Lỗi máy chủ' });
-    }     
-};
-
-exports.getPostCount = async (req, res) => {
-    try {
-        const count = await Post.getPostCount();
-        if (count == 0) {
-            return res.status(404).json({ error: 'Không có bài viết nào' });
-        }
-        res.json({
-            message: 'Lấy số lượng bài viết thành công',
-            count: count
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Lỗi máy chủ' });
-    }
-}
-
-exports.getPostsWithPagination = async (req, res) => {
+export const getPosts = async (req, res) => {
+  try {
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
 
-    try {
-        const totalPosts = await Post.getPostCount();
-        
-        const posts = await Post.getPostsWithPagination(page, limit);
-
-        if (posts.length === 0) {
-            return res.status(404).json({ error: 'Không có bài viết nào' });
-        }
-  
-        res.json({
-            message: `Lấy các bài viết ở trang ${page} thành công`,
-            posts: posts,
-            totalPosts: totalPosts,
-            currentPage: page,
-            totalPages: Math.ceil(totalPosts / limit)
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Lỗi máy chủ' });
+    if (page && limit && (page <= 0 || limit <= 0)) {
+      return res.status(400).json({ error: 'Tham số không hợp lệ.' });
     }
+
+    const postCount = await getPostCountFromModel();
+    const posts =
+      page && limit
+        ? await getPostsWithPaginationFromModel(page, limit)
+        : await getAllPostsFromModel();
+
+    if (posts.length === 0) {
+      return res.status(404).json({ error: 'Không có bài viết nào.' });
+    }
+
+    res.json({
+      message:
+        page && limit
+          ? `Lấy các bài viết ở trang ${page} thành công.`
+          : 'Lấy tất cả bài viết thành công.',
+      posts,
+      meta: {
+        postCount,
+        currentPage: page || undefined,
+        // Nếu toán hạng đầu tiên là truthy thì toán tử || sẽ trả về toán hạng đầu tiên mà không cần kiểm tra toán hạng thứ hai.
+        totalPages: page && limit ? Math.ceil(postCount / limit) : undefined,
+      },
+    });
+  } catch (err) {
+    console.log('Lỗi khi lấy bài viết: ', err);
+    res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
 };
 
-exports.deletePostById = async (req, res) => {
-    const postId = parseInt(req.params.id);
-    if (!postId) {
-        return res.status(400).json({ error: 'Thiếu ID của bài viết' });
-    }
-    try {
-        await Post.deletePostById(postId);
-        return res.status(200).json({ message: 'Xóa bài viết thành công' });
-    } catch (err) {
-        return res.status(500).json({ error: 'Lỗi máy chủ' });
-    }  
-}
+export const createPost = async (req, res) => {
+  const { title, content, userId, thumbnail, categorySlug, slug } = req.body;
 
-exports.getPostById = async (req, res) => {
-    const id = req.params.id;
-    
-    try {
-        const post = await Post.getPostById(id);
-        if (!post) {
-            return res.status(404).json({ error: 'Bài viết không tồn tại' });
-        }
-        res.json({
-            message: 'Lấy bài viết thành công',
-            post: post
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Lỗi máy chủ' });
-    }
+  if (!title || !content || !userId || !thumbnail || !categorySlug || !slug) {
+    return res.status(400).json({ error: 'Thiếu thông tin bài viết.' });
+  }
+
+  try {
+    const newPost = await createPostFromModel(
+      title,
+      content,
+      userId,
+      thumbnail,
+      categorySlug,
+      slug
+    );
+
+    return res.status(201).json({
+      message: 'Tạo bài viết thành công.',
+      post: newPost,
+    });
+  } catch (err) {
+    console.log('Lỗi khi tạo bài viết mới: ', err);
+    return res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
 };
 
-exports.updatePost = async (req, res) => {
-    const id = req.params.id;
+export const getPost = async (req, res) => {
+  const id = req.params.id;
+  let post;
 
-    console.log('id la: ', id);
-    
-    const { title, content, userId, thumbnail, categorySlug, slug } = req.body; 
-  
-    try {
-        const result = await Post.updatePost(id, title, content, userId, thumbnail, categorySlug, slug);
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'Không tìm thấy bài viết' });
-        }
-    
-        const updatedPost = await Post.getPostById(id);
-        res.json({
-            message: 'Cập nhật thông tin bài viết thành công',
-            post: updatedPost,
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Lỗi máy chủ' });
+  try {
+    if (!isNaN(id)) {
+      post = await getPostByIdFromModel(id);
+    } else {
+      post = await getPostBySlugFromModel(id);
     }
+
+    if (!post) {
+      return res.status(404).json({ error: 'Bài viết không tồn tại.' });
+    }
+
+    res.json({
+      message: 'Lấy bài viết thành công.',
+      post: post,
+    });
+  } catch (err) {
+    console.log('Lỗi khi lấy bài viết: ', err);
+    res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
 };
-  
+
+export const updatePost = async (req, res) => {
+  const id = req.params.id;
+  const { title, content, userId, thumbnail, categorySlug, slug } = req.body;
+
+  if (!id || id <= 0) {
+    return res.status(400).json({ error: 'Tham số không hợp lệ' });
+  }
+
+  if (!title || !content || !userId || !thumbnail || !categorySlug || !slug) {
+    return res.status(400).json({ error: 'Thiếu thông tin bài viết.' });
+  }
+
+  try {
+    const result = await updatePostFromModel(
+      id,
+      title,
+      content,
+      userId,
+      thumbnail,
+      categorySlug,
+      slug
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        error: 'Không tìm thấy bài viết.',
+      });
+    }
+
+    const updatedPost = await getPostByIdFromModel(id);
+
+    res.json({
+      message: 'Cập nhật bài viết thành công.',
+      post: updatedPost,
+    });
+  } catch (err) {
+    console.error('Lỗi khi cập nhật bài viết: ', err);
+    res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  if (!id || id <= 0) {
+    return res.status(400).json({ error: 'Tham số không không hợp lệ.' });
+  }
+
+  try {
+    await deletePostByIdFromModel(id);
+    return res.status(204).send();
+  } catch (err) {
+    console.log('Lỗi khi xóa bài viết: ', err);
+    return res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
+};

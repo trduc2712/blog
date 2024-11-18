@@ -1,69 +1,124 @@
-const Category = require('../models/category');
+import {
+  getAllCategories as getAllCategoriesFromModal,
+  getCategoryCount as getCategoryCountFromModal,
+  getCategoriesWithPagination as getCategoriesWithPaginationFromModal,
+  deleteCategoryById as deleteCategoryByIdFromModal,
+  getCategoryById as getCategoryByIdFromModal,
+  updateCategory as updateCategoryFromModal,
+  createCategory as createCategoryFromModal,
+} from '../models/category.js';
 
-exports.getAllCategories = async (req, res) => {
+export const getCategories = async (req, res) => {
   try {
-    const categories = await Category.getAllCategories();
-    if (categories.length === 0) {
-        return res.status(404).json({ error: 'Không có danh mục nào' });
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+
+    if (page && limit && (page <= 0 || limit <= 0)) {
+      return res.status(400).json({ error: 'Tham số không hợp lệ.' });
     }
+
+    const categoryCount = await getCategoryCountFromModal();
+    const categories =
+      page && limit
+        ? await getCategoriesWithPaginationFromModal(page, limit)
+        : await getAllCategoriesFromModal();
+
+    if (categories.length === 0) {
+      return res.status(404).json({ error: 'Không có danh mục nào.' });
+    }
+
     res.json({
-        message: 'Lấy tất cả danh mục thành công',
-        categories: categories
+      message:
+        page && limit
+          ? `Lấy các danh mục ở trang ${page} thành công.`
+          : 'Lấy tất cả danh mục thành công.',
+      categories,
+      meta: {
+        categoryCount,
+        currentPage: page || undefined,
+        totalPages:
+          page && limit ? Math.ceil(categoryCount / limit) : undefined,
+      },
     });
   } catch (err) {
-      res.status(500).json({ error: 'Lỗi máy chủ' });
+    console.log('Lỗi khi lấy danh mục: ', err);
+    res.status(500).json({ error: 'Lỗi máy chủ.' });
   }
 };
 
-exports.getCategoryCount = async (req, res) => {
-  try {
-      const count = await Category.getCategoryCount();
-      if (count == 0) {
-          return res.status(404).json({ error: 'Không có danh mục nào' });
-      }
-      res.json({
-          message: 'Lấy số lượng danh mục thành công',
-          count: count
-      });
-  } catch (err) {
-      res.status(500).json({ error: 'Lỗi máy chủ' });
+export const createCategory = async (req, res) => {
+  const { name, slug } = req.body;
+
+  if (!name || !slug) {
+    res.status(400).json({ error: 'Thiếu thông tin danh mục.' });
   }
-}
-
-exports.getCategoriesWithPagination = async (req, res) => {
-  const page = parseInt(req.query.page);
-  const limit = parseInt(req.query.limit);
 
   try {
-      const totalCategories = await Category.getCategoryCount();
-      
-      const categories = await Category.getCategoriesWithPagination(page, limit);
-
-      if (categories.length === 0) {
-          return res.status(404).json({ error: 'Không có danh mục nào' });
-      }
-
-      res.json({
-          message: `Lấy các danh mục ở trang ${page} thành công`,
-          categories: categories,
-          totalCategories: totalCategories,
-          currentPage: page,
-          totalPages: Math.ceil(totalCategories / limit)
-      });
+    await createCategoryFromModal(name, slug);
+    return res.status(201).json({ message: 'Tạo danh mục thành công' });
   } catch (err) {
-      res.status(500).json({ error: 'Lỗi máy chủ' });
+    console.log('Lỗi khi tạo danh mục mới: ', err);
+    return res.status(500).json({ error: 'Lỗi máy chủ' });
   }
 };
 
-exports.deleteCategoryById = async (req, res) => {
+export const getCategory = async (req, res) => {
+  const id = req.params.id;
+
+  if (!id || id <= 0) {
+    return res.status(400).json({ error: 'Tham số không hợp lệ.' });
+  }
+
+  try {
+    const category = await getCategoryByIdFromModal(id);
+
+    if (!category) {
+      return res.status(404).json({ error: 'Danh mục không tồn tại.' });
+    }
+
+    res.json({
+      message: 'Lấy danh mục thành công.',
+      category: category,
+    });
+  } catch (err) {
+    console.log('Lỗi khi lấy danh mục: ', err);
+    res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
+};
+
+export const updateCategory = async (req, res) => {
+  const id = req.params.id;
+
+  const { name, slug } = req.body;
+
+  try {
+    const result = await updateCategoryFromModal(id, name, slug);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy danh mục.' });
+    }
+
+    const updatedCategory = await getCategoryByIdFromModal(id);
+    res.json({
+      message: 'Cập nhật thông tin danh mục thành công.',
+      category: updatedCategory,
+    });
+  } catch (err) {
+    console.log('Lỗi khi cập nhật danh mục: ', err);
+    res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
+};
+
+export const deleteCategoryById = async (req, res) => {
   const categoryId = parseInt(req.params.id);
+
   if (!categoryId) {
-      return res.status(400).json({ error: 'Thiếu ID của danh mục' });
+    return res.status(400).json({ error: 'Thiếu ID của danh mục.' });
   }
   try {
-      await Category.deleteCategoryById(categoryId);
-      return res.status(200).json({ message: 'Xóa danh mục thành công' });
+    await deleteCategoryByIdFromModal(categoryId);
+    return res.status(200).json({ message: 'Xóa danh mục thành công.' });
   } catch (err) {
-      return res.status(500).json({ error: 'Lỗi máy chủ' });
-  }  
-}
+    console.log('Lỗi khi xóa danh mục: ', err);
+    return res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
+};

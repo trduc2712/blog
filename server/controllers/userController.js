@@ -1,141 +1,158 @@
-const User = require('../models/user');
+import {
+  getAllUsers as getAllUsersFromModel,
+  getUserCount as getUserCountFromModel,
+  getUsersWithPagination as getUsersWithPaginationFromModel,
+  deleteUserById as deleteUserByIdFromModel,
+  getUserById as getUserByIdFromModel,
+  updateUser as updateUserFromModel,
+  getUserByUsername as getUserByUsernameFromModel,
+  createUser as createUserFromModel,
+} from '../models/user.js';
 
-exports.updateCurrentUser = async (req, res) => {
-  const id = req.params.id;
-  const { username, password, name, avatar } = req.body;
-
+export const getUsers = async (req, res) => {
   try {
-    const result = await User.updateCurrentUser(id, username, password, name, avatar);
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Không tìm thấy người dùng' });
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+
+    if (page && limit && (page <= 0 || limit <= 0)) {
+      res.status(400).json({ error: 'Tham số không hợp lệ.' });
     }
 
-    const updatedUser = await User.findUserByUsername(username);
+    const userCount = await getUserCountFromModel();
+    const users =
+      page && limit
+        ? await getUsersWithPaginationFromModel(page, limit)
+        : await getAllUsersFromModel();
 
-    if (req.session.user.id == id) {
-        req.session.user.id = updatedUser.id;
-        req.session.user.username = updatedUser.username;
-        req.session.user.password = updatedUser.password;
-        req.session.user.name = updatedUser.name;
-        req.session.user.avatar = updatedUser.avatar;
-    } else {
-      console.log('updatedUser.id: ', updatedUser.id);
-      console.log('req.session.user.id: ', req.session.user.id);
+    if (users.length === 0) {
+      return res.status(404).json({ error: 'Không có người dùng nào.' });
     }
 
     res.json({
-      message: 'Cập nhật thông tin người dùng thành công',
+      message:
+        page && limit
+          ? `Lấy các người dùng ở trang ${page} thành công.`
+          : 'Lấy tất cả người dùng thành công.',
+      users,
+      meta: {
+        userCount,
+        currentPage: page || undefined,
+        totalPages: page && limit ? Math.ceil(userCount / limit) : undefined,
+      },
+    });
+  } catch (err) {
+    console.log('Lỗi khi lấy người dùng: ', err);
+    res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
+};
+
+export const createUser = async (req, res) => {
+  const { username, password, name, avatar, role } = req.body;
+
+  if (!username || !password || !name) {
+    return res.status(400).json({ error: 'Thiếu thông tin người dùng.' });
+  }
+
+  try {
+    const userExists = await getUserByUsernameFromModel(username);
+    if (userExists) {
+      return res.status(400).json({ error: 'Người dùng đã tồn tại.' });
+    }
+    await createUserFromModel(username, password, name, avatar, role);
+    return res.status(201).json({ message: 'Đăng ký thành công.' });
+  } catch (err) {
+    console.log('Lỗi khi tạo người dùng mới: ', err);
+    return res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
+};
+
+export const getUser = async (req, res) => {
+  const id = req.params.id;
+
+  if (!id || id <= 0) {
+    return res.status(400).json({ error: 'Tham số không hợp lệ.' });
+  }
+
+  try {
+    const user = await getUserByIdFromModel(id);
+
+    if (!user) {
+      return res.status(404).json({ error: 'Người dùng không tồn tại.' });
+    }
+
+    res.json({
+      message: 'Lấy người dùng thành công.',
+      user: user,
+    });
+  } catch (err) {
+    console.log('Lỗi khi lấy người dùng: ', err);
+    res.status(500).json({ error: 'Lỗi máy chủ.' });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  const id = req.params.id;
+  const { username, password, name, avatar, role } = req.body;
+
+  if (!id || id <= 0) {
+    return res.status(400).json({ error: 'Tham số không hợp lệ.' });
+  }
+
+  if (!username || !password || !name || !avatar || !role) {
+    return res.status(400).json({ error: 'Thiếu thông tin người dùng.' });
+  }
+
+  try {
+    const isCurrentUser =
+      parseInt(req.session.user.id, 10) === parseInt(id, 10);
+
+    const result = await updateUserFromModel(
+      id,
+      username,
+      password,
+      name,
+      avatar,
+      role
+    );
+
+    if (!result || result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy người dùng.' });
+    }
+
+    const updatedUser = await getUserByIdFromModel(id);
+
+    if (isCurrentUser) {
+      Object.assign(req.session.user, {
+        username: updatedUser.username,
+        password: updatedUser.password,
+        name: updatedUser.name,
+        avatar: updatedUser.avatar,
+        role: updatedUser.role,
+      });
+    }
+
+    res.json({
+      message: 'Cập nhật người dùng thành công.',
       user: updatedUser,
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Lỗi máy chủ' });
+    console.error('Lỗi khi cập nhật người dùng: ', err);
+    res.status(500).json({ error: 'Lỗi máy chủ.' });
   }
 };
 
-exports.getUserCount = async (req, res) => {
-  try {
-      const count = await User.getUserCount();
-      if (count == 0) {
-          return res.status(404).json({ error: 'Không có người dùng nào' });
-      }
-      res.json({
-          message: 'Lấy số lượng người dùng thành công',
-          count: count
-      });
-  } catch (err) {
-      res.status(500).json({ error: 'Lỗi máy chủ' });
+export const deleteUser = async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  if (!id || id <= 0) {
+    return res.status(400).json({ error: 'Tham số không hợp lệ.' });
   }
-}
-
-exports.getUsersWithPagination = async (req, res) => {
-  const page = parseInt(req.query.page);
-  const limit = parseInt(req.query.limit);
 
   try {
-      const totalUsers = await User.getUserCount();
-      
-      const users = await User.getUsersWithPagination(page, limit);
-
-      if (users.length === 0) {
-          return res.status(404).json({ error: 'Không có người dùng nào' });
-      }
-
-      res.json({
-          message: `Lấy các người dùng ở trang ${page} thành công`,
-          users: users,
-          totalUsers: totalUsers,
-          currentPage: page,
-          totalPages: Math.ceil(totalUsers / limit)
-      });
+    await deleteUserByIdFromModel(id);
+    return res.status(204).send();
   } catch (err) {
-      res.status(500).json({ error: 'Lỗi máy chủ' });
-  }
-};
-
-exports.deleteUserById = async (req, res) => {
-  const userId = parseInt(req.params.id);
-  if (!userId) {
-      return res.status(400).json({ error: 'Thiếu ID của người dùng' });
-  }
-  try {
-      await User.deleteUserById(userId);
-      return res.status(200).json({ message: 'Xóa người dùng thành công' });
-  } catch (err) {
-      return res.status(500).json({ error: 'Lỗi máy chủ' });
-  }  
-};
-
-exports.getAllUsers = async (req, res) => {
-  try {
-    const users = await User.getAllUsers();
-    if (users.length === 0) {
-        return res.status(404).json({ error: 'Không có người dùng nào' });
-    }
-    res.json({
-        message: 'Lấy tất cả người dùng thành công',
-        users: users
-    });
-  } catch (err) {
-      res.status(500).json({ error: 'Lỗi máy chủ' });
-  }
-};
-
-exports.getUserById = async (req, res) => {
-  const id = req.params.id;
-  
-  try {
-      const user = await User.getUserById(id);
-      if (!user) {
-          return res.status(404).json({ error: 'Người dùng không tồn tại' });
-      }
-      res.json({
-          message: 'Lấy người dùng thành công',
-          user: user
-      });
-  } catch (err) {
-      res.status(500).json({ error: 'Lỗi máy chủ' });
-  }
-};
-
-exports.updateUser = async (req, res) => {
-  const id = req.params.id;
-  
-  const { username, password, name, avatar, role } = req.body; 
-
-  try {
-      const result = await User.updateUser(id, username, password, name, avatar, role);
-      if (result.affectedRows === 0) {
-          return res.status(404).json({ error: 'Không tìm thấy người dùng' });
-      }
-  
-      const updatedUser = await User.getUserById(id);
-      res.json({
-          message: 'Cập nhật thông tin người dùng thành công',
-          user: updatedUser,
-      });
-  } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Lỗi máy chủ' });
+    console.log('Lỗi khi xóa người dùng: ', err);
+    return res.status(500).json({ error: 'Lỗi máy chủ.' });
   }
 };
