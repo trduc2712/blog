@@ -1,5 +1,5 @@
 import styles from './Header.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useToastContext } from '../../contexts/ToastContext';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { useEffect, useState } from 'react';
@@ -62,11 +62,11 @@ const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
   return (
     <div className={styles.container}>
       <div className={styles.left}>
-        {/* {isDashboard ? (
+        {isDashboard ? (
           <h1><Link to='/dashboard'>Dashboard</Link></h1>
         ) : (
           <h1><Link to='/'>Blog</Link></h1>
-        )} */}
+        )}
       </div>
       <div className={styles.right}>
         {user ? (

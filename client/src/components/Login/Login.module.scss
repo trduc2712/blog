@@ -54,7 +54,6 @@
           font-size: 24px !important;
         }
       }
-  
     }
 
     form {
@@ -66,7 +65,8 @@
           border: 1px solid red;
         }
 
-        .usernameError, .passwordError {
+        .usernameError,
+        .passwordError {
           height: 20px;
           margin: 2.5px 0;
           color: red;
@@ -113,9 +113,9 @@
           i {
             background-color: #1877f2;
             color: #fff;
-          };
+          }
         }
-        
+
         .checkMark {
           display: flex;
           justify-content: center;

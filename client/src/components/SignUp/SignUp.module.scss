@@ -2,155 +2,112 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 
   .container {
     display: flex;
     flex-direction: column;
-    background-color: #fff;
     padding: 20px;
-    border-radius: 10px;
     width: 500px;
+    border-radius: 10px;
 
-    .closeButton {
-      margin-left: auto;
+    .header {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      float: right;
-      border: none;
+      margin-bottom: 30px;
 
-      &:hover {
-        transition: 0.3s background-color ease;
-        cursor: pointer;
+      h2 {
+        letter-spacing: 2.5px;
+        color: #1877f2;
       }
-    }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
+      .close {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #e6e6e6;
+          transition: 0.3s background-color ease;
+
+          i {
+            background-color: #e6e6e6;
+            transition: 0.3s background-color ease;
+          }
+        }
+
+        i {
+          width: 24px !important;
+          height: 24px !important;
+          font-size: 24px !important;
+        }
+      }
     }
 
     form {
-      .formGroups {
-        .formGroup {
-          margin-bottom: 20px;
-          display: flex;
-          flex-direction: column;
+      .formGroup {
+        display: flex;
+        flex-direction: column;
 
-          label {
-            margin-bottom: 10px;
-          }
+        .redBorder {
+          border: 1px solid red;
+        }
+
+        .usernameError,
+        .passwordError,
+        .nameError {
+          height: 20px;
+          margin: 2.5px 0;
+          color: red;
+        }
+
+        .inputPasswordWrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
 
           input {
-            border: 1px solid #ccc;
-            font-size: 16px;
-            padding: 15px;
-            border-radius: 5px;
-
-            &:focus {
-              outline: none;
-              border: 1px solid #1877f2;
-            }
+            flex-grow: 1;
           }
 
-          .inputPasswordWrapper {
-            display: flex;
-            align-items: center;
-            height: 50px;
+          .togglePassword {
+            position: absolute;
+            right: 11px;
 
-            input {
-              flex-grow: 1;
-              border-top-left-radius: 5px;
-              border-bottom-left-radius: 5px;
-              border-top-right-radius: 0;
-              border-bottom-right-radius: 0;
-              border-right: none;
-
-              &:focus {
-                outline: none;
-                border-right: 1px solid #1877f2;
-              }
-            }
-
-            .togglePassword {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              height: 100%;
-              border: 1px solid #ccc;
-              border-left: none;
-              border-top-right-radius: 5px;
-              border-bottom-right-radius: 5px;
-              padding: 10px;
+            i {
+              opacity: 0.7;
 
               &:hover {
-                cursor: pointer;
+                opacity: 1;
+                transition: 0.3s opacity ease;
               }
             }
           }
         }
       }
 
-      .buttons {
-        display: flex;
-        justify-content: flex-end;
-
-        .cancelButton {
-          background-color: #e2e5e9;
-          font-size: 16px;
-          padding: 10px;
-          border: 1px solid #e2e5e9;
-          border-radius: 5px;
-          color: #000;
-          width: 100px;
-          margin-right: 10px;
-
-          &:hover {
-            cursor: pointer;
-            opacity: 0.8;
-            transition: 0.3s opacity ease;
-          }
-        }
-
-        .saveButton {
-          font-size: 16px;
-          padding: 10px;
-          background-color: #1877f2;
-          border: 1px solid #1877f2;
-          border-radius: 5px;
-          color: #fff;
-          width: 100px;
-
-          &:hover {
-            cursor: pointer;
-            opacity: 0.8;
-            transition: 0.3s opacity ease;
-          }
-        }
-      }
-
-      button {
+      .submit {
         width: 100%;
-        padding: 15px;
-        font-size: 16px;
-        background-color: #1877f2;
-        border-radius: 5px;
-        border: none;
-        color: #fff;
-
-        &:hover {
-          opacity: 0.8;
-          transition: 0.3s opacity ease;
-          cursor: pointer;
-        }
+        margin-top: 5px;
       }
+    }
+
+    .error {
+      text-align: center;
+      color: red;
+      margin-top: 20px;
     }
   }
 }

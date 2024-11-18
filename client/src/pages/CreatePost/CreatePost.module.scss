@@ -1,229 +1,233 @@
 .container {
-  .contentWrapper {
-    padding: 79px 40px 20px;
+    .contentWrapper {
+        padding: 79px 40px 20px;
 
-    .notLoggedIn {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: calc(100vw - 80px);
-      height: calc(100vh - 100px);
-    }
-
-    .content {
-      .formGroups {
-        display: flex;
-        align-items: center;
-
-        .formGroup {
-          margin-bottom: 20px;
-          display: flex;
-          flex-direction: column;
-
-          .categoriesList {
-            width: 150px;
-            height: 100%;
+        .notLoggedIn {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-left: 20px;
-            border: 1px solid #adb5bd;
-            padding: 10px;
-            background-color: #adb5bd;
-            color: #fff;
-            
-            &:hover {
-              opacity: 0.8;
-              transition: 0.3s opacity ease;
-              cursor: pointer;
-            }
-
-            .bi {
-              margin-left: 5px !important;
-              color: #fff !important;
-              background-color: #adb5bd !important;
-
-              &::before {
-                color: #fff !important;
-                background-color: #adb5bd !important;
-              }
-            }
-          }
-        }
-      }
-
-      .categoryPicker {
-        margin-bottom: 20px;
-        
-        .categoriesList {
-          font-size: 14px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-          margin-top: 10px;
-          border: 1px solid #ccc;
-          padding: 10px;
-          border-radius: 5px;
-    
-          &:hover {
-            cursor: pointer;
-          }
-        }
-    
-        .categories {
-          border-radius: 5px;
-          position: sticky;
-          margin-top: 5px;
-          padding: 10px 0;
-          border: 1px solid #ccc;
-          z-index: 100;
-    
-          .category {
-            padding: 10px;
-            font-size: 14px;
-            list-style: none;
-    
-            &:hover {
-              background-color: #e6e6e6;
-              transition: 0.3s background-color ease;
-              cursor: pointer;
-            }
-          }
-        }
-      }
-
-      .thumbnailWrapper {
-        margin-top: 10px;
-        margin-bottom: 20px;
-        width: 100%;
-        height: 500px;
-        border: 1px solid #ccc;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        border-radius: 5px;
-
-        .thumbnailLabel {      
-          padding: 10px;
-
-          &:hover {
-            color: #1877f2;
-            transition: 0.3s color ease;
-            cursor: pointer;
-          }
+            width: calc(100vw - 80px);
+            height: calc(100vh - 100px);
         }
 
-        .thumbnail {
-          object-fit: cover;
-          height: 100%;
-          width: 100%;
-          border: none;
-        }
-      }
+        .content {
+            .formGroups {
+                display: flex;
+                align-items: center;
 
-      .quillWrapper{
-        margin-top: 10px;
+                .formGroup {
+                    margin-bottom: 20px;
+                    display: flex;
+                    flex-direction: column;
 
-        .quill :global {
-          .ql-container {
-            border: none;
-          }
-    
-          .ql-editor, .ql-editor * {
-            -webkit-text-decoration: none !important;
-            text-decoration: none !important;
-          }
-      
-          .ql-editor {
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            font-size: 16px;
-            color: #000;
-            height: 500px;
-            line-height: 1.5;
-            -webkit-text-decoration-line: none !important;
-            -moz-text-decoration-line: none !important;
-            text-decoration-line: none !important;
-    
-            .ql-clipboard {
-              -webkit-text-decoration: none !important;
-              text-decoration: none !important;
-            }
-    
-            p {
-              text-decoration: none !important;
-            }
-      
-            img {
-              display: block;
-              margin: 20px auto;
-            }
-          }
-      
-          .ql-toolbar {
-            padding: 15px;
-            border-bottom: none;
-            align-items: center;
-            display: none;
+                    .categoriesList {
+                        width: 150px;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin-left: 20px;
+                        border: 1px solid #adb5bd;
+                        padding: 10px;
+                        background-color: #adb5bd;
+                        color: #fff;
 
-            .ql-formats {
-              margin-right: 10px;
+                        &:hover {
+                            opacity: 0.8;
+                            transition: 0.3s opacity ease;
+                            cursor: pointer;
+                        }
 
-              .ql-header {
-                font-size: 16px;
+                        .bi {
+                            margin-left: 5px !important;
+                            color: #fff !important;
+                            background-color: #adb5bd !important;
 
-                .ql-picker-options {
-                  padding: 10px;
-
-                  .ql-picker-item {
-                    padding: 0;
-
-                    &:not(:last-child) {
-                      margin-bottom: 10px;
+                            &::before {
+                                color: #fff !important;
+                                background-color: #adb5bd !important;
+                            }
+                        }
                     }
-                  }
                 }
-              }
-
-              button {
-                margin-right: 5px;
-              }
             }
-          }
+
+            .categoryPicker {
+                margin-bottom: 20px;
+
+                .categoriesList {
+                    font-size: 14px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                    margin-top: 10px;
+                    border: 1px solid #ccc;
+                    padding: 10px;
+                    border-radius: 5px;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+
+                .categories {
+                    border-radius: 5px;
+                    position: sticky;
+                    margin-top: 5px;
+                    padding: 10px 0;
+                    border: 1px solid #ccc;
+                    z-index: 100;
+
+                    .category {
+                        padding: 10px;
+                        font-size: 14px;
+                        list-style: none;
+
+                        &:hover {
+                            background-color: #e6e6e6;
+                            transition: 0.3s background-color ease;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+
+            .thumbnailWrapper {
+                margin-top: 10px;
+                margin-bottom: 20px;
+                width: 100%;
+                height: 500px;
+                border: 1px solid #ccc;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                border-radius: 5px;
+
+                .thumbnailLabel {
+                    padding: 10px;
+
+                    &:hover {
+                        color: #1877f2;
+                        transition: 0.3s color ease;
+                        cursor: pointer;
+                    }
+                }
+
+                .thumbnail {
+                    object-fit: cover;
+                    height: 100%;
+                    width: 100%;
+                    border: none;
+                }
+            }
+
+            .quillWrapper {
+                margin-top: 10px;
+
+                .quill :global {
+                    .ql-container {
+                        border: none;
+                    }
+
+                    .ql-editor,
+                    .ql-editor * {
+                        -webkit-text-decoration: none !important;
+                        text-decoration: none !important;
+                    }
+
+                    .ql-editor {
+                        border-radius: 5px;
+                        border: 1px solid #ccc;
+                        padding: 10px;
+                        font-size: 16px;
+                        color: #000;
+                        height: 500px;
+                        line-height: 1.5;
+                        -webkit-text-decoration-line: none !important;
+                        -moz-text-decoration-line: none !important;
+                        text-decoration-line: none !important;
+
+                        .ql-clipboard {
+                            -webkit-text-decoration: none !important;
+                            text-decoration: none !important;
+                        }
+
+                        p {
+                            text-decoration: none !important;
+                        }
+
+                        img {
+                            display: block;
+                            margin: 20px auto;
+                            border-radius: 5px;
+                        }
+                    }
+
+                    .ql-toolbar {
+                        padding: 15px;
+                        border-bottom: none;
+                        align-items: center;
+                        display: none;
+
+                        .ql-formats {
+                            margin-right: 10px;
+
+                            .ql-header {
+                                font-size: 16px;
+
+                                .ql-picker-options {
+                                    padding: 10px;
+
+                                    .ql-picker-item {
+                                        padding: 0;
+
+                                        &:not(:last-child) {
+                                            margin-bottom: 10px;
+                                        }
+                                    }
+                                }
+                            }
+
+                            button {
+                                margin-right: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            h2 {
+                margin-bottom: 20px;
+            }
+
+            .publishWrapper {
+                margin-top: 20px;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+
+                .cancel {
+                    width: 100px;
+                    margin-right: 10px;
+                    border: 1px solid #ccc;
+                    color: #000;
+                    background-color: #fff;
+
+                    &:hover {
+                        border: 1px solid #1877f2;
+                        color: #1877f2;
+                        transition:
+                            0.3s border,
+                            color ease;
+                    }
+                }
+
+                .publish {
+                    width: 100px;
+                }
+            }
         }
-      }      
-      
-      h2 {
-        margin-bottom: 20px;
-      }
-
-      .publishWrapper {
-        margin-top: 20px;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-
-        .cancel {
-          width: 100px;
-          margin-right: 10px;
-          border: 1px solid #ccc;
-          color: #000;
-          background-color: #fff;     
-
-          &:hover {
-            border: 1px solid #1877f2;
-            color: #1877f2;
-            transition: 0.3s border, color ease;
-          }
-        }
-
-        .publish {
-          width: 100px;
-        }
-      }
     }
-  }
 }

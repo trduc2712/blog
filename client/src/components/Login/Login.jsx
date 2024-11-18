@@ -23,15 +23,15 @@ const Login = ({ isOpen, onClose }) => {
     setUsernameError('');
     setPasswordError('');
     onClose();
-  }
+  };
 
   const handleResetUsernameError = () => {
     setUsernameError('');
-  }
+  };
 
   const handleResetPasswordError = () => {
     setPasswordError('');
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,36 +51,37 @@ const Login = ({ isOpen, onClose }) => {
       });
       handleReset();
     } else return;
-  }
+  };
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
-  }
+  };
 
   const handleCheckboxChange = () => {
     setChecked(!checked);
-  }
+  };
 
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} 
-      onClick={handleReset}>
+    <div className={styles.overlay} onClick={handleReset}>
       <div className={styles.container} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h2>Đăng nhập</h2>
           <div className={styles.close} onClick={handleReset}>
-            <i className='bi bi-x'></i>
+            <i className="bi bi-x"></i>
           </div>
         </div>
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label htmlFor='username'><p>Tên người dùng</p></label>
+            <label htmlFor="username">
+              <p>Tên người dùng</p>
+            </label>
             <input
-              id='username'
+              id="username"
               className={usernameError ? styles.redBorder : ''}
-              type='text'
-              placeholder='Tên người dùng'
+              type="text"
+              placeholder="Tên người dùng"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               onFocus={handleResetUsernameError}
@@ -88,36 +89,53 @@ const Login = ({ isOpen, onClose }) => {
             <p className={styles.usernameError}>{usernameError}</p>
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor='password'><p>Mật khẩu</p></label>
+            <label htmlFor="password">
+              <p>Mật khẩu</p>
+            </label>
             <div className={styles.inputPasswordWrapper}>
               <input
-                id='password'
+                id="password"
                 className={passwordError ? styles.redBorder : ''}
                 type={isPasswordVisible ? 'text' : 'password'}
-                placeholder='Mật khẩu'
+                placeholder="Mật khẩu"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onFocus={handleResetPasswordError}
               />
-              <div className={styles.togglePassword} onClick={togglePasswordVisibility}>
-                {isPasswordVisible ? <i className='bi bi-eye-slash'></i> : <i className='bi bi-eye'></i>}
+              <div
+                className={styles.togglePassword}
+                onClick={togglePasswordVisibility}
+              >
+                {isPasswordVisible ? (
+                  <i className="bi bi-eye-slash"></i>
+                ) : (
+                  <i className="bi bi-eye"></i>
+                )}
               </div>
             </div>
             <p className={styles.passwordError}>{passwordError}</p>
           </div>
           <label className={styles.rememberMe}>
-            <input type="checkbox" checked={checked} onChange={handleCheckboxChange} />
-            <span className={`${styles.checkMark} ${checked && styles.checked}`}>
-              {checked && <i class="bi bi-check"></i>}
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={handleCheckboxChange}
+            />
+            <span
+              className={`${styles.checkMark} ${checked && styles.checked}`}
+            >
+              {checked && <i className="bi bi-check"></i>}
             </span>
             <p>Nhớ tôi</p>
           </label>
-          <button className={styles.submit} type='submit'>Đăng nhập</button>
+          <button className={styles.submit} type="submit">
+            Đăng nhập
+          </button>
         </form>
-        {error && (<p className={styles.error}>{error}</p>)}
+        {error && <p className={styles.error}>{error}</p>}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Login;

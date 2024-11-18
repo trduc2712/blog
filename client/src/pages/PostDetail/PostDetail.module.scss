@@ -8,11 +8,18 @@
       }
 
       .postContent {
+        margin-bottom: 20px;
+
         line-height: 1.5;
+        width: 100%;
+        height: 100%;
 
         img {
+          margin: 20px 0;
           display: block;
-          margin: 20px auto;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
           border-radius: 5px;
         }
       }

@@ -32,10 +32,17 @@
         td {
           padding: 10px;
           border-bottom: 1px solid #ccc;
-          text-align: center;
+
+          &:first-child {
+            text-align: center;
+          }
           
           &:not(:last-child) {
             border-right: 1px solid #ccc;
+          }
+
+          &:nth-last-child(2), &:last-child {
+            text-align: center;
           }
 
           a {

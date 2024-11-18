@@ -8,6 +8,7 @@ import Modal from '../Modal/Modal';
 import { deletePostById as deletePostByIdService } from '../../services/postService';
 import { deleteUserById as deleteUserByIdService } from '../../services/userService';
 import { deleteCategoryById as deleteCategoryByIdService } from '../../services/categoryService';
+
 const Table = ({ columnLabels, initialData }) => {
   const [data, setData] = useState([]);
   const [modalContent, setModalContent] = useState({});
@@ -46,13 +47,13 @@ const Table = ({ columnLabels, initialData }) => {
       addToast({
         type: 'success',
         title: 'Thông báo',
-        message: `Xóa ${entityName} thành công`
+        message: `Xóa ${entityName} thành công`,
       });
     } catch (err) {
       addToast({
         type: 'success',
         title: 'Thông báo',
-        message: `Xóa ${entityName} thất bại`
+        message: `Xóa ${entityName} thất bại`,
       });
     }
   };
@@ -64,13 +65,13 @@ const Table = ({ columnLabels, initialData }) => {
       addToast({
         type: 'success',
         title: 'Thông báo',
-        message: `Xóa ${entityName} thành công`
+        message: `Xóa ${entityName} thành công`,
       });
     } catch (err) {
       addToast({
         type: 'success',
         title: 'Thông báo',
-        message: `Xóa ${entityName} thất bại`
+        message: `Xóa ${entityName} thất bại`,
       });
     }
   };
@@ -82,13 +83,13 @@ const Table = ({ columnLabels, initialData }) => {
       addToast({
         type: 'success',
         title: 'Thông báo',
-        message: `Xóa ${entityName} thành công`
+        message: `Xóa ${entityName} thành công`,
       });
     } catch (err) {
       addToast({
         type: 'success',
         title: 'Thông báo',
-        message: `Xóa ${entityName} thất bại`
+        message: `Xóa ${entityName} thất bại`,
       });
     }
   };
@@ -111,19 +112,20 @@ const Table = ({ columnLabels, initialData }) => {
       },
       onCancel: () => {
         closeModal();
-      }
+      },
     });
     openModal();
   };
 
   const handleDeleteRow = (rowId) => {
     openConfirmDeleteModal(rowId);
-  }
+  };
 
   const isBase64 = (str) => {
-    const base64Pattern = /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/;
+    const base64Pattern =
+      /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/;
     return base64Pattern.test(str);
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -141,14 +143,28 @@ const Table = ({ columnLabels, initialData }) => {
             data.map((row, index) => (
               <tr key={index}>
                 {Object.values(row).map((cell, index) => (
-                  <td key={index}>{cell}</td>
+                  <td key={index}>
+                    {cell == 'ADMIN'
+                      ? 'Quản trị viên'
+                      : cell == 'USER'
+                        ? 'Người dùng'
+                        : cell}
+                  </td>
                 ))}
-                <td><Link to={`${location.pathname}/edit/${row.id}`}>Sửa</Link></td>
-                <td><Link to='' onClick={() => handleDeleteRow(row.id)}>Xóa</Link></td>
+                <td>
+                  <Link to={`${location.pathname}/edit/${row.id}`}>Sửa</Link>
+                </td>
+                <td>
+                  <Link to="" onClick={() => handleDeleteRow(row.id)}>
+                    Xóa
+                  </Link>
+                </td>
               </tr>
             ))
           ) : (
-            <tr><td colSpan={columnCounts}>Đang tải...</td></tr>
+            <tr>
+              <td colSpan={columnCounts}>Đang tải...</td>
+            </tr>
           )}
         </tbody>
       </table>
@@ -165,7 +181,7 @@ const Table = ({ columnLabels, initialData }) => {
       />
       <ToastList />
     </div>
-  )
-}
+  );
+};
 
 export default Table;

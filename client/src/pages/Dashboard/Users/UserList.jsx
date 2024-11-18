@@ -3,9 +3,9 @@ import Table from '../../../components/Table/Table';
 import Pagination from '../../../components/Pagination/Pagination';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
+import {
   getUsersWithPagination as getUsersWithPaginationService,
-  getUserCount as getUserCountService
+  getUserCount as getUserCountService,
 } from '../../../services/userService';
 
 const Users = () => {
@@ -20,25 +20,29 @@ const Users = () => {
 
   const removeProperties = (obj, propertiesToRemove) => {
     let result = { ...obj };
-    propertiesToRemove.forEach(prop => delete result[prop]);
+    propertiesToRemove.forEach((prop) => delete result[prop]);
     return result;
   };
 
   useEffect(() => {
     const getUsersWithPagination = async () => {
       try {
-        const usersWithPagination = await getUsersWithPaginationService(currentPage, usersPerPage);
+        const usersWithPagination = await getUsersWithPaginationService(
+          currentPage,
+          usersPerPage
+        );
         const userCount = await getUserCountService();
-        
+
         if (usersWithPagination == null) {
           setUsers([]);
         } else {
-          const newUsers = usersWithPagination.map(user => removeProperties(user, ['password', 'avatar']));
+          const newUsers = usersWithPagination.map((user) =>
+            removeProperties(user, ['password', 'avatar'])
+          );
           setUsers(newUsers);
           setTotalPages(Math.ceil(userCount / usersPerPage));
         }
-      } catch (err) {
-      }
+      } catch (err) {}
     };
 
     getUsersWithPagination();
@@ -46,12 +50,17 @@ const Users = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-  }
+  };
 
   return (
     <div className={styles.container}>
       <h2>Danh sách người dùng</h2>
-      <button className={styles.addButton} onClick={() => navigate('/dashboard/users/create')}>Thêm người dùng</button>
+      <button
+        className={styles.addButton}
+        onClick={() => navigate('/dashboard/users/create')}
+      >
+        Thêm người dùng
+      </button>
       <Table columnLabels={columnLabels} initialData={users} />
       <div className={styles.pagination}>
         <Pagination
@@ -61,7 +70,7 @@ const Users = () => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Users;

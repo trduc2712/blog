@@ -9,183 +9,224 @@ import { fileToBase64 } from '../../utils/file';
 import useModal from '../../hooks/useModal';
 import Modal from '../../components/Modal/Modal';
 import ToastList from '../../components/ToastList/ToastList';
+import { updateUser as updateUserService } from '../../services/userService';
 
 const MyProfile = () => {
-  const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
-  const [isModalSignUpOpen, setIsModalSignUpOpen] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [avatar, setAvatar] = useState('');
-  const [modalContent, setModalContent] = useState({});
-  
-  const { user, updateCurrentUser } = useAuthContext();
-  const { addToast } = useToastContext();
+    const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
+    const [isModalSignUpOpen, setIsModalSignUpOpen] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [userId, setUserId] = useState('');
+    const [role, setRole] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [avatar, setAvatar] = useState('');
+    const [modalContent, setModalContent] = useState({});
 
-  const { isOpen, openModal, closeModal } = useModal();
+    const { user } = useAuthContext();
+    const { addToast } = useToastContext();
 
-  const openModalLogin = () => setIsModalLoginOpen(true);
-  const openModalSignUp = () => setIsModalSignUpOpen(true);
-  const closeModalLogin = () => setIsModalLoginOpen(false);
-  const closeModalSignUp = () => setIsModalSignUpOpen(false);
+    const { isOpen, openModal, closeModal } = useModal();
 
-  const openConfirmUpdateModal = () => {
-    setModalContent({
-      title: 'Thông báo',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
-      message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
-      onConfirm: () => {
-        updateCurrentUser(username, password, name, avatar);
-        closeModal();
-        addToast({
-          type: 'success',
-          title: "Thông báo",
-          message: "Cập nhật thông tin cá nhân thành công.",
-        });
-      },
-      onCancel: () => {
+    const openModalLogin = () => setIsModalLoginOpen(true);
+    const openModalSignUp = () => setIsModalSignUpOpen(true);
+    const closeModalLogin = () => setIsModalLoginOpen(false);
+    const closeModalSignUp = () => setIsModalSignUpOpen(false);
+
+    const updateUser = async (id, username, password, name, avatar, role) => {
         if (user) {
-          setUsername(user.username);
-          setPassword(user.password);
-          setName(user.name);
-          setAvatar(user.avatar);
-          setRole(user.role);
-        };
-        closeModal();
-      }
-    });
-    openModal();
-  };
+            try {
+                await updateUserService(
+                    id,
+                    username,
+                    password,
+                    name,
+                    avatar,
+                    role
+                );
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    };
 
-  useEffect(() => {
-    document.title = 'Hồ sơ của tôi | Blog';
+    const openConfirmUpdateModal = () => {
+        setModalContent({
+            title: 'Thông báo',
+            cancelLabel: 'Không',
+            confirmLabel: 'Có',
+            message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
+            onConfirm: () => {
+                updateUser(userId, username, password, name, avatar, role);
+                closeModal();
+                addToast({
+                    type: 'success',
+                    title: 'Thông báo',
+                    message: 'Cập nhật thông tin cá nhân thành công.',
+                });
+            },
+            onCancel: () => {
+                if (user) {
+                    setUsername(user.username);
+                    setPassword(user.password);
+                    setName(user.name);
+                    setAvatar(user.avatar);
+                    setRole(user.role);
+                }
+                closeModal();
+            },
+        });
+        openModal();
+    };
 
-    if (user) {
-      setUsername(user.username);
-      setPassword(user.password);
-      setName(user.name);
-      setAvatar(user.avatar);
-    }
-  }, [user]);
+    useEffect(() => {
+        document.title = 'Hồ sơ của tôi | Blog';
 
-  const handleAvatarChange = async (e) => {
-    const file = e.target.files[0];
+        if (user) {
+            setUserId(user.id);
+            setUsername(user.username);
+            setPassword(user.password);
+            setName(user.name);
+            setAvatar(user.avatar);
+            setRole(user.role);
+        }
+    }, [user]);
 
-    if (!file) {
-      console.log('Vui lòng chọn ảnh');
-      return;
-    }
+    const handleAvatarChange = async (e) => {
+        const file = e.target.files[0];
 
-    const base64 = await fileToBase64(file);
-    setAvatar(base64);
-  };
+        if (!file) {
+            console.log('Vui lòng chọn ảnh');
+            return;
+        }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+        const base64 = await fileToBase64(file);
+        setAvatar(base64);
+    };
 
-    openConfirmUpdateModal();
-  };
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  }
+        openConfirmUpdateModal();
+    };
 
-  return (
-    <div className={styles.container}>
-      <Header
-        isDashboard={false}
-        openModalLogin={openModalLogin}
-        openModalSignUp={openModalSignUp}
-      />
-      <div className={styles.contentWrapper}>
-        {user ? (
-          <div className={styles.content}>
-            <h2>Hồ sơ của tôi</h2>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="file"
-                id="avatar"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onChange={handleAvatarChange}
-              />
-              <div className={styles.avatarWrapper}>
-                <label htmlFor="avatar">
-                  <img
-                    src={`data:image/jpeg;base64,${avatar}`} 
-                    alt="Hình đại diện của người dùng"
-                    className={styles.avatar}
-                  />
-                </label>
-              </div>
-              <div className={styles.formGroups}>
-                <div className={styles.formGroup}>
-                  <label htmlFor='username'>Tên người dùng</label>
-                  <input
-                    id='username' 
-                    type='text'
-                    value={username} 
-                    disabled
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <label htmlFor='password'>Mật khẩu</label>
-                  <div className={styles.inputPasswordWrapper}>
-                    <input 
-                      id='password' 
-                      type={isPasswordVisible ? 'text' : 'password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <div className={styles.togglePassword} onClick={togglePasswordVisibility}>
-                      {isPasswordVisible ?
-                        <i className="bi bi-eye-slash"></i>
-                      :
-                        <i className="bi bi-eye"></i>
-                      }
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
+
+    return (
+        <div className={styles.container}>
+            <Header
+                isDashboard={false}
+                openModalLogin={openModalLogin}
+                openModalSignUp={openModalSignUp}
+            />
+            <div className={styles.contentWrapper}>
+                {user ? (
+                    <div className={styles.content}>
+                        <h2>Hồ sơ của tôi</h2>
+                        <form onSubmit={handleSubmit}>
+                            <input
+                                type="file"
+                                id="avatar"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                onChange={handleAvatarChange}
+                            />
+                            <div className={styles.avatarWrapper}>
+                                <label htmlFor="avatar">
+                                    <img
+                                        src={`data:image/jpeg;base64,${avatar}`}
+                                        alt="Hình đại diện của người dùng"
+                                        className={styles.avatar}
+                                    />
+                                </label>
+                            </div>
+                            <div className={styles.formGroups}>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="username">
+                                        Tên người dùng
+                                    </label>
+                                    <input
+                                        id="username"
+                                        type="text"
+                                        value={username}
+                                        disabled
+                                        onChange={(e) =>
+                                            setUsername(e.target.value)
+                                        }
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="password">Mật khẩu</label>
+                                    <div
+                                        className={styles.inputPasswordWrapper}
+                                    >
+                                        <input
+                                            id="password"
+                                            type={
+                                                isPasswordVisible
+                                                    ? 'text'
+                                                    : 'password'
+                                            }
+                                            value={password}
+                                            onChange={(e) =>
+                                                setPassword(e.target.value)
+                                            }
+                                        />
+                                        <div
+                                            className={styles.togglePassword}
+                                            onClick={togglePasswordVisibility}
+                                        >
+                                            {isPasswordVisible ? (
+                                                <i className="bi bi-eye-slash"></i>
+                                            ) : (
+                                                <i className="bi bi-eye"></i>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="name">Tên</label>
+                                    <input
+                                        id="name"
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) =>
+                                            setName(e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <div className={styles.buttons}>
+                                <button type="submit" className={styles.create}>
+                                    Lưu
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                  </div>
-                </div>
-                <div className={styles.formGroup}>
-                  <label htmlFor='name'>Tên</label>
-                  <input 
-                    id='name' 
-                    type='text' 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className={styles.buttons}>
-                <button type='submit' className={styles.create}>Lưu</button>
-              </div>
-            </form>
-          </div>
-        ) : (
-          <div className={styles.notLoggedIn}>
-            <p>Chưa đăng nhập.</p>
-          </div>
-        )}
-      </div>
-      <Login isOpen={isModalLoginOpen} onClose={closeModalLogin} />
-      <SignUp isOpen={isModalSignUpOpen} onClose={closeModalSignUp} />
-      <Modal
-        title={modalContent.title}
-        isOpen={isOpen}
-        onClose={closeModal}
-        cancelLabel={modalContent.cancelLabel}
-        confirmLabel={modalContent.confirmLabel}
-        onConfirm={modalContent.onConfirm}
-        onCancel={modalContent.onCancel}
-        message={modalContent.message}
-        buttonLabel={modalContent.buttonLabel}
-      />
-      <ToastList />
-    </div>
-  )
-}
+                ) : (
+                    <div className={styles.notLoggedIn}>
+                        <p>Chưa đăng nhập.</p>
+                    </div>
+                )}
+            </div>
+            <Login isOpen={isModalLoginOpen} onClose={closeModalLogin} />
+            <SignUp isOpen={isModalSignUpOpen} onClose={closeModalSignUp} />
+            <Modal
+                title={modalContent.title}
+                isOpen={isOpen}
+                onClose={closeModal}
+                cancelLabel={modalContent.cancelLabel}
+                confirmLabel={modalContent.confirmLabel}
+                onConfirm={modalContent.onConfirm}
+                onCancel={modalContent.onCancel}
+                message={modalContent.message}
+                buttonLabel={modalContent.buttonLabel}
+            />
+            <ToastList />
+        </div>
+    );
+};
 
 export default MyProfile;

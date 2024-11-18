@@ -8,7 +8,7 @@ const RoleBasedRoute = ({ allowedRole, redirectPath, children }) => {
     if (user.role != allowedRole) {
       return <Navigate to={redirectPath} replace />;
     }
-  }
+  } else if (!user) return <Navigate to={redirectPath} replace />;
 
   return children;
 }

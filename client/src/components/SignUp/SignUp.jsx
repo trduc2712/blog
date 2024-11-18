@@ -8,6 +8,9 @@ const SignUp = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [nameError, setNameError] = useState('');
 
   const { error, setError, signUp } = useAuthContext();
   const { addToast } = useToastContext();
@@ -15,127 +18,159 @@ const SignUp = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (username == '' || password == '') {
+      if (username == '') setUsernameError('Vui lòng điền tên người dùng.');
+      if (password == '') setPasswordError('Vui lòng điền mật khẩu.');
+      if (name == '') setNameError('Vui lòng điền tên.');
+      return;
+    }
+
     const validUsernamePattern = /^[a-zA-Z0-9]*$/;
     const validNamePattern = /^[a-zA-ZÀ-ỹà-ý ]*$/;
     const validPasswordPattern = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
-    if (username == '' || password == '' || name == '') {
-      setError('Vui lòng điền đầy đủ thông tin vào tất cả các trường bắt buộc');
-      return;
-    }
     if (!validUsernamePattern.test(username)) {
-      setError('Tên người dùng không được chứa ký tự đặc biệt');
+      setUsernameError('Tên người dùng không được chứa ký tự đặc biệt.');
       return;
     }
     if (!validNamePattern.test(name)) {
-      setError('Tên không dược chứa ký tự đặc biệt');
+      setNameError('Tên không dược chứa ký tự đặc biệt.');
       return;
     }
     if (!validPasswordPattern.test(password)) {
-      setError('Mật khẩu phải có ít nhất 6 ký tự và bao gồm chữ cái và số');
+      setPasswordError(
+        'Mật khẩu phải có ít nhất 8 ký tự và bao gồm cả chữ cái và số.'
+      );
       return;
     }
 
     const avatar = '';
     const role = '';
-    const isSuccess = await await signUp(username, password, name, avatar, role);
+    const isSuccess = await signUp(username, password, name, avatar, role);
     if (isSuccess) {
       addToast({
         type: 'success',
-        title: "Thông báo",
-        message: "Đăng ký thành công",
+        title: 'Thông báo',
+        message: 'Đăng ký thành công',
       });
+      handleReset();
     } else return;
+  };
 
+  const handleReset = () => {
     setUsername('');
     setPassword('');
     setName('');
     setError('');
+    setUsernameError('');
+    setPasswordError('');
+    setNameError('');
     onClose();
-  }
+  };
+
+  const handleResetUsernameError = () => {
+    setUsernameError('');
+  };
+
+  const handleResetPasswordError = () => {
+    setPasswordError('');
+  };
+
+  const handleResetNameError = () => {
+    setNameError('');
+  };
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
-  }
+  };
 
   if (!isOpen) return null;
 
   return (
-    <div
-      className={styles.overlay}
-      onClick={() => {
-        setUsername('');
-        setPassword('');
-        setName('');
-        setError('');
-        onClose();
-      }}
-    >
+    <div className={styles.overlay} onClick={handleReset}>
       <div className={styles.container} onClick={(e) => e.stopPropagation()}>
-        <button
-          onClick={() => {
-            setUsername('');
-            setPassword('');
-            setName('');
-            setError('');
-            onClose();
-          }}
-          className={styles.closeButton}
-        >
-          <i className="bi bi-x"></i>
-        </button>
-        <h2>Đăng ký</h2>
+        <div className={styles.header}>
+          <h2>Đăng ký</h2>
+          <div className={styles.close} onClick={handleReset}>
+            <i className="bi bi-x"></i>
+          </div>
+        </div>
         <form onSubmit={handleSubmit}>
-          <div className={styles.formGroups}>
-            <div className={styles.formGroup}>
-              <label htmlFor='username'>Tên người dùng</label>
-              <input 
-                type='text'
-                placeholder='Tên người dùng'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                onClick={() => setError('')}
-                id='username'
+          <div className={styles.formGroup}>
+            <label htmlFor="username">
+              <p>Tên người dùng</p>
+            </label>
+            <input
+              id="username"
+              className={usernameError ? styles.redBorder : ''}
+              type="text"
+              placeholder="Tên người dùng"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              onFocus={handleResetUsernameError}
+            />
+            <p className={styles.usernameError}>{usernameError}</p>
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="password">
+              <p>Mật khẩu</p>
+            </label>
+            <div className={styles.inputPasswordWrapper}>
+              <input
+                id="password"
+                className={passwordError ? styles.redBorder : ''}
+                type={isPasswordVisible ? 'text' : 'password'}
+                placeholder="Mật khẩu"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={handleResetPasswordError}
               />
-            </div>
-            <div className={styles.formGroup}>
-            <label htmlFor='password'>Mật khẩu</label>
-              <div className={styles.inputPasswordWrapper}>
-                <input
-                  type={isPasswordVisible ? 'text' : 'password'}
-                  placeholder='Mật khẩu'
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onClick={() => setError('')}
-                  id='password'
-                />
-                <div className={styles.togglePassword} onClick={togglePasswordVisibility}>
-                  {isPasswordVisible ?
-                    <i className="bi bi-eye-slash"></i>
-                  :
-                    <i className="bi bi-eye"></i>
-                  }
-                </div>
+              <div
+                className={styles.togglePassword}
+                onClick={togglePasswordVisibility}
+              >
+                {isPasswordVisible ? (
+                  <i className="bi bi-eye-slash"></i>
+                ) : (
+                  <i className="bi bi-eye"></i>
+                )}
               </div>
             </div>
-            <div className={styles.formGroup}>
-              <label htmlFor='name'>Tên</label>
-              <input 
-                type='text'
-                placeholder='Tên'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onClick={() => setError('')}
-                id='name'
-              />
-            </div>
+            <p className={styles.passwordError}>{passwordError}</p>
           </div>
-          <button type='submit'>Đăng ký</button>
+          <div className={styles.formGroup}>
+            <label htmlFor="name">
+              <p>Tên</p>
+            </label>
+            <input
+              id="name"
+              className={nameError ? styles.redBorder : ''}
+              type="text"
+              placeholder="Tên"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onFocus={handleResetNameError}
+            />
+            <p className={styles.nameError}>{nameError}</p>
+          </div>
+          <button type="submit" className={styles.submit}>
+            Đăng ký
+          </button>
         </form>
-        {error && (<p style={{ color: 'red', marginTop: '20px', textAlign: 'center' }}>{error}</p>)}
+        {error && (
+          <p
+            style={{
+              color: 'red',
+              marginTop: '20px',
+              textAlign: 'center',
+            }}
+          >
+            {error}
+          </p>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default SignUp;
