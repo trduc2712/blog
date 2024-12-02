@@ -1,11 +1,11 @@
 import {
-  getAllCategories as getAllCategoriesFromModal,
-  getCategoryCount as getCategoryCountFromModal,
-  getCategoriesWithPagination as getCategoriesWithPaginationFromModal,
-  deleteCategoryById as deleteCategoryByIdFromModal,
-  getCategoryById as getCategoryByIdFromModal,
-  updateCategory as updateCategoryFromModal,
-  createCategory as createCategoryFromModal,
+  getAllCategories as getAllCategoriesFromModel,
+  getCategoryCount as getCategoryCountFromModel,
+  getCategoriesWithPagination as getCategoriesWithPaginationFromModel,
+  deleteCategoryById as deleteCategoryByIdFromModel,
+  getCategoryById as getCategoryByIdFromModel,
+  updateCategory as updateCategoryFromModel,
+  createCategory as createCategoryFromModel,
 } from '../models/category.js';
 
 export const getCategories = async (req, res) => {
@@ -17,11 +17,11 @@ export const getCategories = async (req, res) => {
       return res.status(400).json({ error: 'Tham số không hợp lệ.' });
     }
 
-    const categoryCount = await getCategoryCountFromModal();
+    const categoryCount = await getCategoryCountFromModel();
     const categories =
       page && limit
-        ? await getCategoriesWithPaginationFromModal(page, limit)
-        : await getAllCategoriesFromModal();
+        ? await getCategoriesWithPaginationFromModel(page, limit)
+        : await getAllCategoriesFromModel();
 
     if (categories.length === 0) {
       return res.status(404).json({ error: 'Không có danh mục nào.' });
@@ -54,7 +54,7 @@ export const createCategory = async (req, res) => {
   }
 
   try {
-    await createCategoryFromModal(name, slug);
+    await createCategoryFromModel(name, slug);
     return res.status(201).json({ message: 'Tạo danh mục thành công' });
   } catch (err) {
     console.log('Lỗi khi tạo danh mục mới: ', err);
@@ -70,7 +70,7 @@ export const getCategory = async (req, res) => {
   }
 
   try {
-    const category = await getCategoryByIdFromModal(id);
+    const category = await getCategoryByIdFromModel(id);
 
     if (!category) {
       return res.status(404).json({ error: 'Danh mục không tồn tại.' });
@@ -92,12 +92,12 @@ export const updateCategory = async (req, res) => {
   const { name, slug } = req.body;
 
   try {
-    const result = await updateCategoryFromModal(id, name, slug);
+    const result = await updateCategoryFromModel(id, name, slug);
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Không tìm thấy danh mục.' });
     }
 
-    const updatedCategory = await getCategoryByIdFromModal(id);
+    const updatedCategory = await getCategoryByIdFromModel(id);
     res.json({
       message: 'Cập nhật thông tin danh mục thành công.',
       category: updatedCategory,
@@ -115,7 +115,7 @@ export const deleteCategoryById = async (req, res) => {
     return res.status(400).json({ error: 'Thiếu ID của danh mục.' });
   }
   try {
-    await deleteCategoryByIdFromModal(categoryId);
+    await deleteCategoryByIdFromModel(categoryId);
     return res.status(200).json({ message: 'Xóa danh mục thành công.' });
   } catch (err) {
     console.log('Lỗi khi xóa danh mục: ', err);

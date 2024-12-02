@@ -1,6 +1,6 @@
 import { query as _query } from '../config/db.js';
 
-export function getAllCategories() {
+export const getAllCategories = () => {
   return new Promise((resolve, reject) => {
     const query = 'SELECT * FROM categories';
 
@@ -9,46 +9,51 @@ export function getAllCategories() {
       resolve(results);
     });
   });
-}
+};
 
-export function getCategoryCount() {
+export const getCategoryCount = () => {
   return new Promise((resolve, reject) => {
     const query = 'SELECT COUNT(*) AS count FROM categories';
+
     _query(query, (err, results) => {
       if (err) return reject(err);
       resolve(results[0].count);
     });
   });
-}
+};
 
-export function getCategoriesWithPagination(page, limit) {
+export const getCategoriesWithPagination = (page, limit) => {
   return new Promise((resolve, reject) => {
     const offset = (page - 1) * limit;
+
     const query = `
-          SELECT 
-              categories.id, 
-              categories.name, 
-              categories.slug
-          FROM categories
-          LIMIT ? OFFSET ?`;
+      SELECT 
+        categories.id, 
+        categories.name, 
+        categories.slug
+      FROM categories
+      LIMIT ? OFFSET ?
+    `;
+
     _query(query, [limit, offset], (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
   });
-}
+};
 
-export function deleteCategoryById(id) {
+export const deleteCategoryById = (id) => {
   return new Promise((resolve, reject) => {
     const query = 'DELETE FROM categories WHERE id = ?';
+
     _query(query, [id], (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
   });
-}
+};
 
-export function updatePost(
+export const updatePost = (
   id,
   title,
   content,
@@ -56,19 +61,21 @@ export function updatePost(
   thumbnail,
   categorySlug,
   slug
-) {
+) => {
   return new Promise((resolve, reject) => {
     const query = `
-          UPDATE 
-              posts 
-          SET 
-              title = ?, 
-              content = ?, 
-              user_id = ?,
-              thumbnail = ?,
-              category_slug = ?,
-              slug = ?
-          WHERE id = ?`;
+      UPDATE 
+        posts 
+      SET 
+        title = ?, 
+        content = ?, 
+        user_id = ?,
+        thumbnail = ?,
+        category_slug = ?,
+        slug = ?
+      WHERE id = ?
+    `;
+
     _query(
       query,
       [title, content, userId, thumbnail, categorySlug, slug, id],
@@ -78,47 +85,51 @@ export function updatePost(
       }
     );
   });
-}
+};
 
-export function getCategoryById(id) {
+export const getCategoryById = (id) => {
   return new Promise((resolve, reject) => {
     const query = `
-          SELECT
-              id,
-              name,
-              slug
-          FROM categories
-          WHERE id = ?
-      `;
+      SELECT
+        id,
+        name,
+        slug
+      FROM categories
+      WHERE id = ?
+    `;
+
     _query(query, [id], (err, results) => {
       if (err) return reject(err);
       resolve(results[0]);
     });
   });
-}
+};
 
-export function updateCategory(id, name, slug) {
+export const updateCategory = (id, name, slug) => {
   return new Promise((resolve, reject) => {
     const query = `
-          UPDATE 
-              categories
-          SET 
-              name = ?,
-              slug = ?
-          WHERE id = ?`;
+      UPDATE 
+        categories
+      SET 
+        name = ?,
+        slug = ?
+      WHERE id = ?
+      `;
+
     _query(query, [name, slug, id], (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
   });
-}
+};
 
-export function createCategory(name, slug) {
+export const createCategory = (name, slug) => {
   return new Promise((resolve, reject) => {
-    const query = `INSERT INTO categories (name, slug) VALUES (?, ?)`;
+    const query = 'INSERT INTO categories (name, slug) VALUES (?, ?)';
+
     _query(query, [name, slug], (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
   });
-}
+};

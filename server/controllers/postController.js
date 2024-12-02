@@ -7,40 +7,63 @@ import {
   getPostsWithPagination as getPostsWithPaginationFromModel,
   deletePostById as deletePostByIdFromModel,
   updatePost as updatePostFromModel,
+  searchPostsByKeyword as searchPostsByKeywordFromModel,
 } from '../models/post.js';
 
 export const getPosts = async (req, res) => {
   try {
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
+    const keyword = req.query.keyword;
 
-    if (page && limit && (page <= 0 || limit <= 0)) {
-      return res.status(400).json({ error: 'Tham số không hợp lệ.' });
-    }
+    if (keyword) {
+      try {
+        const posts = await searchPostsByKeywordFromModel(keyword);
 
-    const postCount = await getPostCountFromModel();
-    const posts =
-      page && limit
-        ? await getPostsWithPaginationFromModel(page, limit)
-        : await getAllPostsFromModel();
+        if (posts.length === 0) {
+          return res.status(404).json({ error: 'Không tìm thấy bài viết.' });
+        }
 
-    if (posts.length === 0) {
-      return res.status(404).json({ error: 'Không có bài viết nào.' });
-    }
+        res.json({
+          message: `Tìm kiếm bài viết với từ khóa ${keyword} thành công`,
+          posts,
+        });
+      } catch (err) {
+        console.error(
+          `Lỗi khi tìm kiếm bài viết với từ khóa ${keyword}: `,
+          err
+        );
+        res.status(500).json({ error: 'Lỗi máy chủ.' });
+      }
+    } else {
+      if (page && limit && (page <= 0 || limit <= 0)) {
+        return res.status(400).json({ error: 'Tham số không hợp lệ.' });
+      }
 
-    res.json({
-      message:
+      const postCount = await getPostCountFromModel();
+      const posts =
         page && limit
-          ? `Lấy các bài viết ở trang ${page} thành công.`
-          : 'Lấy tất cả bài viết thành công.',
-      posts,
-      meta: {
-        postCount,
-        currentPage: page || undefined,
-        // Nếu toán hạng đầu tiên là truthy thì toán tử || sẽ trả về toán hạng đầu tiên mà không cần kiểm tra toán hạng thứ hai.
-        totalPages: page && limit ? Math.ceil(postCount / limit) : undefined,
-      },
-    });
+          ? await getPostsWithPaginationFromModel(page, limit)
+          : await getAllPostsFromModel();
+
+      if (posts.length === 0) {
+        return res.status(404).json({ error: 'Không có bài viết nào.' });
+      }
+
+      res.json({
+        message:
+          page && limit
+            ? `Lấy các bài viết ở trang ${page} thành công.`
+            : 'Lấy tất cả bài viết thành công.',
+        posts,
+        meta: {
+          postCount,
+          currentPage: page || undefined,
+          // Nếu toán hạng đầu tiên là truthy thì toán tử || sẽ trả về toán hạng đầu tiên mà không cần kiểm tra toán hạng thứ hai.
+          totalPages: page && limit ? Math.ceil(postCount / limit) : undefined,
+        },
+      });
+    }
   } catch (err) {
     console.log('Lỗi khi lấy bài viết: ', err);
     res.status(500).json({ error: 'Lỗi máy chủ.' });
@@ -70,6 +93,7 @@ export const createPost = async (req, res) => {
     });
   } catch (err) {
     console.log('Lỗi khi tạo bài viết mới: ', err);
+    console.log('Mã lỗi: ', err.code);
     return res.status(500).json({ error: 'Lỗi máy chủ.' });
   }
 };

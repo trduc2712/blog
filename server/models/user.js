@@ -1,17 +1,20 @@
 import { query as _query } from '../config/db.js';
 
-export function createUser(username, password, name, avatar, role) {
+export const createUser = (username, password, name, avatar, role) => {
   if (!role) role = 'USER';
+
   return new Promise((resolve, reject) => {
-    const query = `INSERT INTO users (username, password, name, avatar, role) VALUES (?, ?, ?, ?, ?)`;
+    const query =
+      'INSERT INTO users (username, password, name, avatar, role) VALUES (?, ?, ?, ?, ?)';
+
     _query(query, [username, password, name, avatar, role], (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
   });
-}
+};
 
-export function getUserByUsername(username) {
+export const getUserByUsername = (username) => {
   return new Promise((resolve, reject) => {
     const query = 'SELECT * FROM users WHERE username = ?';
 
@@ -20,30 +23,33 @@ export function getUserByUsername(username) {
       resolve(results[0]);
     });
   });
-}
+};
 
-export function getUserByCredentials(username, password) {
+export const getUserByCredentials = (username, password) => {
   return new Promise((resolve, reject) => {
     const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
+
     _query(query, [username, password], (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
   });
-}
+};
 
-export function updateUser(id, username, password, name, avatar, role) {
+export const updateUser = (id, username, password, name, avatar, role) => {
   return new Promise((resolve, reject) => {
     const query = `
-            UPDATE 
-                users 
-            SET 
-                username = ?, 
-                password = ?, 
-                name = ?,
-                avatar = ?,
-                role = ?
-            WHERE id = ?`;
+      UPDATE 
+        users 
+      SET 
+        username = ?, 
+        password = ?, 
+        name = ?,
+        avatar = ?,
+        role = ?
+      WHERE id = ?
+    `;
+
     _query(
       query,
       [username, password, name, avatar, role, id],
@@ -53,49 +59,53 @@ export function updateUser(id, username, password, name, avatar, role) {
       }
     );
   });
-}
+};
 
-export function getUserCount() {
+export const getUserCount = () => {
   return new Promise((resolve, reject) => {
     const query = 'SELECT COUNT(*) AS count FROM users';
+
     _query(query, (err, results) => {
       if (err) return reject(err);
       resolve(results[0].count);
     });
   });
-}
+};
 
-export function getUsersWithPagination(page, limit) {
+export const getUsersWithPagination = (page, limit) => {
   return new Promise((resolve, reject) => {
     const offset = (page - 1) * limit;
     const query = `
-          SELECT 
-              users.id, 
-              users.username, 
-              users.password, 
-              users.name,
-              users.avatar,
-              users.role
-          FROM users
-          LIMIT ? OFFSET ?`;
+      SELECT 
+        id, 
+        username, 
+        password, 
+        name,
+        avatar,
+        role
+      FROM users
+      LIMIT ? OFFSET ?
+    `;
+
     _query(query, [limit, offset], (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
   });
-}
+};
 
-export function deleteUserById(id) {
+export const deleteUserById = (id) => {
   return new Promise((resolve, reject) => {
     const query = 'DELETE FROM users WHERE id = ?';
+
     _query(query, [id], (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
   });
-}
+};
 
-export function getAllUsers() {
+export const getAllUsers = () => {
   return new Promise((resolve, reject) => {
     const query = 'SELECT * FROM users';
 
@@ -104,24 +114,25 @@ export function getAllUsers() {
       resolve(results);
     });
   });
-}
+};
 
-export function getUserById(id) {
+export const getUserById = (id) => {
   return new Promise((resolve, reject) => {
     const query = `
-            SELECT
-                id,
-                username,
-                password,
-                name,
-                avatar,
-                role
-            FROM users
-            WHERE id = ?
-        `;
+      SELECT
+        id,
+        username,
+        password,
+        name,
+        avatar,
+        role
+      FROM users
+      WHERE id = ?
+    `;
+
     _query(query, [id], (err, results) => {
       if (err) return reject(err);
       resolve(results[0]);
     });
   });
-}
+};
