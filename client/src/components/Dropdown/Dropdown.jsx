@@ -1,49 +1,48 @@
 import styles from './Dropdown.module.scss';
 import { useState, useEffect, useRef } from 'react';
 
-const Dropdown = ({ trigger, children }) => {
+const Dropdown = ({ trigger, items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target))
         setIsOpen(false);
-      }
     };
+
     document.addEventListener('mousedown', handleClickOutside);
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
-  const handleToggle = () => {
+  const handleToggleTrigger = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleChildClick = (child) => {
-    child.onClick();
+  const handleClickItem = (item) => {
+    item.onClick();
     setIsOpen(false);
   };
 
   return (
     <div className={styles.container} ref={dropdownRef}>
-      <div className={styles.trigger} onClick={handleToggle}>
+      <div className={styles.trigger} onClick={handleToggleTrigger}>
         {trigger}
       </div>
-      {isOpen && (
-        <ul className={styles.children}>
-          {children.map((child, index) => (
-            <li
-              key={index}
-              className={styles.child}
-              onClick={() => handleChildClick(child)}
-            >
-              <p>{child.label}</p>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul className={`${styles.items} ${isOpen ? styles.open : ''}`}>
+        {items.map((item, index) => (
+          <li
+            key={index}
+            className={styles.item}
+            onClick={() => handleClickItem(item)}
+          >
+            <p>{item.label}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

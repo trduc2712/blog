@@ -1,12 +1,11 @@
 import styles from './PostList.module.scss';
-import Table from '../../../components/Table/Table';
-import Pagination from '../../../components/Pagination/Pagination';
+import Table from '@components/Table/Table';
+import Pagination from '@components/Pagination/Pagination';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { 
+import {
   getPostCount as getPostCountService,
-  getPostsWithPagination as getPostsWithPaginationService
-} from '../../../services/postService';
+  getPostsWithPagination as getPostsWithPaginationService,
+} from '@services/postService';
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
@@ -14,24 +13,37 @@ const PostList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const postsPerPage = 10;
 
-  const columnLabels = ['ID', 'Tiêu đề', 'Tác giả', 'Tên người dùng'];
+  const columnLabels = ['ID', 'Tiêu đề', 'Tác giả'];
 
   const removeProperties = (obj, propertiesToRemove) => {
     let result = { ...obj };
-    propertiesToRemove.forEach(prop => delete result[prop]);
+    propertiesToRemove.forEach((prop) => delete result[prop]);
     return result;
   };
 
   useEffect(() => {
     const getPostsWithPagination = async () => {
       try {
-        const postsWithPagination = await getPostsWithPaginationService(currentPage, postsPerPage);
+        const postsWithPagination = await getPostsWithPaginationService(
+          currentPage,
+          postsPerPage
+        );
         const postCount = await getPostCountService();
-        
+
         if (postsWithPagination == null) {
           setPosts([]);
         } else {
-          const newPosts = postsWithPagination.map(post => removeProperties(post, ['thumbnail', 'slug','user_avatar', 'created_at', 'category_name', 'category_slug']));
+          const newPosts = postsWithPagination.map((post) =>
+            removeProperties(post, [
+              'thumbnail',
+              'slug',
+              'user_avatar',
+              'created_at',
+              'category_name',
+              'category_slug',
+              'user_username',
+            ])
+          );
           setPosts(newPosts);
           setTotalPages(Math.ceil(postCount / postsPerPage));
         }
@@ -45,7 +57,7 @@ const PostList = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -59,7 +71,7 @@ const PostList = () => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default PostList;

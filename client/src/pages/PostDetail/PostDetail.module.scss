@@ -1,4 +1,13 @@
 .container {
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-width: 100vw;
+    padding: 79px 40px 20px;
+  }
+
   .contentWrapper {
     padding: 79px 40px 20px;
 

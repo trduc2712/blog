@@ -11,70 +11,75 @@
   z-index: 2000;
   flex-direction: column;
 
-  .header {
-    width: 450px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 10px 10px 0 0;
-    padding: 20px;
-    
-    .close {
+  .container {
+    border-radius: 10px;
+    overflow: hidden;
+
+    .header {
+      width: 450px;
       display: flex;
-      justify-content: center;
       align-items: center;
-      width: 40px;
-      height: 40px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      justify-content: space-between;
+      padding: 20px;
 
-      &:hover {
-        background-color: #e6e6e6;
-        transition: 0.3s background-color ease;
+      .close {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
 
-        i {
+        &:hover {
           background-color: #e6e6e6;
           transition: 0.3s background-color ease;
+
+          i {
+            background-color: #e6e6e6;
+            transition: 0.3s background-color ease;
+          }
+        }
+
+        i {
+          width: 24px !important;
+          height: 24px !important;
+          font-size: 24px !important;
+        }
+      }
+    }
+
+    .body {
+      width: 450px;
+      padding: 0 20px;
+    }
+
+    .footer {
+      padding: 20px;
+      display: flex;
+      justify-content: flex-end;
+      width: 450px;
+
+      .cancel {
+        width: 100px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        color: #000;
+        background-color: #fff;
+
+        &:hover {
+          border: 1px solid #1677ff;
+          color: #1677ff;
+          transition:
+            0.3s border,
+            color ease;
         }
       }
 
-      i {
-        width: 24px !important;
-        height: 24px !important;
-        font-size: 24px !important;
+      .confirm {
+        width: 100px;
       }
-    }
-  }
-
-  .body {
-    width: 450px;
-    padding: 0 20px;
-  }
-
-  .footer {
-    padding: 20px;
-    display: flex;
-    justify-content: flex-end;
-    width: 450px;
-    border-radius: 0 0 10px 10px;
-
-    .cancel {
-      width: 100px;
-      margin-right: 10px;
-      border: 1px solid #ccc;
-      color: #000;
-      background-color: #fff;
-
-      &:hover {
-        border: 1px solid #1877f2;
-        color: #1877f2;
-        transition: 0.3s border, color ease;
-      }
-    }
-
-    .confirm {
-      width: 100px;
     }
   }
 }

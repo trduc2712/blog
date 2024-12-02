@@ -1,22 +1,114 @@
 .container {
   .avatarWrapper {
-    margin: 20px 0 15px;
     width: 100%;
     display: flex;
     justify-content: center;
 
-    .avatar {
-      width: 150px;
-      height: 150px;
+    .avatarLabel {
+      position: relative;
+
+      .change {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        top: 20px;
+        background-color: rgba(0, 0, 0, 0);
+        width: 100px;
+        height: 100px;
+
+        i {
+          opacity: 0;
+        }
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.2);
+          cursor: pointer;
+          transition: 0.3s background-color ease;
+
+          i {
+            opacity: 1;
+            background-color: transparent;
+            color: #fff;
+            transition: 0.3s opacity ease;
+          }
+        }
+      }
+
+      .avatar {
+        display: block;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin: 20px auto 10px;
+        border: 1px solid #ccc;
+
+        &:hover {
+          cursor: pointer;
+          opacity: 0.8;
+          transition: 0.3s opacity ease;
+        }
+      }
+    }
+
+    .notFoundAvatar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100px;
+      height: 100px;
       object-fit: cover;
-      display: block;
-      border-radius: 50%;
-      cursor: pointer;
+      border-radius: 5px;
+      margin: 20px auto;
       border: 1px solid #ccc;
+      cursor: pointer;
 
       &:hover {
-        opacity: 0.8;
-        transition: 0.3s opacity ease;
+        color: #1677ff;
+        border: 1px solid #1677ff;
+        transition:
+          color 0.3s ease,
+          border 0.3s ease;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      .avatar {
+        display: block;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin: 20px auto 10px;
+        border: 1px solid #ccc;
+
+        &:hover {
+          cursor: pointer;
+          opacity: 0.8;
+          transition: 0.3s opacity ease;
+        }
+      }
+
+      .upload {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        i {
+          width: 25px;
+          height: 25px;
+          font-size: 25px;
+          margin-bottom: 5px;
+        }
+
+        span {
+          font-size: 30px;
+        }
       }
     }
   }
@@ -53,7 +145,8 @@
 
   .rolePicker {
     margin-bottom: 20px;
-    
+    position: relative;
+
     .roleList {
       font-size: 14px;
       display: flex;
@@ -68,11 +161,18 @@
       &:hover {
         cursor: pointer;
       }
+
+      i {
+        width: 14px;
+        height: 14px;
+        font-size: 14px;
+      }
     }
 
     .roles {
+      position: absolute;
       border-radius: 5px;
-      position: sticky;
+      width: 100%;
       margin-top: 5px;
       padding: 10px 0;
       border: 1px solid #ccc;

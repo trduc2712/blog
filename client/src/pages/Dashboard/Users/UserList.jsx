@@ -1,12 +1,12 @@
 import styles from './UserList.module.scss';
-import Table from '../../../components/Table/Table';
-import Pagination from '../../../components/Pagination/Pagination';
+import Table from '@components/Table/Table';
+import Pagination from '@components/Pagination/Pagination';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getUsersWithPagination as getUsersWithPaginationService,
   getUserCount as getUserCountService,
-} from '../../../services/userService';
+} from '@services/userService';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -14,7 +14,13 @@ const Users = () => {
   const [totalPages, setTotalPages] = useState(0);
   const usersPerPage = 10;
 
-  const columnLabels = ['ID', 'Tên người dùng', 'Tên', 'Vai trò'];
+  const columnLabels = [
+    'ID',
+    'Tên người dùng',
+    'Tên',
+    'Ảnh đại diện',
+    'Vai trò',
+  ];
 
   const navigate = useNavigate();
 
@@ -37,7 +43,7 @@ const Users = () => {
           setUsers([]);
         } else {
           const newUsers = usersWithPagination.map((user) =>
-            removeProperties(user, ['password', 'avatar'])
+            removeProperties(user, ['password'])
           );
           setUsers(newUsers);
           setTotalPages(Math.ceil(userCount / usersPerPage));
@@ -56,7 +62,7 @@ const Users = () => {
     <div className={styles.container}>
       <h2>Danh sách người dùng</h2>
       <button
-        className={styles.addButton}
+        className={`${styles.addButton} primary-btn`}
         onClick={() => navigate('/dashboard/users/create')}
       >
         Thêm người dùng

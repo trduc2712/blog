@@ -1,0 +1,17 @@
+.container {
+  .searchBar {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    input {
+      width: 300px;
+      border-radius: 5px;
+    }
+
+    .search {
+      right: 10px;
+      position: absolute;
+    }
+  }
+}

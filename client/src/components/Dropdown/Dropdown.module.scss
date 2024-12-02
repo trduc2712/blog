@@ -1,25 +1,37 @@
 .container {
   position: relative;
   z-index: 1000;
-  
-  .children {
+
+  .items.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .items {
     position: absolute;
-    margin-top: 5px;
-    padding: 10px 0;
     top: 100%;
     right: 0;
     width: 150px;
+    padding: 10px 0;
+    margin-top: 5px;
+    pointer-events: none;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-5px);
     background-color: #fff;
     border-radius: 7.5px;
     list-style: none;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     overflow-y: auto;
 
-    .child {
+    .item {
+      width: 100%;
       background-color: #fff;
       border: 1px solid #e6e6e6;
       padding: 10px;
-      width: 100%;
       text-align: left;
       border: none;
       font-size: 16px;

@@ -1,45 +1,56 @@
 import styles from './Header.module.scss';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useToastContext } from '../../contexts/ToastContext';
-import { useAuthContext } from '../../contexts/AuthContext';
-import { useEffect, useState } from 'react';
-import Dropdown from '../Dropdown/Dropdown';
-import useModal from '../../hooks/useModal';
-import Modal from '../Modal/Modal';
+import useModal from '@hooks/useModal';
+import { useAuthContext } from '@contexts/AuthContext';
+import { useToastContext } from '@contexts/ToastContext';
+import Dropdown from '@components/Dropdown/Dropdown';
+import Modal from '@components/Modal/Modal';
 
-const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
+const Header = ({ isDashboard }) => {
+  const [modal, setModal] = useState({});
+  const [dropdownItems, setDropdownItems] = useState([]);
+
   const { user, logout } = useAuthContext();
-  const [modalContent, setModalContent] = useState({});
-  const [dropdownChildren, setDropdownChildren] = useState([]);
+  const { createToast } = useToastContext();
 
   const navigate = useNavigate();
 
   const { isOpen, openModal, closeModal } = useModal();
 
-  const { addToast } = useToastContext();
-
-  useEffect(() => {
+  const generateDropdownItems = () => {
     const items = [];
+
     if (!isDashboard) {
       if (user) {
-        if (user.role == 'ADMIN') 
-          items.push({ label: 'Trang quản trị', onClick: () => navigate('/dashboard') });
+        user.role === 'ADMIN' &&
+          items.push({
+            label: 'Trang quản trị',
+            onClick: () => navigate('/dashboard'),
+          });
       }
       items.push(
         { label: 'Hồ sơ của tôi', onClick: () => navigate('/my-profile') },
-        { label: 'Bài viết của tôi', onClick: () => navigate('/my-posts') },
+        { label: 'Bài viết của tôi', onClick: () => navigate('/my-posts') }
       );
     } else {
       items.push({ label: 'Trang chủ', onClick: () => navigate('/') });
     }
-    
-    items.push({ label: 'Đăng xuất', onClick: () => { openConfirmLogoutModal(); } });
 
-    setDropdownChildren(items);
+    items.push({
+      label: 'Đăng xuất',
+      onClick: openConfirmLogoutModal,
+    });
+
+    return items;
+  };
+
+  useEffect(() => {
+    setDropdownItems(generateDropdownItems);
   }, [user, isDashboard]);
 
   const openConfirmLogoutModal = () => {
-    setModalContent({
+    setModal({
       title: 'Cảnh báo',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
@@ -47,14 +58,14 @@ const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
       onConfirm: () => {
         logout();
         closeModal();
-        addToast({
+        createToast({
           type: 'success',
-          title: "Thông báo",
-          message: "Đăng xuất thành công.",
+          title: 'Thành công',
+          message: 'Đăng xuất thành công.',
         });
         navigate('/');
       },
-      onCancel: closeModal
+      onCancel: closeModal,
     });
     openModal();
   };
@@ -63,37 +74,69 @@ const Header = ({ isDashboard, openModalLogin, openModalSignUp }) => {
     <div className={styles.container}>
       <div className={styles.left}>
         {isDashboard ? (
-          <h1><Link to='/dashboard'>Dashboard</Link></h1>
+          <h1>
+            <Link to="/dashboard">Dashboard</Link>
+          </h1>
         ) : (
-          <h1><Link to='/'>Blog</Link></h1>
+          <h1>
+            <Link to="/">Blog</Link>
+          </h1>
         )}
       </div>
       <div className={styles.right}>
         {user ? (
           <>
-            {!isDashboard && (<button className={styles.createPost} onClick={() => navigate('/create-post')}>Tạo bài viết mới</button>)}
-            <Dropdown trigger={<img src={`data:image/jpeg;base64,${user.avatar}`} alt='Hình đại diện của người dùng.' className={styles.avatar} />} children={dropdownChildren} />
+            {!isDashboard && (
+              <>
+                <button
+                  className={`${styles.createPost} primary-btn`}
+                  onClick={() => navigate('/create-post')}
+                >
+                  <i className="bi bi-plus"></i> Tạo bài viết mới
+                </button>
+              </>
+            )}
+            <Dropdown
+              trigger={
+                <img
+                  src={`data:image/jpeg;base64,${user.avatar}`}
+                  alt="Hình đại diện của người dùng."
+                  className={styles.avatar}
+                />
+              }
+              items={dropdownItems}
+            />
           </>
         ) : (
           <>
-            <button onClick={openModalSignUp} className={styles.signUp}>Đăng ký</button>
-            <button onClick={openModalLogin} className={styles.login}>Đăng nhập</button>
+            <button
+              className={`${styles.signUp} primary-btn`}
+              onClick={() => navigate('/sign-up')}
+            >
+              Đăng ký
+            </button>
+            <button
+              className={`${styles.login} primary-btn`}
+              onClick={() => navigate('/login')}
+            >
+              Đăng nhập
+            </button>
           </>
         )}
       </div>
       <Modal
-        title={modalContent.title}
+        title={modal.title}
         isOpen={isOpen}
         onClose={closeModal}
-        cancelLabel={modalContent.cancelLabel}
-        confirmLabel={modalContent.confirmLabel}
-        onConfirm={modalContent.onConfirm}
-        onCancel={modalContent.onCancel}
-        message={modalContent.message}
-        buttonLabel={modalContent.buttonLabel}
+        cancelLabel={modal.cancelLabel}
+        confirmLabel={modal.confirmLabel}
+        onConfirm={modal.onConfirm}
+        onCancel={modal.onCancel}
+        message={modal.message}
+        buttonLabel={modal.buttonLabel}
       />
     </div>
-  )
-}
+  );
+};
 
 export default Header;

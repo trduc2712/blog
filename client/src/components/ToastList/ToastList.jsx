@@ -1,7 +1,7 @@
 import styles from './ToastList.module.scss';
-import Toast from '../Toast/Toast';
 import { useEffect } from 'react';
-import { useToastContext } from '../../contexts/ToastContext';
+import Toast from '@components/Toast/Toast';
+import { useToastContext } from '@contexts/ToastContext';
 
 const ToastList = () => {
   const { toasts, removeToast } = useToastContext();
@@ -28,7 +28,7 @@ const ToastList = () => {
         />
       ))}
     </div>
-  )
-}
+  );
+};
 
 export default ToastList;

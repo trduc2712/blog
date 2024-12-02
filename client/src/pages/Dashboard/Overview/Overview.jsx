@@ -1,7 +1,7 @@
 import styles from './Overview.module.scss';
-import { getUserCount as getUserCountService } from '../../../services/userService';
-import { getPostCount as getPostCountService } from '../../../services/postService';
-import { getCategoryCount as getCategoryCountService } from '../../../services/categoryService';
+import { getUserCount as getUserCountService } from '@services/userService';
+import { getPostCount as getPostCountService } from '@services/postService';
+import { getCategoryCount as getCategoryCountService } from '@services/categoryService';
 import { useEffect, useState } from 'react';
 
 const Overview = () => {
@@ -21,7 +21,7 @@ const Overview = () => {
       } catch (err) {
         console.log(err);
       }
-    }
+    };
 
     getCount();
   }, []);
@@ -50,7 +50,7 @@ const Overview = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Overview;

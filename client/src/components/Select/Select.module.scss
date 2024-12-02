@@ -1,0 +1,87 @@
+.container {
+  position: relative;
+
+  &:hover {
+    background-color: #e6e6e6;
+    transition: 0.3s background-color ease;
+
+    .trigger {
+      display: flex;
+      background-color: #e6e6e6;
+      transition: 0.3s background-color ease;
+
+      .left {
+        background-color: #e6e6e6;
+        transition: 0.3s background-color ease;
+
+        p,
+        i {
+          background-color: #e6e6e6;
+          transition: 0.3s background-color ease;
+        }
+      }
+
+      .right {
+        background-color: #e6e6e6;
+        transition: 0.3s background-color ease;
+
+        i {
+          background-color: #e6e6e6;
+          transition: 0.3s background-color ease;
+        }
+      }
+    }
+  }
+
+  .trigger {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e6e6e6;
+      transition: 0.3s background-color ease;
+    }
+
+    .left {
+      display: flex;
+      align-items: center;
+
+      i {
+        margin-right: 5px;
+      }
+    }
+
+    .right {
+      i {
+        margin-left: 20px;
+        width: 14px;
+        height: 14px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .items {
+    position: absolute;
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+    .item {
+      list-style: none;
+      padding: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #e6e6e6;
+        transition: 0.3s background-color ease;
+      }
+    }
+  }
+}

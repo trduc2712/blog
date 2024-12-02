@@ -1,12 +1,12 @@
 import styles from './CategoryList.module.scss';
-import Table from '../../../components/Table/Table';
-import Pagination from '../../../components/Pagination/Pagination';
+import Table from '@components/Table/Table';
+import Pagination from '@components/Pagination/Pagination';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
+import {
   getCategoryCount as getCategoryCountService,
-  getCategoriesWithPagination as getCategoriesWithPaginationService
-} from '../../../services/categoryService';
+  getCategoriesWithPagination as getCategoriesWithPaginationService,
+} from '@services/categoryService';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -21,9 +21,14 @@ const Categories = () => {
   useEffect(() => {
     const getCategoriesWithPagination = async () => {
       try {
-        const categoriesWithPagination = await getCategoriesWithPaginationService(currentPage, categoriesPerPage);
+        const categoriesWithPagination =
+          await getCategoriesWithPaginationService(
+            currentPage,
+            categoriesPerPage
+          );
+
         const categoryCount = await getCategoryCountService();
-        
+
         if (categoriesWithPagination == null) {
           setCategories([]);
         } else {
@@ -40,12 +45,18 @@ const Categories = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-  }
+    console.log('Trang hiện tại: ', currentPage);
+  };
 
   return (
     <div className={styles.container}>
       <h2>Danh sách danh mục</h2>
-      <button className={styles.addButton} onClick={() => navigate('/dashboard/categories/create')}>Thêm danh mục</button>
+      <button
+        className={`${styles.addButton} primary-btn`}
+        onClick={() => navigate('/dashboard/categories/create')}
+      >
+        Thêm danh mục
+      </button>
       <Table columnLabels={columnLabels} initialData={categories} />
       <div className={styles.pagination}>
         <Pagination
@@ -55,7 +66,7 @@ const Categories = () => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Categories;

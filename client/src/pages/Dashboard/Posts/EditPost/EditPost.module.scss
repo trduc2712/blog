@@ -6,10 +6,13 @@
     margin-bottom: 20px;
   }
 
-  .categoryPicker, .userPicker {
+  .categoryPicker,
+  .userPicker {
     margin-bottom: 20px;
-    
-    .categoriesList, .usersList {
+    position: relative;
+
+    .categoriesList,
+    .usersList {
       font-size: 14px;
       display: flex;
       justify-content: space-between;
@@ -23,17 +26,28 @@
       &:hover {
         cursor: pointer;
       }
+
+      i {
+        width: 14px;
+        height: 14px;
+        font-size: 14px;
+      }
     }
 
-    .categories, .users {
+    .categories,
+    .users {
       border-radius: 5px;
-      position: sticky;
+      position: absolute;
+      height: 250px;
+      overflow-y: auto;
+      width: 100%;
       margin-top: 5px;
       padding: 10px 0;
       border: 1px solid #ccc;
       z-index: 100;
 
-      .category, .user {
+      .category,
+      .user {
         padding: 10px;
         font-size: 14px;
         list-style: none;
@@ -62,63 +76,12 @@
     align-items: center;
     justify-content: center;
     border-radius: 5px;
-  
+
     .thumbnail {
       object-fit: cover;
       height: 100%;
       width: 100%;
       border: none;
-    }
-  }
-
-  .quillWrapper{
-    .quill :global {
-      .ql-container {
-        border: none;
-      }
-
-      .ql-editor, .ql-editor * {
-        -webkit-text-decoration: none !important;
-        text-decoration: none !important;
-      }
-  
-      .ql-editor {
-        padding: 10px;
-        overflow: scroll; 
-        scrollbar-width: none;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        padding: 15px;
-        font-size: 16px;
-        color: #000;
-        height: 500px;
-        line-height: 1.5;
-        -webkit-text-decoration-line: none !important;
-        -moz-text-decoration-line: none !important;
-        text-decoration-line: none !important;
-
-        .ql-clipboard {
-          -webkit-text-decoration: none !important;
-          text-decoration: none !important;
-        }
-
-        p {
-          text-decoration: none !important;
-        }
-  
-        img {
-          display: block;
-          margin: 20px auto;
-          border-radius: 5px;
-        }
-      }
-  
-      .ql-toolbar {
-        display: none;
-        padding: 10px;
-        font-size: 16px;
-        border-radius: 5px 5px 0 0;
-      }
     }
   }
 

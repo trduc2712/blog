@@ -1,13 +1,13 @@
 import styles from './Table.module.scss';
 import { Link, useLocation } from 'react-router-dom';
-import useModal from '../../hooks/useModal';
+import useModal from '@hooks/useModal';
 import { useState, useEffect } from 'react';
-import { useToastContext } from '../../contexts/ToastContext';
-import ToastList from '../ToastList/ToastList';
-import Modal from '../Modal/Modal';
-import { deletePostById as deletePostByIdService } from '../../services/postService';
-import { deleteUserById as deleteUserByIdService } from '../../services/userService';
-import { deleteCategoryById as deleteCategoryByIdService } from '../../services/categoryService';
+import { useToastContext } from '@contexts/ToastContext';
+import ToastList from '@components/ToastList/ToastList';
+import Modal from '@components/Modal/Modal';
+import { deletePostById as deletePostByIdService } from '@services/postService';
+import { deleteUserById as deleteUserByIdService } from '@services/userService';
+import { deleteCategoryById as deleteCategoryByIdService } from '@services/categoryService';
 
 const Table = ({ columnLabels, initialData }) => {
   const [data, setData] = useState([]);
@@ -19,7 +19,7 @@ const Table = ({ columnLabels, initialData }) => {
 
   const { isOpen, openModal, closeModal } = useModal();
 
-  const { addToast } = useToastContext();
+  const { createToast } = useToastContext();
 
   useEffect(() => {
     if (location.pathname.includes('posts')) {
@@ -44,13 +44,13 @@ const Table = ({ columnLabels, initialData }) => {
     try {
       await deletePostByIdService(id);
       setData((prevData) => prevData.filter((item) => item.id != id));
-      addToast({
+      createToast({
         type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thành công`,
       });
     } catch (err) {
-      addToast({
+      createToast({
         type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thất bại`,
@@ -62,13 +62,13 @@ const Table = ({ columnLabels, initialData }) => {
     try {
       await deleteUserByIdService(id);
       setData((prevData) => prevData.filter((item) => item.id != id));
-      addToast({
+      createToast({
         type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thành công`,
       });
     } catch (err) {
-      addToast({
+      createToast({
         type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thất bại`,
@@ -80,13 +80,13 @@ const Table = ({ columnLabels, initialData }) => {
     try {
       await deleteCategoryByIdService(id);
       setData((prevData) => prevData.filter((item) => item.id != id));
-      addToast({
+      createToast({
         type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thành công`,
       });
     } catch (err) {
-      addToast({
+      createToast({
         type: 'success',
         title: 'Thông báo',
         message: `Xóa ${entityName} thất bại`,
@@ -121,12 +121,6 @@ const Table = ({ columnLabels, initialData }) => {
     openConfirmDeleteModal(rowId);
   };
 
-  const isBase64 = (str) => {
-    const base64Pattern =
-      /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/;
-    return base64Pattern.test(str);
-  };
-
   return (
     <div className={styles.container}>
       <table>
@@ -144,11 +138,18 @@ const Table = ({ columnLabels, initialData }) => {
               <tr key={index}>
                 {Object.values(row).map((cell, index) => (
                   <td key={index}>
-                    {cell == 'ADMIN'
-                      ? 'Quản trị viên'
-                      : cell == 'USER'
-                        ? 'Người dùng'
-                        : cell}
+                    {cell == 'ADMIN' ? (
+                      'Quản trị viên'
+                    ) : cell == 'USER' ? (
+                      'Người dùng'
+                    ) : cell.length > 100 ? (
+                      <img
+                        src={`data:image/jpeg;base64,${cell}`}
+                        alt="Hình đại diện của người dùng."
+                      />
+                    ) : (
+                      cell
+                    )}
                   </td>
                 ))}
                 <td>

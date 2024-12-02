@@ -1,26 +1,26 @@
 import styles from './EditCategory.module.scss';
 import { useEffect, useState } from 'react';
-import { stringToSlug } from '../../../../utils/string';
+import { stringToSlug } from '@utils/string';
 import { useParams } from 'react-router-dom';
-import { 
+import {
   getCategoryById as getCategoryByIdService,
   updateCategory as updateCategoryService,
-} from '../../../../services/categoryService';
-import { useToastContext } from '../../../../contexts/ToastContext';
-import ToastList from '../../../../components/ToastList/ToastList';
-import useModal from '../../../../hooks/useModal';
-import Modal from '../../../../components/Modal/Modal';
+} from '@services/categoryService';
+import { useToastContext } from '@contexts/ToastContext';
+import ToastList from '@components/ToastList/ToastList';
+import useModal from '@hooks/useModal';
+import Modal from '@components/Modal/Modal';
 
 const EditCategory = () => {
   const [category, setCategory] = useState();
   const [modalContent, setModalContent] = useState('');
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
-  
+
   const { categoryId } = useParams();
 
-  const { addToast } = useToastContext();
-  
+  const { createToast } = useToastContext();
+
   const { isOpen, openModal, closeModal } = useModal();
 
   useEffect(() => {
@@ -33,10 +33,10 @@ const EditCategory = () => {
       } catch (err) {
         console.log(err);
       }
-    }
+    };
 
     getCategoryById(categoryId);
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (category) {
@@ -54,15 +54,15 @@ const EditCategory = () => {
       onConfirm: () => {
         handleUpdate();
         closeModal();
-        addToast({
+        createToast({
           type: 'success',
           title: 'Thông báo',
-          message: 'Cập nhật danh mục thành công'
-        })
+          message: 'Cập nhật danh mục thành công',
+        });
       },
       onCancel: () => {
         closeModal();
-      }
+      },
     });
     openModal();
   };
@@ -77,9 +77,7 @@ const EditCategory = () => {
     };
 
     updateCategory(categoryId, name, slug);
-  }
-
-  if (!category) return (<div className={styles.container}>Đang tải...</div>)
+  };
 
   return (
     <div className={styles.container}>
@@ -87,9 +85,9 @@ const EditCategory = () => {
       <div className={styles.formGroup}>
         <label htmlFor="name">Tên</label>
         <input
-          type="text" 
-          name="name" 
-          id="name" 
+          type="text"
+          name="name"
+          id="name"
           value={name}
           onChange={(e) => {
             setName(e.target.value);
@@ -101,15 +99,20 @@ const EditCategory = () => {
         <label htmlFor="slug">Slug</label>
         <input
           disabled={true}
-          type="text" 
-          name="slug" 
-          id="slug" 
+          type="text"
+          name="slug"
+          id="slug"
           value={slug}
           onChange={(e) => setSlug(stringToSlug(name))}
         />
       </div>
       <div className={styles.updateButtonWrapper}>
-        <button className={styles.updateButton} onClick={openConfirmUpdateModal}>Cập nhật</button>
+        <button
+          className={`${styles.updateButton} primary-btn`}
+          onClick={openConfirmUpdateModal}
+        >
+          Cập nhật
+        </button>
       </div>
       <Modal
         title={modalContent.title}
@@ -124,7 +127,7 @@ const EditCategory = () => {
       />
       <ToastList />
     </div>
-  )
-}
+  );
+};
 
 export default EditCategory;

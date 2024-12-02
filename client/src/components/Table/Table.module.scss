@@ -7,12 +7,13 @@
     overflow: hidden;
     width: 100%;
     font-size: 14px;
-    
+
     thead {
       padding: 10px;
 
       tr {
         th {
+          background-color: #f1f1f1;
           padding: 10px;
           border-bottom: 1px solid #ccc;
 
@@ -36,13 +37,29 @@
           &:first-child {
             text-align: center;
           }
-          
+
           &:not(:last-child) {
             border-right: 1px solid #ccc;
           }
 
-          &:nth-last-child(2), &:last-child {
+          &:nth-last-child(2),
+          &:last-child {
             text-align: center;
+          }
+
+          img {
+            width: 75px;
+            height: 75px;
+            display: block;
+            margin: 0 auto;
+            object-fit: cover;
+            border-radius: 5px;
+          }
+
+          i {
+            text-align: center;
+            width: 14px;
+            height: 14px;
           }
 
           a {
@@ -50,7 +67,7 @@
             text-decoration: none;
 
             &:hover {
-              color: #1877f2;
+              color: #1677ff;
               transition: 0.3s color ease;
             }
           }

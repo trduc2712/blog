@@ -1,11 +1,11 @@
 import styles from './CreateCategory.module.scss';
 import { useEffect, useState } from 'react';
-import { stringToSlug } from '../../../../utils/string';
-import { useToastContext } from '../../../../contexts/ToastContext';
-import ToastList from '../../../../components/ToastList/ToastList';
-import useModal from '../../../../hooks/useModal';
-import Modal from '../../../../components/Modal/Modal';
-import { createCategory as createCategoryService } from '../../../../services/categoryService';
+import { stringToSlug } from '@utils/string';
+import { useToastContext } from '@contexts/ToastContext';
+import ToastList from '@components/ToastList/ToastList';
+import useModal from '@hooks/useModal';
+import Modal from '@components/Modal/Modal';
+import { createCategory as createCategoryService } from '@services/categoryService';
 import { useNavigate } from 'react-router-dom';
 
 const CreateCategory = () => {
@@ -15,20 +15,20 @@ const CreateCategory = () => {
 
   const navigate = useNavigate();
 
-  const { addToast } = useToastContext();
-  
+  const { createToast } = useToastContext();
+
   const { isOpen, openModal, closeModal } = useModal();
 
   useEffect(() => {
     setSlug(stringToSlug(name));
-  }, [])
+  }, []);
 
   const openConfirmCreateModal = () => {
     if (!name || !slug) {
-      addToast({
+      createToast({
         type: 'warning',
         title: 'Thông báo',
-        message: 'Vui lòng điền đầy đủ thông tin yêu cầu.'
+        message: 'Vui lòng điền đầy đủ thông tin yêu cầu.',
       });
       return;
     }
@@ -40,16 +40,16 @@ const CreateCategory = () => {
       onConfirm: () => {
         handleCreate();
         closeModal();
-        addToast({
+        createToast({
           type: 'success',
           title: 'Thông báo',
-          message: 'Tạo mới danh mục thành công'
+          message: 'Tạo mới danh mục thành công',
         });
-        navigate('/dashboard/categories')
+        navigate('/dashboard/categories');
       },
       onCancel: () => {
         closeModal();
-      }
+      },
     });
     openModal();
   };
@@ -66,7 +66,7 @@ const CreateCategory = () => {
     };
 
     createCategory(name, slug);
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -74,9 +74,9 @@ const CreateCategory = () => {
       <div className={styles.formGroup}>
         <label htmlFor="name">Tên</label>
         <input
-          type="text" 
-          name="name" 
-          id="name" 
+          type="text"
+          name="name"
+          id="name"
           value={name}
           onChange={(e) => {
             setName(e.target.value);
@@ -88,15 +88,20 @@ const CreateCategory = () => {
         <label htmlFor="slug">Slug</label>
         <input
           disabled={true}
-          type="text" 
-          name="slug" 
-          id="slug" 
+          type="text"
+          name="slug"
+          id="slug"
           value={slug}
           onChange={(e) => setSlug(stringToSlug(name))}
         />
       </div>
       <div className={styles.updateButtonWrapper}>
-        <button className={styles.updateButton} onClick={openConfirmCreateModal}>Thêm</button>
+        <button
+          className={`${styles.updateButton} primary-btn`}
+          onClick={openConfirmCreateModal}
+        >
+          Thêm
+        </button>
       </div>
       <Modal
         title={modalContent.title}
@@ -111,7 +116,7 @@ const CreateCategory = () => {
       />
       <ToastList />
     </div>
-  )
-}
+  );
+};
 
 export default CreateCategory;
