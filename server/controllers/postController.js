@@ -1,4 +1,3 @@
-import { query } from 'express';
 import {
   getPostById as getPostByIdFromModel,
   getPostBySlug as getPostBySlugFromModel,
