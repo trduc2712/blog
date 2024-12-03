@@ -9,6 +9,7 @@ const Modal = ({
   message,
   onConfirm,
   onCancel,
+  type,
 }) => {
   if (!isOpen) return null;
 
@@ -26,13 +27,13 @@ const Modal = ({
         </div>
         <div className={styles.footer}>
           <button
-            className={`${styles.cancel} secondary-btn`}
+            className={`${styles.cancel} destructive-secondary-btn`}
             onClick={onCancel}
           >
             {cancelLabel}
           </button>
           <button
-            className={`${styles.confirm} primary-btn`}
+            className={`${styles.confirm} ${type == 'destructive' ? 'destructive-btn' : 'primary-btn'}`}
             onClick={onConfirm}
           >
             {confirmLabel}

@@ -177,8 +177,10 @@ const EditPost = () => {
         value="bullet"
         aria-label="Danh sách không thứ tự"
       ></button>
-
       <button className="ql-image" aria-label="Chèn ảnh"></button>
+      <button className="ql-clean" aria-label="Xóa định dạng">
+        <i className="bi bi-eraser"></i>
+      </button>
     </div>
   );
 

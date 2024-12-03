@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './SearchBox.module.scss';
 
 const SearchBox = ({ placeholder, onSearch }) => {
   const [value, setValue] = useState('');
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    setValue(urlParams.get('keyword'));
+  }, []);
 
   return (
     <div className={styles.container}>

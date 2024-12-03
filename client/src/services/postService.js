@@ -25,8 +25,18 @@ export const createPost = async (
       { title, content, userId, thumbnail, categorySlug, slug },
       { withCredentials: true }
     );
+    return { success: true };
   } catch (err) {
-    console.log(err.response.data.error);
+    if (err.response?.status === 413) {
+      return {
+        success: false,
+        errorMessage: err.response?.data.error,
+      };
+    }
+    return {
+      success: false,
+      errorMessage: err.response?.data?.error || 'Có lỗi xảy ra',
+    };
   }
 };
 
@@ -97,11 +107,10 @@ export const updatePost = async (
   }
 };
 
-export const searchPost = async (keyword) => {
+export const searchPost = async (keyword, page, limit) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/posts?keyword=${keyword}`,
-      { keyword },
+      `${import.meta.env.VITE_API_URL}/posts?keyword=${keyword}&page=${page}&limit=${limit}`,
       { withCredentials: true }
     );
 
@@ -111,14 +120,13 @@ export const searchPost = async (keyword) => {
   }
 };
 
-export const getFoundPostsCount = async (keyword) => {
+export const getFoundPostsCount = async (keyword, page, limit) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/posts?keyword=${keyword}`,
-      {
-        withCredentials: true,
-      }
+      `${import.meta.env.VITE_API_URL}/posts?keyword=${keyword}&page=${page}&limit=${limit}`,
+      { withCredentials: true }
     );
+
     return response.data.meta.foundPostsCount;
   } catch (err) {
     console.log(err.response.data.error);

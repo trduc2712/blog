@@ -29,6 +29,16 @@ app.use(
 );
 
 app.use(json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+app.use((err, req, res, next) => {
+  if (err.type === 'entity.too.large') {
+    return res.status(413).json({
+      error: 'Dữ liệu quá lớn.',
+    });
+  }
+  next(err);
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);

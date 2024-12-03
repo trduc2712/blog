@@ -32,12 +32,6 @@
     width: calc(100vw - 80px);
     height: calc(100vh - 99px);
   }
-
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
 }
 
 .notLoggedIn {
@@ -49,16 +43,6 @@
 
   .pagination {
     display: none;
-  }
-}
-
-@media (max-width: 1200px) {
-  .container {
-    .content {
-      .body {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
   }
 }
 

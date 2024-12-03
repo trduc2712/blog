@@ -1,5 +1,58 @@
 .container {
   .content {
     padding: 79px 40px 20px;
+    display: flex;
+    align-items: flex-start;
+
+    .postCardList {
+      width: 80%;
+
+      .pagination {
+        margin-top: 20px;
+      }
+    }
+
+    .notLoggedIn,
+    .loading {
+      height: calc(100vh - 59px - 40px);
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .sidebar {
+      width: 20%;
+      margin-left: 20px;
+
+      .searchBox {
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      .filter {
+        margin-top: 20px;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      .categoryList {
+        margin-top: 20px;
+        padding-bottom: 10px;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        border: 1px solid #e6e6e6;
+        border-radius: 7.5px;
+        overflow: hidden;
+
+        .categoryListTop {
+          padding: 10px;
+          text-align: center;
+          background-color: #1677f2;
+
+          h3 {
+            background-color: #1677f2;
+            color: #fff;
+          }
+        }
+      }
+    }
   }
 }

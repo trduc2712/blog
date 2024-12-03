@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useToastContext } from '@contexts/ToastContext';
-import Header from '@components/Header/Header';
-import ToastList from '@components/ToastList/ToastList';
+import Header from '@components/Header';
+import ToastList from '@components/ToastList';
+import Footer from '@components/Footer';
 
 const Login = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -136,6 +137,7 @@ const Login = () => {
         </div>
       </div>
       <ToastList />
+      <Footer />
     </>
   );
 };

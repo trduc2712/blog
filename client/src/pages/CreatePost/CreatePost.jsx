@@ -1,5 +1,5 @@
 import styles from './CreatePost.module.scss';
-import Header from '@components/Header/Header';
+import Header from '@components/Header';
 import { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -10,9 +10,10 @@ import { fileToBase64 } from '@utils/file';
 import { createPost as createPostService } from '@services/postService';
 import { useNavigate } from 'react-router-dom';
 import useModal from '@hooks/useModal';
-import Modal from '@components/Modal/Modal';
+import Modal from '@components/Modal';
 import { useToastContext } from '@contexts/ToastContext';
-import ToastList from '@components/ToastList/ToastList';
+import ToastList from '@components/ToastList';
+import Footer from '@components/Footer';
 
 const CreatePost = () => {
   const [content, setContent] = useState('');
@@ -24,6 +25,7 @@ const CreatePost = () => {
   const [userId, setUserId] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
+  const [error, setError] = useState();
 
   const { user } = useAuthContext();
 
@@ -77,11 +79,6 @@ const CreatePost = () => {
       onConfirm: () => {
         handlePublish();
         closeModal();
-        createToast({
-          type: 'success',
-          title: 'Thành công',
-          message: 'Đăng bài viết thành công.',
-        });
       },
       onCancel: () => {
         closeModal();
@@ -124,6 +121,7 @@ const CreatePost = () => {
       <button className="ql-image" aria-label="Chèn ảnh">
         <i className="bi bi-image"></i>
       </button>
+      <button className="ql-clean" aria-label="Xóa định dạng"></button>
     </div>
   );
 
@@ -145,36 +143,32 @@ const CreatePost = () => {
     });
   }
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     const slug = stringToSlug(title);
 
-    console.log('title: ', title);
-    console.log('content: ', content);
-    console.log('userId: ', userId);
-    console.log('thumbnail: ', thumbnail);
-    console.log('categorySlug: ', categorySlug);
-    console.log('slug: ', slug);
-
-    const createPost = async (
+    const result = await createPostService(
       title,
       content,
       userId,
       thumbnail,
       categorySlug,
       slug
-    ) => {
-      await createPostService(
-        title,
-        content,
-        userId,
-        thumbnail,
-        categorySlug,
-        slug
-      );
-    };
+    );
 
-    createPost(title, content, userId, thumbnail, categorySlug, slug);
-    navigate('/');
+    if (result.success) {
+      navigate('/');
+      createToast({
+        type: 'success',
+        title: 'Thành công',
+        message: 'Đăng bài viết thành công.',
+      });
+    } else {
+      createToast({
+        type: 'error',
+        title: 'Lỗi',
+        message: result.errorMessage,
+      });
+    }
   };
 
   const handleChangeThumbnail = async (e) => {
@@ -306,6 +300,7 @@ const CreatePost = () => {
         buttonLabel={modalContent.buttonLabel}
       />
       <ToastList />
+      <Footer />
     </div>
   );
 };

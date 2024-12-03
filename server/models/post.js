@@ -69,7 +69,9 @@ export const createPost = (
       query,
       [title, content, userId, thumbnail, categorySlug, slug],
       (err, results) => {
-        if (err) return reject(err);
+        if (err) {
+          return reject(err);
+        }
         resolve(results);
       }
     );
@@ -96,7 +98,9 @@ export const getPostsWithPagination = (page, limit) => {
         posts.id, 
         posts.title, 
         posts.thumbnail AS thumbnail, 
+        posts.content,
         posts.slug,
+        posts.summary,
         posts.created_at,
         users.name AS user_name,
         users.username as user_username,

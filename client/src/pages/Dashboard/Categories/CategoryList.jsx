@@ -45,7 +45,6 @@ const Categories = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    console.log('Trang hiện tại: ', currentPage);
   };
 
   return (

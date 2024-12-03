@@ -1,3 +1,4 @@
+import { query } from 'express';
 import {
   getPostById as getPostByIdFromModel,
   getPostBySlug as getPostBySlugFromModel,
@@ -8,6 +9,7 @@ import {
   deletePostById as deletePostByIdFromModel,
   updatePost as updatePostFromModel,
   searchPostsByKeyword as searchPostsByKeywordFromModel,
+  getFoundPostsCount as getFoundPostsCountFromModel,
 } from '../models/post.js';
 
 export const getPosts = async (req, res) => {
@@ -18,7 +20,8 @@ export const getPosts = async (req, res) => {
 
     if (keyword) {
       try {
-        const posts = await searchPostsByKeywordFromModel(keyword);
+        const posts = await searchPostsByKeywordFromModel(keyword, page, limit);
+        const foundPostsCount = await getFoundPostsCountFromModel(keyword);
 
         if (posts.length === 0) {
           return res.status(404).json({ error: 'Không tìm thấy bài viết.' });
@@ -27,6 +30,11 @@ export const getPosts = async (req, res) => {
         res.json({
           message: `Tìm kiếm bài viết với từ khóa ${keyword} thành công`,
           posts,
+          meta: {
+            foundPostsCount,
+            currentPage: page,
+            totalPages: Math.ceil(foundPostsCount / limit),
+          },
         });
       } catch (err) {
         console.error(

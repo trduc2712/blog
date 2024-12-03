@@ -10,6 +10,10 @@
   color: #fff;
   cursor: pointer;
 
+  p {
+    background-color: colors.$brand-color;
+  }
+
   &:hover {
     background-color: colors.$hover-color;
     transition: 0.3s background-color ease !important;
@@ -17,6 +21,11 @@
     i {
       background-color: colors.$hover-color !important;
       transition: 0.3s background-color ease;
+    }
+
+    p {
+      background-color: colors.$hover-color;
+      transition: 0.3s background-color ease !important;
     }
   }
 
@@ -50,6 +59,65 @@
   }
 }
 
+.destructive-btn {
+  width: 100px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: colors.$destructive-color;
+  color: #fff;
+  cursor: pointer;
+
+  p {
+    background-color: colors.$destructive-color;
+  }
+
+  &:hover {
+    background-color: colors.$destructive-hover-color;
+    transition: 0.3s background-color ease !important;
+
+    i {
+      background-color: colors.$destructive-hover-color !important;
+      transition: 0.3s background-color ease;
+    }
+
+    p {
+      background-color: colors.$destructive-hover-color;
+      transition: 0.3s background-color ease !important;
+    }
+  }
+
+  &:active {
+    background-color: colors.$destructive-active-color;
+    transition: 0.3s background-color ease !important;
+
+    i {
+      background-color: colors.$destructive-active-color !important;
+      transition: 0.3s background-color ease;
+    }
+  }
+}
+
+.destructive-secondary-btn {
+  width: 100px;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  color: #000;
+  background-color: #fff;
+
+  &:hover {
+    border: 1px solid colors.$destructive-color;
+    color: colors.$destructive-color;
+    transition:
+      0.3s border ease,
+      color ease;
+  }
+}
+
 .custom-toolbar {
   padding: 10px !important;
   border-bottom: none !important;
@@ -65,6 +133,10 @@
 
     svg {
       padding: 3px;
+    }
+
+    i {
+      display: block;
     }
   }
 

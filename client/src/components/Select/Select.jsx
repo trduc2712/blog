@@ -8,7 +8,7 @@ const Select = ({ icon, label, items }) => {
     <div className={styles.container}>
       <div className={styles.trigger} onClick={() => setIsOpen(!isOpen)}>
         <div className={styles.left}>
-          <i className={`bi bi-${icon}`}></i>
+          {icon && <i className={`bi bi-${icon}`}></i>}
           <p>{label}</p>
         </div>
         <div className={styles.right}>

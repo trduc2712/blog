@@ -1,35 +1,31 @@
 export const formatFullDate = (dateString) => {
   const date = new Date(dateString);
 
-  const dayNames = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
+  const dayNames = [
+    'Chủ nhật',
+    'Thứ hai',
+    'Thứ ba',
+    'Thứ tư',
+    'Thứ năm',
+    'Thứ sáu',
+    'Thứ bảy',
+  ];
+
   const dayName = dayNames[date.getDay()];
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
 
-  const formattedDate = new Intl.DateTimeFormat('vi-VN', {
-      day: 'numeric',
-      month: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-  }).format(date);
-
-  const parts = formattedDate.split(' ');
-  if (parts.length === 2) {
-      const datePart = parts[0].trim();
-      const timePart = parts[1].trim();
-      return `${dayName}, ${datePart}, ${timePart}`;
-  }
-
-  return `${dayName}, ${formattedDate}`;
+  return `${dayName}, ${day}/${month}/${year}, ${hours}:${minutes}`;
 };
 
 export const formatShortDate = (dateString) => {
   const date = new Date(dateString);
-  
-  let formattedDate = date.toLocaleDateString('vi-VN', {
-    day: 'numeric',
-    month: 'numeric',
-    year: 'numeric'
-  });
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
 
-  return formattedDate;
+  return `${day}/${month}/${year}`;
 };

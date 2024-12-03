@@ -4,7 +4,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(36, 36, 36, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,6 +13,7 @@
 
   .container {
     border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     overflow: hidden;
 
     .header {
@@ -60,26 +61,6 @@
       display: flex;
       justify-content: flex-end;
       width: 450px;
-
-      .cancel {
-        width: 100px;
-        margin-right: 10px;
-        border: 1px solid #ccc;
-        color: #000;
-        background-color: #fff;
-
-        &:hover {
-          border: 1px solid #1677ff;
-          color: #1677ff;
-          transition:
-            0.3s border,
-            color ease;
-        }
-      }
-
-      .confirm {
-        width: 100px;
-      }
     }
   }
 }

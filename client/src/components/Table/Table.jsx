@@ -100,6 +100,7 @@ const Table = ({ columnLabels, initialData }) => {
       cancelLabel: 'Không',
       confirmLabel: 'Có',
       message: `Bạn có chắc chắn muốn xóa ${entityName} này không?`,
+      type: 'destructive',
       onConfirm: () => {
         if (currentRoute == 'posts') {
           deletePostById(rowId);
@@ -133,40 +134,34 @@ const Table = ({ columnLabels, initialData }) => {
           </tr>
         </thead>
         <tbody>
-          {data.length > 0 ? (
-            data.map((row, index) => (
-              <tr key={index}>
-                {Object.values(row).map((cell, index) => (
-                  <td key={index}>
-                    {cell == 'ADMIN' ? (
-                      'Quản trị viên'
-                    ) : cell == 'USER' ? (
-                      'Người dùng'
-                    ) : cell.length > 100 ? (
-                      <img
-                        src={`data:image/jpeg;base64,${cell}`}
-                        alt="Hình đại diện của người dùng."
-                      />
-                    ) : (
-                      cell
-                    )}
+          {data &&
+            (data.length > 0 ? (
+              data.map((row, index) => (
+                <tr key={index}>
+                  {Object.values(row).map((cell, index) => (
+                    <td key={index}>
+                      {cell == 'ADMIN'
+                        ? 'Quản trị viên'
+                        : cell == 'USER'
+                          ? 'Người dùng'
+                          : cell}
+                    </td>
+                  ))}
+                  <td>
+                    <Link to={`${location.pathname}/edit/${row.id}`}>Sửa</Link>
                   </td>
-                ))}
-                <td>
-                  <Link to={`${location.pathname}/edit/${row.id}`}>Sửa</Link>
-                </td>
-                <td>
-                  <Link to="" onClick={() => handleDeleteRow(row.id)}>
-                    Xóa
-                  </Link>
-                </td>
+                  <td>
+                    <Link to="" onClick={() => handleDeleteRow(row.id)}>
+                      Xóa
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={columnCounts}>Đang tải...</td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={columnCounts}>Đang tải...</td>
-            </tr>
-          )}
+            ))}
         </tbody>
       </table>
       <Modal
@@ -179,6 +174,7 @@ const Table = ({ columnLabels, initialData }) => {
         onCancel={modalContent.onCancel}
         message={modalContent.message}
         buttonLabel={modalContent.buttonLabel}
+        type={modalContent.type}
       />
       <ToastList />
     </div>

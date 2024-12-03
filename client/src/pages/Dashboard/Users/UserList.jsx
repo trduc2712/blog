@@ -14,13 +14,7 @@ const Users = () => {
   const [totalPages, setTotalPages] = useState(0);
   const usersPerPage = 10;
 
-  const columnLabels = [
-    'ID',
-    'Tên người dùng',
-    'Tên',
-    'Ảnh đại diện',
-    'Vai trò',
-  ];
+  const columnLabels = ['ID', 'Tên người dùng', 'Tên', 'Vai trò'];
 
   const navigate = useNavigate();
 
@@ -43,7 +37,7 @@ const Users = () => {
           setUsers([]);
         } else {
           const newUsers = usersWithPagination.map((user) =>
-            removeProperties(user, ['password'])
+            removeProperties(user, ['password', 'avatar'])
           );
           setUsers(newUsers);
           setTotalPages(Math.ceil(userCount / usersPerPage));
