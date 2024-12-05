@@ -40,7 +40,7 @@ export const createPost = async (
   }
 };
 
-export const getPostCount = async () => {
+export const getPostsCount = async () => {
   try {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
       withCredentials: true,
@@ -51,10 +51,29 @@ export const getPostCount = async () => {
   }
 };
 
-export const getPostsWithPagination = async (page, limit) => {
+export const getPostsCountByCategory = async (category, page, limit) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/posts?page=${page}&limit=${limit}`,
+      `${import.meta.env.VITE_API_URL}/posts?category=${category}&page=${page}&limit=${limit}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data.meta.postCount;
+  } catch (err) {
+    console.log(err.response.data.error);
+  }
+};
+
+export const getPostsWithPagination = async (
+  page,
+  limit,
+  filter,
+  categorySlug
+) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/posts?filter=${filter ? filter : ''}&page=${page}&limit=${limit}&category=${categorySlug ? categorySlug : ''}`,
       { withCredentials: true }
     );
     return response.data.posts.length > 0 ? response.data.posts : null;
@@ -107,10 +126,10 @@ export const updatePost = async (
   }
 };
 
-export const searchPost = async (keyword, page, limit) => {
+export const searchPost = async (keyword, page, limit, filter) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/posts?keyword=${keyword}&page=${page}&limit=${limit}`,
+      `${import.meta.env.VITE_API_URL}/posts?filter=${filter}&keyword=${keyword}&page=${page}&limit=${limit}`,
       { withCredentials: true }
     );
 

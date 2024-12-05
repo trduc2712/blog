@@ -28,7 +28,7 @@ const CategoryList = () => {
         <div
           key={index}
           className={styles.category}
-          onClick={() => navigate(`category/${category.slug}`)}
+          onClick={() => navigate(`?categorySlug=${category.slug}`)}
         >
           {category.name}
         </div>

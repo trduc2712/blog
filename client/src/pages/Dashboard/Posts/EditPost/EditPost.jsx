@@ -80,7 +80,7 @@ const EditPost = () => {
   useEffect(() => {
     if (post) {
       setTitle(post.title);
-      setSlug(stringToSlug(title));
+      setSlug(stringToSlug(post.title));
       setThumbnail(post.thumbnail);
       setCategoryName(post.category_name);
       setCategorySlug(stringToSlug(post.category_name));
@@ -115,11 +115,6 @@ const EditPost = () => {
       onConfirm: () => {
         handleUpdate();
         closeModal();
-        createToast({
-          type: 'success',
-          title: 'Thông báo',
-          message: 'Cập nhật bài viết thành công',
-        });
       },
       onCancel: () => {
         closeModal();
@@ -129,6 +124,9 @@ const EditPost = () => {
   };
 
   const handleUpdate = () => {
+    setCategorySlug(stringToSlug(categoryName));
+    setSlug(stringToSlug(title));
+
     const updatePost = async (
       postId,
       title,
@@ -148,8 +146,14 @@ const EditPost = () => {
           categorySlug,
           slug
         );
+        createToast({
+          type: 'success',
+          title: 'Thông báo',
+          message: 'Cập nhật bài viết thành công.',
+        });
       } catch (err) {
         console.log(err);
+        return;
       }
     };
 

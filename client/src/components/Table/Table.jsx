@@ -11,7 +11,7 @@ import { deleteCategoryById as deleteCategoryByIdService } from '@services/categ
 
 const Table = ({ columnLabels, initialData }) => {
   const [data, setData] = useState([]);
-  const [modalContent, setModalContent] = useState({});
+  const [modal, setModal] = useState({});
   const [currentRoute, setCurrentRoute] = useState('');
   const [entityName, setEntityName] = useState('');
   const location = useLocation();
@@ -95,7 +95,7 @@ const Table = ({ columnLabels, initialData }) => {
   };
 
   const openConfirmDeleteModal = (rowId) => {
-    setModalContent({
+    setModal({
       title: 'Thông báo',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
@@ -165,16 +165,16 @@ const Table = ({ columnLabels, initialData }) => {
         </tbody>
       </table>
       <Modal
-        title={modalContent.title}
+        title={modal.title}
         isOpen={isOpen}
         onClose={closeModal}
-        cancelLabel={modalContent.cancelLabel}
-        confirmLabel={modalContent.confirmLabel}
-        onConfirm={modalContent.onConfirm}
-        onCancel={modalContent.onCancel}
-        message={modalContent.message}
-        buttonLabel={modalContent.buttonLabel}
-        type={modalContent.type}
+        cancelLabel={modal.cancelLabel}
+        confirmLabel={modal.confirmLabel}
+        onConfirm={modal.onConfirm}
+        onCancel={modal.onCancel}
+        message={modal.message}
+        buttonLabel={modal.buttonLabel}
+        type={modal.type}
       />
       <ToastList />
     </div>

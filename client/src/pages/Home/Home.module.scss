@@ -7,8 +7,22 @@
     .postCardList {
       width: 80%;
 
+      .title {
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #fff;
+        color: #fff;
+        background-color: #054dac;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        border-radius: 5px;
+      }
+
       .pagination {
         margin-top: 20px;
+      }
+
+      .notFound {
+        text-align: center;
       }
     }
 

@@ -3,7 +3,7 @@ import Table from '@components/Table/Table';
 import Pagination from '@components/Pagination/Pagination';
 import { useState, useEffect } from 'react';
 import {
-  getPostCount as getPostCountService,
+  getPostsCount as getPostsCountService,
   getPostsWithPagination as getPostsWithPaginationService,
 } from '@services/postService';
 
@@ -28,7 +28,7 @@ const PostList = () => {
           currentPage,
           postsPerPage
         );
-        const postCount = await getPostCountService();
+        const postCount = await getPostsCountService();
 
         if (postsWithPagination == null) {
           setPosts([]);

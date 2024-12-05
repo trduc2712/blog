@@ -10,13 +10,16 @@ import CategoryList from '@components/CategoryList';
 import Select from '@components/Select';
 import {
   getPostsWithPagination as getPostsWithPaginationService,
-  getPostCount as getPostCountService,
+  getPostsCount as getPostsCountService,
   searchPost as searchPostService,
   getFoundPostsCount as getFoundPostsCountService,
+  getPostsCountByCategory as getPostsCountByCategoryService,
 } from '@services/postService';
+import { getAllCategories as getAllCategoriesService } from '@services/categoryService';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useToastContext } from '@contexts/ToastContext';
+import { toLowerCaseFirstLetter } from '@utils/string';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -25,6 +28,11 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [selectItems, setSelectItems] = useState([]);
   const [keyword, setKeyword] = useState('');
+  const [filter, setFilter] = useState('');
+  const [categorySlug, setCategorySlug] = useState('');
+  const [categories, setCategories] = useState('');
+  const [categoryName, setCategoryName] = useState('');
+  const [selectLabel, setSelectLabel] = useState('Lọc bài viết');
   const postsPerPage = 9;
 
   const { user } = useAuthContext();
@@ -49,40 +57,130 @@ const Home = () => {
     navigate(`?keyword=${keyword}`);
   };
 
+  const addParam = (param, value) => {
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set(param, value);
+    navigate(`${window.location.pathname}?${searchParams.toString()}`);
+  };
+
+  const removeParam = (param) => {
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.delete(param);
+    navigate(`${window.location.pathname}?${searchParams.toString()}`);
+  };
+
   useEffect(() => {
+    user ? '' : navigate('/login');
+
     document.title = 'Trang chủ | Blog';
     window.scrollTo(0, 0);
 
     const items = [
-      { label: 'A - Z', onClick: () => {} },
-      { label: 'Z - A', onClick: () => {} },
-      { label: 'Mới nhất', onClick: () => {} },
-      { label: 'Cũ nhất', onClick: () => {} },
+      {
+        label: 'Từ A đến Z',
+        onClick: () => {
+          addParam('filter', 'alphaAsc');
+        },
+      },
+      {
+        label: 'Từ Z đến A',
+        onClick: () => {
+          addParam('filter', 'alphaDesc');
+        },
+      },
+      {
+        label: 'Mới nhất',
+        onClick: () => {
+          addParam('filter', 'newest');
+        },
+      },
+      {
+        label: 'Cũ nhất',
+        onClick: () => {
+          addParam('filter', 'oldest');
+        },
+      },
+      {
+        label: 'Xóa lọc',
+        onClick: () => {
+          removeParam('filter');
+        },
+      },
     ];
 
     setSelectItems(items);
+
+    const getAllCategories = async () => {
+      try {
+        const categories = await getAllCategoriesService();
+        setCategories(categories);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getAllCategories();
   }, []);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const newKeyword = urlParams.get('keyword');
-    setKeyword(newKeyword);
+    if (categories && categorySlug) {
+      const categoryMatched = categories.find(
+        (category) => category.slug === categorySlug
+      );
 
-    if (newKeyword) {
-      searchPost(newKeyword);
-    } else {
-      getPostsWithPagination();
+      setCategoryName(categoryMatched.name);
+      console.log(categories);
     }
+  }, [categorySlug]);
+
+  useEffect(() => {
+    const getPosts = async () => {
+      const urlParams = new URLSearchParams(location.search);
+      const newKeyword = urlParams.get('keyword') || '';
+      const newFilter = urlParams.get('filter') || '';
+      const newCategorySlug = urlParams.get('categorySlug') || '';
+
+      setKeyword(newKeyword);
+      setFilter(newFilter);
+      setCategorySlug(newCategorySlug);
+
+      switch (newFilter) {
+        case 'alphaAsc':
+          setSelectLabel('Từ A đến Z');
+          break;
+        case 'alphaDesc':
+          setSelectLabel('Từ Z đến A');
+          break;
+        case 'newest':
+          setSelectLabel('Mới nhất');
+          break;
+        case 'oldest':
+          setSelectLabel('Cũ nhất');
+          break;
+        default:
+          setSelectLabel('Lọc bài viết');
+          break;
+      }
+
+      if (newKeyword) {
+        await searchPost(newKeyword, newFilter);
+      } else {
+        await getPostsWithPagination(newFilter, newCategorySlug);
+      }
+    };
+
+    getPosts();
   }, [location.search, currentPage]);
 
-  const searchPost = async (keyword) => {
+  const searchPost = async (keyword, filter) => {
     try {
       setLoading(true);
 
       const foundPosts = await searchPostService(
         keyword,
         currentPage,
-        postsPerPage
+        postsPerPage,
+        filter
       );
 
       const foundPostsCount = await getFoundPostsCountService(
@@ -105,15 +203,25 @@ const Home = () => {
     }
   };
 
-  const getPostsWithPagination = async () => {
+  const getPostsWithPagination = async (filter, categorySlug) => {
     try {
       setLoading(true);
+
       const postsWithPagination = await getPostsWithPaginationService(
         currentPage,
-        postsPerPage
+        postsPerPage,
+        filter,
+        categorySlug
       );
 
-      const postCount = await getPostCountService();
+      let postCount;
+      categorySlug
+        ? (postCount = await getPostsCountByCategoryService(
+            categorySlug,
+            currentPage,
+            postsPerPage
+          ))
+        : (postCount = await getPostsCountService());
 
       if (postsWithPagination == null) {
         setPosts([]);
@@ -133,11 +241,6 @@ const Home = () => {
     window.scrollTo(0, 0);
   };
 
-  useEffect(() => {
-    console.log('Keyword: ', keyword);
-    console.log('Posts: ', posts);
-  }, [posts]);
-
   return (
     <>
       <div className={styles.container}>
@@ -147,6 +250,36 @@ const Home = () => {
             !loading ? (
               <>
                 <div className={styles.postCardList}>
+                  {keyword && filter && (
+                    <p className={styles.title}>
+                      Kết quả khi tìm kiếm với từ khóa: '{keyword}' được sắp xếp
+                      theo thứ tự {toLowerCaseFirstLetter(selectLabel)}
+                    </p>
+                  )}
+                  {keyword && !filter && (
+                    <p className={styles.title}>
+                      Kết quả tìm kiếm với từ khóa: '{keyword}'
+                    </p>
+                  )}
+                  {filter && !keyword && !categorySlug && (
+                    <p className={styles.title}>
+                      Kết quả lọc với lựa chọn:{' '}
+                      {toLowerCaseFirstLetter(selectLabel)}
+                    </p>
+                  )}
+                  {categorySlug && filter && (
+                    <p className={styles.title}>
+                      Các bài viết thuộc chủ đề{' '}
+                      {toLowerCaseFirstLetter(categoryName)} được sắp xếp theo
+                      thứ tự {toLowerCaseFirstLetter(selectLabel)}
+                    </p>
+                  )}
+                  {categorySlug && !filter && (
+                    <p className={styles.title}>
+                      Các bài viết thuộc chủ đề{' '}
+                      {toLowerCaseFirstLetter(categoryName)}
+                    </p>
+                  )}
                   {posts.length > 0 ? (
                     <>
                       <PostCardList posts={posts} />
@@ -159,7 +292,9 @@ const Home = () => {
                       </div>
                     </>
                   ) : (
-                    'Không tìm thấy bài viết. ☹️'
+                    <div className={styles.notFound}>
+                      Không có kết quả phù hợp. ☹️
+                    </div>
                   )}
                 </div>
                 <div className={styles.sidebar}>
@@ -171,7 +306,7 @@ const Home = () => {
                   </div>
 
                   <div className={styles.filter}>
-                    <Select label="Lọc bài viết" items={selectItems} />
+                    <Select label={selectLabel} items={selectItems} />
                   </div>
 
                   <div className={styles.categoryList}>
@@ -193,8 +328,8 @@ const Home = () => {
             <div className={styles.notLoggedIn}>Chưa đăng nhập.</div>
           )}
         </div>
+        <Footer />
       </div>
-      <Footer />
       <ToastList />
     </>
   );

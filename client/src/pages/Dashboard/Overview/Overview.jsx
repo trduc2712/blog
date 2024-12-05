@@ -1,6 +1,6 @@
 import styles from './Overview.module.scss';
 import { getUserCount as getUserCountService } from '@services/userService';
-import { getPostCount as getPostCountService } from '@services/postService';
+import { getPostsCount as getPostsCountService } from '@services/postService';
 import { getCategoryCount as getCategoryCountService } from '@services/categoryService';
 import { useEffect, useState } from 'react';
 
@@ -13,7 +13,7 @@ const Overview = () => {
     const getCount = async () => {
       try {
         const userCount = await getUserCountService();
-        const postCount = await getPostCountService();
+        const postCount = await getPostsCountService();
         const categoryCount = await getCategoryCountService();
         setUserCount(userCount);
         setPostCount(postCount);

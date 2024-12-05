@@ -26,5 +26,9 @@ export const stringToSlug = (str) => {
 export const isBase64String = (str) => {
   const base64Pattern =
     /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
-  return base64Pattern.test(str); // Kiểm tra xem chuỗi có khớp với biểu thức hay không
+  return base64Pattern.test(str);
+};
+
+export const toLowerCaseFirstLetter = (str) => {
+  return str[0].toLowerCase() + str.slice(1);
 };
