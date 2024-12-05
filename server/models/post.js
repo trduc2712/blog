@@ -78,7 +78,7 @@ export const createPost = (
   });
 };
 
-export const getPostCount = () => {
+export const getPostsCount = () => {
   return new Promise((resolve, reject) => {
     const query = 'SELECT COUNT(*) AS count FROM posts';
 
@@ -89,9 +89,35 @@ export const getPostCount = () => {
   });
 };
 
-export const getPostsWithPagination = (page, limit) => {
+export const getPostsWithPagination = (page, limit, filter, categorySlug) => {
   return new Promise((resolve, reject) => {
     const offset = (page - 1) * limit;
+
+    let categoryQuery;
+    if (categorySlug) {
+      categoryQuery = `WHERE posts.category_slug = '${categorySlug}'`;
+    } else {
+      categoryQuery = '';
+    }
+
+    let filterQuery;
+    switch (filter) {
+      case 'alphaAsc':
+        filterQuery = 'ORDER BY title ASC';
+        break;
+      case 'alphaDesc':
+        filterQuery = 'ORDER BY title DESC';
+        break;
+      case 'newest':
+        filterQuery = 'ORDER BY created_at DESC';
+        break;
+      case 'oldest':
+        filterQuery = 'ORDER BY created_at ASC';
+        break;
+      default:
+        filterQuery = '';
+        break;
+    }
 
     const query = `
       SELECT 
@@ -110,6 +136,8 @@ export const getPostsWithPagination = (page, limit) => {
       FROM posts
       JOIN users ON posts.user_id = users.id
       JOIN categories ON posts.category_slug = categories.slug
+      ${categoryQuery}
+      ${filterQuery} 
       LIMIT ? OFFSET ?
     `;
 
@@ -189,9 +217,28 @@ export const getPostById = (id) => {
   });
 };
 
-export const searchPostsByKeyword = (keyword, page, limit) => {
+export const searchPostsByKeyword = (keyword, page, limit, filter) => {
   return new Promise((resolve, reject) => {
     const offset = (page - 1) * limit;
+
+    let filterQuery;
+    switch (filter) {
+      case 'alphaAsc':
+        filterQuery = 'ORDER BY title ASC';
+        break;
+      case 'alphaDesc':
+        filterQuery = 'ORDER BY title DESC';
+        break;
+      case 'newest':
+        filterQuery = 'ORDER BY created_at DESC';
+        break;
+      case 'oldest':
+        filterQuery = 'ORDER BY created_at ASC';
+        break;
+      default:
+        filterQuery = '';
+        break;
+    }
 
     const query = `
        SELECT 
@@ -209,6 +256,7 @@ export const searchPostsByKeyword = (keyword, page, limit) => {
       JOIN users ON posts.user_id = users.id
       JOIN categories ON posts.category_slug = categories.slug
       WHERE title LIKE ?
+      ${filterQuery} 
       LIMIT ? OFFSET ?
     `;
 
@@ -228,6 +276,17 @@ export const getFoundPostsCount = (keyword) => {
     const searchKeyword = `%${keyword}%`;
 
     _query(query, [searchKeyword], (err, results) => {
+      if (err) return reject(err);
+      resolve(results[0].count);
+    });
+  });
+};
+
+export const getPostsCountByCategory = (category) => {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT COUNT(*) AS count FROM posts WHERE category_slug = ?`;
+
+    _query(query, [category], (err, results) => {
       if (err) return reject(err);
       resolve(results[0].count);
     });

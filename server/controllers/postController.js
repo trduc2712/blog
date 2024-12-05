@@ -3,12 +3,13 @@ import {
   getPostBySlug as getPostBySlugFromModel,
   createPost as createPostFromModel,
   getAllPosts as getAllPostsFromModel,
-  getPostCount as getPostCountFromModel,
+  getPostsCount as getPostsCountFromModel,
   getPostsWithPagination as getPostsWithPaginationFromModel,
   deletePostById as deletePostByIdFromModel,
   updatePost as updatePostFromModel,
   searchPostsByKeyword as searchPostsByKeywordFromModel,
   getFoundPostsCount as getFoundPostsCountFromModel,
+  getPostsCountByCategory as getPostsCountByCategoryFromModel,
 } from '../models/post.js';
 
 export const getPosts = async (req, res) => {
@@ -16,19 +17,27 @@ export const getPosts = async (req, res) => {
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
     const keyword = req.query.keyword;
+    const filter = req.query.filter;
+    const categorySlug = req.query.category;
 
     if (keyword) {
       try {
-        const posts = await searchPostsByKeywordFromModel(keyword, page, limit);
+        const foundPosts = await searchPostsByKeywordFromModel(
+          keyword,
+          page,
+          limit,
+          filter
+        );
+
         const foundPostsCount = await getFoundPostsCountFromModel(keyword);
 
-        if (posts.length === 0) {
+        if (foundPosts.length === 0) {
           return res.status(404).json({ error: 'Không tìm thấy bài viết.' });
         }
 
         res.json({
           message: `Tìm kiếm bài viết với từ khóa ${keyword} thành công`,
-          posts,
+          posts: foundPosts,
           meta: {
             foundPostsCount,
             currentPage: page,
@@ -47,10 +56,19 @@ export const getPosts = async (req, res) => {
         return res.status(400).json({ error: 'Tham số không hợp lệ.' });
       }
 
-      const postCount = await getPostCountFromModel();
+      let postCount;
+      categorySlug
+        ? (postCount = await getPostsCountByCategoryFromModel(categorySlug))
+        : (postCount = await getPostsCountFromModel());
+
       const posts =
         page && limit
-          ? await getPostsWithPaginationFromModel(page, limit)
+          ? await getPostsWithPaginationFromModel(
+              page,
+              limit,
+              filter,
+              categorySlug
+            )
           : await getAllPostsFromModel();
 
       if (posts.length === 0) {
