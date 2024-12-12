@@ -4,7 +4,7 @@ import useModal from '@hooks/useModal';
 import { useState, useEffect } from 'react';
 import { useToastContext } from '@contexts/ToastContext';
 import ToastList from '@components/ToastList/ToastList';
-import Modal from '@components/Modal/Modal';
+import Modal from '@components/Modal';
 import { deletePostById as deletePostByIdService } from '@services/postService';
 import { deleteUserById as deleteUserByIdService } from '@services/userService';
 import { deleteCategoryById as deleteCategoryByIdService } from '@services/categoryService';
@@ -30,7 +30,7 @@ const Table = ({ columnLabels, initialData }) => {
       setEntityName(' người dùng');
     } else if (location.pathname.includes('categories')) {
       setCurrentRoute('categories');
-      setEntityName('danh mục');
+      setEntityName('chủ đề');
     }
   }, []);
 
@@ -96,7 +96,7 @@ const Table = ({ columnLabels, initialData }) => {
 
   const openConfirmDeleteModal = (rowId) => {
     setModal({
-      title: 'Thông báo',
+      title: 'Cảnh báo',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
       message: `Bạn có chắc chắn muốn xóa ${entityName} này không?`,
@@ -115,6 +115,7 @@ const Table = ({ columnLabels, initialData }) => {
         closeModal();
       },
     });
+
     openModal();
   };
 
@@ -134,34 +135,27 @@ const Table = ({ columnLabels, initialData }) => {
           </tr>
         </thead>
         <tbody>
-          {data &&
-            (data.length > 0 ? (
-              data.map((row, index) => (
-                <tr key={index}>
-                  {Object.values(row).map((cell, index) => (
-                    <td key={index}>
-                      {cell == 'ADMIN'
-                        ? 'Quản trị viên'
-                        : cell == 'USER'
-                          ? 'Người dùng'
-                          : cell}
-                    </td>
-                  ))}
-                  <td>
-                    <Link to={`${location.pathname}/edit/${row.id}`}>Sửa</Link>
-                  </td>
-                  <td>
-                    <Link to="" onClick={() => handleDeleteRow(row.id)}>
-                      Xóa
-                    </Link>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={columnCounts}>Đang tải...</td>
-              </tr>
-            ))}
+          {data.map((row, index) => (
+            <tr key={index}>
+              {Object.values(row).map((cell, index) => (
+                <td key={index}>
+                  {cell == 'ADMIN'
+                    ? 'Quản trị viên'
+                    : cell == 'USER'
+                      ? 'Người dùng'
+                      : cell}
+                </td>
+              ))}
+              <td>
+                <Link to={`${location.pathname}/edit/${row.id}`}>Sửa</Link>
+              </td>
+              <td>
+                <Link to="" onClick={() => handleDeleteRow(row.id)}>
+                  Xóa
+                </Link>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <Modal

@@ -13,7 +13,7 @@ import Modal from '@components/Modal/Modal';
 
 const EditCategory = () => {
   const [category, setCategory] = useState();
-  const [modalContent, setModalContent] = useState('');
+  const [modal, setModal] = useState('');
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
 
@@ -46,18 +46,19 @@ const EditCategory = () => {
   }, [category]);
 
   const openConfirmUpdateModal = () => {
-    setModalContent({
-      title: 'Thông báo',
+    setModal({
+      title: 'Xác nhận',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
       message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
+      type: 'confirmation',
       onConfirm: () => {
         handleUpdate();
         closeModal();
         createToast({
           type: 'success',
           title: 'Thông báo',
-          message: 'Cập nhật danh mục thành công',
+          message: 'Cập nhật chủ đề thành công',
         });
       },
       onCancel: () => {
@@ -81,7 +82,7 @@ const EditCategory = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Sửa danh mục</h2>
+      <h2>Sửa chủ đề</h2>
       <div className={styles.formGroup}>
         <label htmlFor="name">Tên</label>
         <input
@@ -103,7 +104,7 @@ const EditCategory = () => {
           name="slug"
           id="slug"
           value={slug}
-          onChange={(e) => setSlug(stringToSlug(name))}
+          onChange={() => setSlug(stringToSlug(name))}
         />
       </div>
       <div className={styles.updateButtonWrapper}>
@@ -115,15 +116,16 @@ const EditCategory = () => {
         </button>
       </div>
       <Modal
-        title={modalContent.title}
+        title={modal.title}
         isOpen={isOpen}
         onClose={closeModal}
-        cancelLabel={modalContent.cancelLabel}
-        confirmLabel={modalContent.confirmLabel}
-        onConfirm={modalContent.onConfirm}
-        onCancel={modalContent.onCancel}
-        message={modalContent.message}
-        buttonLabel={modalContent.buttonLabel}
+        cancelLabel={modal.cancelLabel}
+        confirmLabel={modal.confirmLabel}
+        onConfirm={modal.onConfirm}
+        onCancel={modal.onCancel}
+        message={modal.message}
+        buttonLabel={modal.buttonLabel}
+        type={modal.type}
       />
       <ToastList />
     </div>

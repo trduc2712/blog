@@ -29,10 +29,10 @@ const Header = ({ isDashboard }) => {
             onClick: () => navigate('/dashboard'),
           });
       }
-      items.push(
-        { label: 'Hồ sơ của tôi', onClick: () => navigate('/my-profile') },
-        { label: 'Bài viết của tôi', onClick: () => navigate('/my-posts') }
-      );
+      items.push({
+        label: 'Hồ sơ của tôi',
+        onClick: () => navigate(`/profile/${user.username}`),
+      });
     } else {
       items.push({ label: 'Trang chủ', onClick: () => navigate('/') });
     }
@@ -51,10 +51,11 @@ const Header = ({ isDashboard }) => {
 
   const openConfirmLogoutModal = () => {
     setModal({
-      title: 'Cảnh báo',
+      title: 'Xác nhận',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
       message: 'Bạn có chắc chắn muốn đăng xuất không?',
+      type: 'confirmation',
       onConfirm: () => {
         logout();
         closeModal();
@@ -118,13 +119,13 @@ const Header = ({ isDashboard }) => {
         ) : (
           <>
             <button
-              className={`${styles.signUp} primary-btn`}
+              className="outline-primary-btn"
               onClick={() => navigate('/sign-up')}
             >
               Đăng ký
             </button>
             <button
-              className={`${styles.login} primary-btn`}
+              className={'primary-btn'}
               onClick={() => navigate('/login')}
             >
               Đăng nhập
@@ -142,6 +143,7 @@ const Header = ({ isDashboard }) => {
         onCancel={modal.onCancel}
         message={modal.message}
         buttonLabel={modal.buttonLabel}
+        type={modal.type}
       />
     </div>
   );

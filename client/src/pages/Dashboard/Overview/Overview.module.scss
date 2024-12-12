@@ -1,14 +1,21 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
+  background-color: colors.$bg-color;
+
   h2 {
+    background-color: inherit;
     margin-bottom: 20px;
   }
 
   .statisticCards {
+    background-color: inherit;
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(3, 1fr);
 
     .statisticCard {
+      box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
       border: 1px solid #ccc;
       border-radius: 5px;
       padding: 15px;
@@ -18,10 +25,10 @@
       }
 
       .statistic {
-        font-size: 1.4em;
+        font-size: 1.17em;
         font-weight: 600;
         letter-spacing: 5px;
-        color: #1677ff;
+        color: colors.$primary-color;
       }
     }
   }

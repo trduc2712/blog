@@ -1,16 +1,21 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  border: 1px solid #e6e6e6;
-  border-radius: 7.5px;
+  background-color: colors.$bg-color;
+  border: 1px solid #ccc;
+  border-radius: 10px;
   min-height: 200px;
   height: 100%;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
   overflow: hidden;
 
   .header {
+    background-color: colors.$bg-color;
+
     .thumbnail {
+      background-color: colors.$bg-color;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -27,15 +32,15 @@
   }
 
   .body {
-    padding: 15px;
+    padding: 10px;
 
     .categoryName {
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       text-decoration: none;
       color: #000;
 
       &:hover {
-        color: #1677ff;
+        color: colors.$primary-color;
         transition: 0.3s color ease;
       }
     }
@@ -46,7 +51,7 @@
         color: #000;
 
         &:hover {
-          color: #1677ff;
+          color: colors.$primary-color;
           transition: 0.3s color ease;
         }
       }
@@ -57,7 +62,39 @@
     display: flex;
     align-items: center;
     margin-top: auto;
-    padding: 0 0 15px 15px;
+    padding: 0 0 10px 10px;
+    width: 100%;
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding-right: 10px;
+
+      .action {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #ccc;
+          border-radius: 5px;
+
+          i {
+            background-color: #ccc;
+          }
+        }
+
+        i {
+          width: 22px !important;
+          height: 22px !important;
+          font-size: 22px !important;
+        }
+      }
+    }
 
     .userAvatar {
       border: 1px solid #ccc;
@@ -76,11 +113,11 @@
     }
 
     .userName {
-      margin-left: 15px;
+      margin-left: 10px;
 
       &:hover {
         cursor: pointer;
-        color: #1677ff;
+        color: colors.$primary-color;
         transition: 0.3s color ease;
       }
     }

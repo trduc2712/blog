@@ -15,9 +15,27 @@ const Modal = ({
 
   return (
     <div className={styles.overlay}>
-      <div className={`${styles.container}`}>
+      <div className={styles.container}>
         <div className={styles.header}>
-          <h3>{title}</h3>
+          <div className={styles.headerLeft}>
+            {type == 'success' && (
+              <i className={`bi bi-check-circle-fill ${styles.success}`}></i>
+            )}
+            {type == 'destructive' && (
+              <i
+                className={`bi bi-exclamation-circle-fill ${styles.destructive}`}
+              ></i>
+            )}
+            {type == 'info' && (
+              <i className={`bi bi-info-circle-fill ${styles.info}`}></i>
+            )}
+            {type == 'confirmation' && (
+              <i
+                className={`bi bi-question-circle-fill ${styles.confirmation}`}
+              ></i>
+            )}
+            <h3>{title}</h3>
+          </div>
           <div className={styles.close} onClick={onClose}>
             <i className="bi bi-x"></i>
           </div>
@@ -27,7 +45,7 @@ const Modal = ({
         </div>
         <div className={styles.footer}>
           <button
-            className={`${styles.cancel} ${type == 'destructive' ? 'destructive-secondary-btn' : 'secondary-btn'}`}
+            className={`${styles.cancel} ${type == 'destructive' ? 'outline-destructive-btn' : 'outline-primary-btn'}`}
             onClick={onCancel}
           >
             {cancelLabel}

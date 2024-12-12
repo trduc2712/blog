@@ -1,11 +1,17 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
+  background-color: colors.$bg-color;
+
   .searchBar {
+    background-color: colors.$bg-color;
     display: flex;
     align-items: center;
     position: relative;
 
     input {
       width: 100%;
+      font-size: 16.38px;
       border-radius: 5px;
     }
 
@@ -14,9 +20,9 @@
       position: absolute;
 
       i {
-        width: 14px;
-        height: 14px;
-        font-size: 14px;
+        width: 16.38px;
+        height: 16.38px;
+        font-size: 16.38px;
       }
     }
   }

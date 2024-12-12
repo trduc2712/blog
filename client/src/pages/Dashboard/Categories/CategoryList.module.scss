@@ -1,16 +1,21 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
+  background-color: colors.$bg-color;
+
   h2 {
     margin-bottom: 20px;
+    background-color: inherit;
   }
 
   .pagination {
     margin-top: 20px;
-    padding-bottom: 20px;
   }
 
-  .addButton {
-    width: 132px;
-    float: right;
+  .createWrapper {
+    background-color: inherit;
+    display: flex;
+    justify-content: flex-end;
     margin-bottom: 20px;
   }
 }

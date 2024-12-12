@@ -47,7 +47,7 @@ export const getUsers = async () => {
   }
 };
 
-export const getUserById = async (id) => {
+export const getUser = async (id) => {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/users/${id}`,

@@ -7,7 +7,6 @@ import Footer from '@components/Footer';
 import Pagination from '@components/Pagination';
 import SearchBox from '@components/SearchBox';
 import CategoryList from '@components/CategoryList';
-import Select from '@components/Select';
 import {
   getPostsWithPagination as getPostsWithPaginationService,
   getPostsCount as getPostsCountService,
@@ -20,19 +19,29 @@ import { useAuthContext } from '@contexts/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useToastContext } from '@contexts/ToastContext';
 import { toLowerCaseFirstLetter } from '@utils/string';
+import Modal from '@components/Modal';
+import useModal from '@hooks/useModal';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [selectItems, setSelectItems] = useState([]);
   const [keyword, setKeyword] = useState('');
   const [filter, setFilter] = useState('');
   const [categorySlug, setCategorySlug] = useState('');
   const [categories, setCategories] = useState('');
   const [categoryName, setCategoryName] = useState('');
-  const [selectLabel, setSelectLabel] = useState('Lọc bài viết');
+  const [filterLabel, setFilterLabel] = useState('');
+  const [modal, setModal] = useState({
+    title: '',
+    cancelLabel: '',
+    confirmLabel: '',
+    message: '',
+    type: 'destructive',
+    onConfirm: () => {},
+    onCancel: () => {},
+  });
   const postsPerPage = 9;
 
   const { user } = useAuthContext();
@@ -40,6 +49,8 @@ const Home = () => {
   const navigate = useNavigate();
 
   const { createToast } = useToastContext();
+
+  const { isOpen, openModal, closeModal } = useModal();
 
   const location = useLocation();
 
@@ -70,45 +81,8 @@ const Home = () => {
   };
 
   useEffect(() => {
-    user ? '' : navigate('/login');
-
     document.title = 'Trang chủ | Blog';
     window.scrollTo(0, 0);
-
-    const items = [
-      {
-        label: 'Từ A đến Z',
-        onClick: () => {
-          addParam('filter', 'alphaAsc');
-        },
-      },
-      {
-        label: 'Từ Z đến A',
-        onClick: () => {
-          addParam('filter', 'alphaDesc');
-        },
-      },
-      {
-        label: 'Mới nhất',
-        onClick: () => {
-          addParam('filter', 'newest');
-        },
-      },
-      {
-        label: 'Cũ nhất',
-        onClick: () => {
-          addParam('filter', 'oldest');
-        },
-      },
-      {
-        label: 'Xóa lọc',
-        onClick: () => {
-          removeParam('filter');
-        },
-      },
-    ];
-
-    setSelectItems(items);
 
     const getAllCategories = async () => {
       try {
@@ -129,7 +103,6 @@ const Home = () => {
       );
 
       setCategoryName(categoryMatched.name);
-      console.log(categories);
     }
   }, [categorySlug]);
 
@@ -144,24 +117,6 @@ const Home = () => {
       setFilter(newFilter);
       setCategorySlug(newCategorySlug);
 
-      switch (newFilter) {
-        case 'alphaAsc':
-          setSelectLabel('Từ A đến Z');
-          break;
-        case 'alphaDesc':
-          setSelectLabel('Từ Z đến A');
-          break;
-        case 'newest':
-          setSelectLabel('Mới nhất');
-          break;
-        case 'oldest':
-          setSelectLabel('Cũ nhất');
-          break;
-        default:
-          setSelectLabel('Lọc bài viết');
-          break;
-      }
-
       if (newKeyword) {
         await searchPost(newKeyword, newFilter);
       } else {
@@ -173,6 +128,8 @@ const Home = () => {
   }, [location.search, currentPage]);
 
   const searchPost = async (keyword, filter) => {
+    window.scrollTo(0, 0);
+
     try {
       setLoading(true);
 
@@ -204,8 +161,18 @@ const Home = () => {
   };
 
   const getPostsWithPagination = async (filter, categorySlug) => {
+    window.scrollTo(0, 0);
+
     try {
       setLoading(true);
+
+      const postCount = categorySlug
+        ? await getPostsCountByCategoryService(
+            categorySlug,
+            currentPage,
+            postsPerPage
+          )
+        : await getPostsCountService();
 
       const postsWithPagination = await getPostsWithPaginationService(
         currentPage,
@@ -214,20 +181,13 @@ const Home = () => {
         categorySlug
       );
 
-      let postCount;
-      categorySlug
-        ? (postCount = await getPostsCountByCategoryService(
-            categorySlug,
-            currentPage,
-            postsPerPage
-          ))
-        : (postCount = await getPostsCountService());
-
       if (postsWithPagination == null) {
         setPosts([]);
       } else {
         setPosts(postsWithPagination);
-        setTotalPages(Math.ceil(postCount / postsPerPage));
+        const totalPages = Math.ceil(postCount / postsPerPage);
+        setTotalPages(totalPages);
+        if (totalPages == 1) setCurrentPage(1);
       }
     } catch (err) {
       console.log(err);
@@ -241,6 +201,44 @@ const Home = () => {
     window.scrollTo(0, 0);
   };
 
+  const openConfirmClearFilterModal = () => {
+    setModal({
+      title: 'Xác nhận',
+      cancelLabel: 'Không',
+      confirmLabel: 'Có',
+      message: `Bạn có chắc chắn muốn xóa lọc không?`,
+      type: 'confirmation',
+      onConfirm: () => {
+        removeParam('filter');
+        closeModal();
+      },
+      onCancel: () => {
+        closeModal();
+      },
+    });
+
+    openModal();
+  };
+
+  useEffect(() => {
+    if (filter) {
+      switch (filter) {
+        case 'alphaAsc':
+          setFilterLabel('tăng dần theo bảng chữ cái');
+          break;
+        case 'alphaDesc':
+          setFilterLabel('giảm dần theo bảng chữ cái');
+          break;
+        case 'oldest':
+          setFilterLabel('tăng dần theo thời gian');
+          break;
+        case 'newest':
+          setFilterLabel('giảm dần theo thời gian');
+          break;
+      }
+    }
+  }, [filter]);
+
   return (
     <>
       <div className={styles.container}>
@@ -251,34 +249,36 @@ const Home = () => {
               <>
                 <div className={styles.postCardList}>
                   {keyword && filter && (
-                    <p className={styles.title}>
+                    <h3 className={styles.title}>
                       Kết quả khi tìm kiếm với từ khóa: '{keyword}' được sắp xếp
-                      theo thứ tự {toLowerCaseFirstLetter(selectLabel)}
-                    </p>
+                      theo thứ tự {filterLabel}
+                    </h3>
                   )}
                   {keyword && !filter && (
-                    <p className={styles.title}>
+                    <h3 className={styles.title}>
                       Kết quả tìm kiếm với từ khóa: '{keyword}'
-                    </p>
+                    </h3>
                   )}
                   {filter && !keyword && !categorySlug && (
-                    <p className={styles.title}>
-                      Kết quả lọc với lựa chọn:{' '}
-                      {toLowerCaseFirstLetter(selectLabel)}
-                    </p>
+                    <h3 className={styles.title}>
+                      Danh sách bài viết được sắp xếp theo thứ tự {filterLabel}
+                    </h3>
                   )}
                   {categorySlug && filter && (
-                    <p className={styles.title}>
-                      Các bài viết thuộc chủ đề{' '}
-                      {toLowerCaseFirstLetter(categoryName)} được sắp xếp theo
-                      thứ tự {toLowerCaseFirstLetter(selectLabel)}
-                    </p>
+                    <h3 className={styles.title}>
+                      Danh sách bài viết thuộc chủ đề{' '}
+                      {categoryName && toLowerCaseFirstLetter(categoryName)}{' '}
+                      được sắp xếp theo thứ tự
+                    </h3>
                   )}
                   {categorySlug && !filter && (
-                    <p className={styles.title}>
-                      Các bài viết thuộc chủ đề{' '}
-                      {toLowerCaseFirstLetter(categoryName)}
-                    </p>
+                    <h3 className={styles.title}>
+                      Danh sách bài viết thuộc chủ đề{' '}
+                      {categoryName && toLowerCaseFirstLetter(categoryName)}
+                    </h3>
+                  )}
+                  {!categorySlug && !filter && !keyword && (
+                    <h3 className={styles.title}>Danh sách bài viết</h3>
                   )}
                   {posts.length > 0 ? (
                     <>
@@ -293,7 +293,7 @@ const Home = () => {
                     </>
                   ) : (
                     <div className={styles.notFound}>
-                      Không có kết quả phù hợp. ☹️
+                      Không có kết quả phù hợp.
                     </div>
                   )}
                 </div>
@@ -304,9 +304,82 @@ const Home = () => {
                       onSearch={handleSearch}
                     />
                   </div>
-
                   <div className={styles.filter}>
-                    <Select label={selectLabel} items={selectItems} />
+                    <div className={styles.filterTop}>
+                      <div className={styles.title}>
+                        <h3>Lọc bài viết</h3>
+                      </div>
+                    </div>
+                    <div className={styles.filterBody}>
+                      <div className={styles.filterOption}>
+                        <input
+                          type="radio"
+                          name="filter"
+                          id="alphaAsc"
+                          value="alphaAsc"
+                          checked={filter == 'alphaAsc'}
+                          onChange={(e) => {
+                            setFilter(e.target.value);
+                            addParam('filter', 'alphaAsc');
+                          }}
+                        />
+                        <label htmlFor="alphaAsc">
+                          Tăng dần theo bảng chữ cái
+                        </label>
+                      </div>
+                      <div className={styles.filterOption}>
+                        <input
+                          type="radio"
+                          name="filter"
+                          id="alphaDesc"
+                          value="alphaDesc"
+                          checked={filter == 'alphaDesc'}
+                          onChange={(e) => {
+                            setFilter(e.target.value);
+                            addParam('filter', 'alphaDesc');
+                          }}
+                        />
+                        <label htmlFor="alphaDesc">
+                          Giảm dần theo bảng chữ cái
+                        </label>
+                      </div>
+                      <div className={styles.filterOption}>
+                        <input
+                          type="radio"
+                          name="filter"
+                          id="oldest"
+                          value="oldest"
+                          checked={filter == 'oldest'}
+                          onChange={(e) => {
+                            setFilter(e.target.value);
+                            addParam('filter', 'oldest');
+                          }}
+                        />
+                        <label htmlFor="oldest">Tăng dần theo thời gian</label>
+                      </div>
+                      <div className={styles.filterOption}>
+                        <input
+                          type="radio"
+                          name="filter"
+                          id="newest"
+                          value="newest"
+                          checked={filter == 'newest'}
+                          onChange={(e) => {
+                            setFilter(e.target.value);
+                            addParam('filter', 'newest');
+                          }}
+                        />
+                        <label htmlFor="newest">Giảm dần theo thời gian</label>
+                      </div>
+                    </div>
+                    <div className={styles.filterBottom}>
+                      <div
+                        className="secondary-btn"
+                        onClick={openConfirmClearFilterModal}
+                      >
+                        Xóa lọc
+                      </div>
+                    </div>
                   </div>
 
                   <div className={styles.categoryList}>
@@ -331,6 +404,18 @@ const Home = () => {
         <Footer />
       </div>
       <ToastList />
+      <Modal
+        title={modal.title}
+        isOpen={isOpen}
+        onClose={closeModal}
+        cancelLabel={modal.cancelLabel}
+        confirmLabel={modal.confirmLabel}
+        onConfirm={modal.onConfirm}
+        onCancel={modal.onCancel}
+        message={modal.message}
+        buttonLabel={modal.buttonLabel}
+        type={modal.type}
+      />
     </>
   );
 };

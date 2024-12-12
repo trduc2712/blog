@@ -8,7 +8,7 @@ const Login = lazy(() => import('@pages/Login'));
 const SignUp = lazy(() => import('@pages/SignUp'));
 const Loading = lazy(() => import('@pages/Loading'));
 const PostDetail = lazy(() => import('@pages/PostDetail'));
-const MyProfile = lazy(() => import('@pages/MyProfile'));
+const Profile = lazy(() => import('@pages/Profile'));
 const CreatePost = lazy(() => import('@pages/CreatePost'));
 const Dashboard = lazy(() => import('@pages/Dashboard'));
 const Overview = lazy(() => import('@pages/Dashboard/Overview'));
@@ -28,7 +28,6 @@ const CreateCategory = lazy(
 );
 const RoleBasedRoute = lazy(() => import('@pages/RoleBasedRoute'));
 const Unauthorized = lazy(() => import('@pages/Unauthorized'));
-const MyPosts = lazy(() => import('@pages/MyPosts'));
 
 const App = () => {
   return (
@@ -66,9 +65,8 @@ const App = () => {
                 <Route path="categories/create" element={<CreateCategory />} />
               </Route>
               <Route path="/post/:slug" element={<PostDetail />} />
-              <Route path="/my-profile" element={<MyProfile />} />
+              <Route path="/profile/:username" element={<Profile />} />
               <Route path="/create-post" element={<CreatePost />} />
-              <Route path="/my-posts" element={<MyPosts />} />
             </Routes>
           </Suspense>
         </BrowserRouter>

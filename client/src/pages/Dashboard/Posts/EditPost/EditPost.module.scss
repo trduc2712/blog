@@ -1,13 +1,18 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
   width: 100%;
   height: 100%;
+  background-color: colors.$bg-color;
 
   h2 {
+    background-color: colors.$bg-color;
     margin-bottom: 20px;
   }
 
   .categoryPicker,
   .userPicker {
+    background-color: colors.$bg-color;
     margin-bottom: 20px;
     position: relative;
 
@@ -53,7 +58,7 @@
         list-style: none;
 
         &:hover {
-          background-color: #e6e6e6;
+          background-color: #ccc;
           transition: 0.3s background-color ease;
           cursor: pointer;
         }
@@ -62,30 +67,97 @@
   }
 
   .formGroup {
+    background-color: colors.$bg-color;
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
   }
 
   .thumbnailWrapper {
+    background-color: inherit;
+    margin-top: 10px;
+    margin-bottom: 15px;
     width: 100%;
     height: 500px;
-    border: 1px solid #ccc;
-    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 5px;
 
+    &:hover {
+      cursor: pointer;
+      opacity: 0.9;
+      transition: 0.3s opacity ease;
+
+      .deleteThumbnail {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        i {
+          display: block !important;
+        }
+      }
+    }
+
+    .thumbnailLabel {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #ccc !important;
+      background-color: #fff;
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+      position: relative;
+
+      &:hover {
+        color: colors.$primary-color;
+        transition: 0.3s color ease;
+        cursor: pointer;
+      }
+
+      p {
+        font-size: 14px;
+        background-color: #fff;
+      }
+
+      i {
+        font-size: 14px;
+        background-color: #fff;
+        height: 14px;
+        width: 14px;
+        margin-right: 5px;
+      }
+    }
+
+    .deleteThumbnail {
+      position: absolute;
+      background-color: transparent;
+
+      i {
+        color: #fff;
+        display: none;
+        background-color: transparent;
+        font-size: 28px;
+        height: 28px;
+        width: 28px;
+      }
+    }
+
     .thumbnail {
       object-fit: cover;
       height: 100%;
       width: 100%;
-      border: none;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
   }
 
   .updateButtonWrapper {
+    background-color: colors.$bg-color;
     margin-top: 20px;
     padding-bottom: 20px;
     display: flex;

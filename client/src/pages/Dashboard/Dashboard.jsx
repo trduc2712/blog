@@ -54,7 +54,7 @@ const Dashboard = () => {
               className={`${styles.sidebarItem} ${currentRoute == 'categories' ? styles.active : ''}`}
               onClick={() => navigate('/dashboard/categories')}
             >
-              <p>Danh mục</p>
+              <p>Chủ đề</p>
             </li>
           </ul>
         </div>

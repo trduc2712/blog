@@ -1,3 +1,5 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
   display: flex;
   justify-content: center;
@@ -18,7 +20,7 @@
       margin-bottom: 30px;
 
       h2 {
-        color: #1677ff;
+        color: colors.$primary-color;
       }
 
       .close {
@@ -32,11 +34,11 @@
         cursor: pointer;
 
         &:hover {
-          background-color: #e6e6e6;
+          background-color: #ccc;
           transition: 0.3s background-color ease;
 
           i {
-            background-color: #e6e6e6;
+            background-color: #ccc;
             transition: 0.3s background-color ease;
           }
         }

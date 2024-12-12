@@ -1,3 +1,5 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
   .content {
     .header {
@@ -10,7 +12,7 @@
         display: flex;
         width: auto;
         i {
-          background-color: #1677ff;
+          background-color: colors.$primary-color;
           margin-right: 5px;
         }
       }
@@ -18,8 +20,13 @@
 
     .body {
       display: grid;
+      background-color: colors.$bg-color;
       gap: 20px;
       grid-template-columns: repeat(3, 1fr);
+
+      .post {
+        background-color: colors.$bg-color;
+      }
     }
   }
 
@@ -43,6 +50,16 @@
 
   .pagination {
     display: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  .container {
+    .content {
+      .body {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
   }
 }
 

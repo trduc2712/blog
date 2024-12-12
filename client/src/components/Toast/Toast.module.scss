@@ -1,5 +1,6 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
-  box-shadow: rgba(148, 148, 148, 0.35) 0px 5px 15px;
   z-index: 3000;
   border-radius: 7.5px;
   overflow: hidden;
@@ -9,6 +10,8 @@
   justify-content: space-between;
   flex-direction: column;
   margin-bottom: 10px;
+  border: 1px solid #ccc;
+  box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
 
   .header {
     display: flex;
@@ -16,6 +19,22 @@
     justify-content: space-between;
     width: 100%;
     padding: 15px;
+
+    .warning {
+      color: colors.$warning-color;
+    }
+
+    .success {
+      color: colors.$success-color;
+    }
+
+    .info {
+      color: colors.$info-color;
+    }
+
+    .error {
+      color: colors.$destructive-color;
+    }
 
     .close {
       display: flex;
@@ -28,11 +47,11 @@
       cursor: pointer;
 
       &:hover {
-        background-color: #e6e6e6;
+        background-color: #ccc;
         transition: 0.3s background-color ease;
 
         i {
-          background-color: #e6e6e6;
+          background-color: #ccc;
           transition: 0.3s background-color ease;
         }
       }

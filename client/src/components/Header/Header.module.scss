@@ -1,3 +1,5 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
   position: fixed;
   display: flex;
@@ -5,16 +7,16 @@
   align-items: center;
   width: 100%;
   padding: 10px 40px;
-  border-bottom: 1px solid #e6e6e6;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-bottom: 1px solid #ccc;
   background-color: #fff;
+  box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
   z-index: 1000;
 
   .left {
     h1 {
       a {
         text-decoration: none;
-        color: #1677ff;
+        color: colors.$primary-color;
         letter-spacing: 5px;
       }
     }
@@ -25,20 +27,7 @@
     align-items: center;
 
     .createPost {
-      width: 144px;
       margin: 0 10px;
-      display: flex;
-
-      i {
-        background-color: #1677ff;
-        margin-right: 5px;
-      }
-
-      &:hover {
-        cursor: pointer;
-        opacity: 0.8;
-        transition: 0.3s opacity ease;
-      }
     }
 
     .avatar {
@@ -60,13 +49,13 @@
     .signUp {
       margin-right: 10px;
       width: 100px;
-      border: 1px solid #1677ff;
+      border: 1px solid colors.$primary-color;
       background-color: #fff;
-      color: #1677ff;
+      color: colors.$primary-color;
     }
 
     .login {
-      border: 1px solid #1677ff;
+      border: 1px solid colors.$primary-color;
       width: 100px;
 
       &:hover {

@@ -29,7 +29,7 @@ const EditPost = () => {
   const [isCategoriesDropdownOpen, setIsCategoriesDropdownOpen] =
     useState(false);
   const [isUsersDropdownOpen, setIsUsersDropdownOpen] = useState(false);
-  const [modalContent, setModalContent] = useState('');
+  const [modal, setModal] = useState('');
 
   const { postId } = useParams();
 
@@ -98,7 +98,6 @@ const EditPost = () => {
     const file = e.target.files[0];
 
     if (!file) {
-      console.log('Vui lòng chọn ảnh');
       return;
     }
 
@@ -107,11 +106,12 @@ const EditPost = () => {
   };
 
   const openConfirmUpdateModal = () => {
-    setModalContent({
-      title: 'Thông báo',
+    setModal({
+      title: 'Xác nhận',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
       message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
+      type: 'confirmation',
       onConfirm: () => {
         handleUpdate();
         closeModal();
@@ -194,6 +194,25 @@ const EditPost = () => {
     },
   };
 
+  const openConfirmDeleteThumbnailModal = () => {
+    setModal({
+      title: 'Xác nhận',
+      cancelLabel: 'Không',
+      confirmLabel: 'Có',
+      message: `Bạn có chắc chắn muốn xóa ảnh đại diện thu nhỏ không?`,
+      type: 'confirmation',
+      onConfirm: () => {
+        setThumbnail('');
+        closeModal();
+      },
+      onCancel: () => {
+        closeModal();
+      },
+    });
+
+    openModal();
+  };
+
   return (
     <div className={styles.container}>
       <h2>Sửa bài viết</h2>
@@ -215,7 +234,7 @@ const EditPost = () => {
           htmlFor="category"
           onClick={() => setIsCategoriesDropdownOpen(!isCategoriesDropdownOpen)}
         >
-          Danh mục
+          Chủ đề
         </label>
         <div
           className={styles.categoriesList}
@@ -245,11 +264,25 @@ const EditPost = () => {
       <div className={styles.formGroup}>
         <label htmlFor="thumbnail">Thumbnail</label>
         <div className={styles.thumbnailWrapper}>
-          <img
-            src={`data:image/jpeg;base64,${thumbnail}`}
-            alt="Hình đại diện của bài viết"
-            className={styles.thumbnail}
-          />
+          {!thumbnail ? (
+            <label htmlFor="thumbnail" className={styles.thumbnailLabel}>
+              <i className="bi bi-image"></i>
+              <p>Tải lên ảnh đại diện thu nhỏ.</p>
+            </label>
+          ) : (
+            <>
+              <img
+                src={`data:image/jpeg;base64,${thumbnail}`}
+                className={styles.thumbnail}
+              />
+              <div
+                className={styles.deleteThumbnail}
+                onClick={openConfirmDeleteThumbnailModal}
+              >
+                <i className="bi bi-trash"></i>
+              </div>
+            </>
+          )}
           <input
             type="file"
             id="thumbnail"
@@ -313,15 +346,16 @@ const EditPost = () => {
         </button>
       </div>
       <Modal
-        title={modalContent.title}
+        title={modal.title}
         isOpen={isOpen}
         onClose={closeModal}
-        cancelLabel={modalContent.cancelLabel}
-        confirmLabel={modalContent.confirmLabel}
-        onConfirm={modalContent.onConfirm}
-        onCancel={modalContent.onCancel}
-        message={modalContent.message}
-        buttonLabel={modalContent.buttonLabel}
+        cancelLabel={modal.cancelLabel}
+        confirmLabel={modal.confirmLabel}
+        onConfirm={modal.onConfirm}
+        onCancel={modal.onCancel}
+        message={modal.message}
+        buttonLabel={modal.buttonLabel}
+        type={modal.type}
       />
       <ToastList />
     </div>

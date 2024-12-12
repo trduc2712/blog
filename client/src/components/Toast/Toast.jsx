@@ -12,25 +12,18 @@ const Toast = ({ id, type, title, message, onClose }) => {
           }}
         >
           {type == 'success' && (
-            <i
-              className="bi bi-check-circle-fill"
-              style={{ color: '#52c41a' }}
-            ></i>
+            <i className={`bi bi-check-circle-fill ${styles.success}`}></i>
           )}
           {type == 'error' && (
-            <i className="bi bi-x-circle-fill" style={{ color: '#ff4d4f' }}></i>
+            <i className={`bi bi-x-circle-fill ${styles.error}`}></i>
           )}
           {type == 'warning' && (
             <i
-              className="bi bi-exclamation-circle-fill"
-              style={{ color: '#faad14' }}
+              className={`bi bi-exclamation-circle-fill ${styles.warning}`}
             ></i>
           )}
           {type == 'info' && (
-            <i
-              className="bi bi-info-circle-fill"
-              style={{ color: '#1677ff' }}
-            ></i>
+            <i className={`bi bi-info-circle-fill ${styles.info}`}></i>
           )}
           <h4 style={{ marginLeft: '5px' }}>{title}</h4>
         </div>

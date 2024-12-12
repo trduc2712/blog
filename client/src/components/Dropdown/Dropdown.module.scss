@@ -24,13 +24,14 @@
     background-color: #fff;
     border-radius: 7.5px;
     list-style: none;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     overflow-y: auto;
+    box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
+    border: 1px solid #ccc;
 
     .item {
       width: 100%;
       background-color: #fff;
-      border: 1px solid #e6e6e6;
+      border: 1px solid #ccc;
       padding: 10px;
       text-align: left;
       border: none;
@@ -38,11 +39,11 @@
       cursor: pointer;
 
       &:hover {
-        background-color: #e6e6e6;
+        background-color: #ccc;
         transition: 0.3s background-color ease;
 
         p {
-          background-color: #e6e6e6;
+          background-color: #ccc;
           transition: 0.3s background-color ease;
         }
       }

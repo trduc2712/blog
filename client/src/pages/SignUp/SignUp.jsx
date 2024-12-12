@@ -37,10 +37,14 @@ const SignUp = () => {
 
     if (!validUsernamePattern.test(username)) {
       setUsernameError('Tên người dùng không được chứa ký tự đặc biệt.');
+      return;
     }
+
     if (!validNamePattern.test(name)) {
-      setNameError('Tên không dược chứa ký tự đặc biệt.');
+      setNameError('Tên không được chứa ký tự đặc biệt.');
+      return;
     }
+
     if (!validPasswordPattern.test(password)) {
       setPasswordError(
         'Mật khẩu phải có ít nhất 8 ký tự và bao gồm cả chữ cái và số.'

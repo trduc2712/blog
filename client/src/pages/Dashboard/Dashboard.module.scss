@@ -1,5 +1,7 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
-  height: 100vh;
+  height: 100%;
 
   .main {
     width: 100%;
@@ -9,7 +11,7 @@
 
     .sidebar {
       position: fixed;
-      padding: 20px;
+      padding: 10px;
       width: 20%;
       height: 100%;
       border-right: 1px solid #ccc;
@@ -21,20 +23,19 @@
 
         .active {
           background-color: #fff !important;
-          color: #1677ff;
-          border: 1px solid #1677ff !important;
+          color: colors.$primary-color;
+          border: 1px solid colors.$primary-color !important;
           transition:
             background-color 0.3s ease,
             color 0.3s ease;
 
           &:hover {
             background-color: #fff !important;
-            // color: #fff;
           }
 
           p {
             background-color: #fff !important;
-            color: #1677ff !important;
+            color: colors.$primary-color !important;
             transition:
               background-color 0.3s ease,
               color 0.3s ease;
@@ -42,17 +43,21 @@
         }
 
         .sidebarItem {
-          padding: 15px;
+          padding: 10px;
           border-radius: 5px;
           border: 1px solid #fff;
 
+          &:not(:last-child) {
+            margin-bottom: 10px;
+          }
+
           &:hover {
-            background-color: #e6e6e6;
+            background-color: #ccc;
             cursor: pointer;
-            border: 1px solid #e6e6e6;
+            border: 1px solid #ccc;
 
             p {
-              background-color: #e6e6e6;
+              background-color: #ccc;
             }
           }
 
@@ -65,10 +70,12 @@
     }
 
     .content {
+      background-color: colors.$bg-color;
       margin-left: 20%;
       padding: 20px;
       width: 80%;
       height: 100%;
+      min-height: calc(100vh - 61px);
     }
   }
 }

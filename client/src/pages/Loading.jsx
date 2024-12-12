@@ -7,6 +7,7 @@ const Loading = () => {
         justifyContent: 'center',
         width: '100vw',
         height: '100vh',
+        backgroundColor: '#f2f4f7',
       }}
     >
       <p>Đang tải...</p>

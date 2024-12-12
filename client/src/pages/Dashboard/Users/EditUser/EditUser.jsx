@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import styles from './EditUser.module.scss';
 import { useEffect, useState } from 'react';
 import {
-  getUserById as getUserByIdService,
+  getUser as getUserService,
   updateUser as updateUserService,
 } from '@services/userService';
 import { fileToBase64 } from '@utils/file';
@@ -21,7 +21,7 @@ const EditUser = () => {
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
   const [role, setRole] = useState('');
-  const [modalContent, setModalContent] = useState('');
+  const [modal, setModal] = useState('');
 
   const { createToast } = useToastContext();
 
@@ -32,16 +32,16 @@ const EditUser = () => {
   };
 
   useEffect(() => {
-    const getUserById = async (id) => {
+    const getUser = async (id) => {
       try {
-        const user = await getUserByIdService(id);
+        const user = await getUserService(id);
         setUser(user);
       } catch (err) {
         console.log(err);
       }
     };
 
-    getUserById(userId);
+    getUser(userId);
   }, []);
 
   useEffect(() => {
@@ -58,7 +58,6 @@ const EditUser = () => {
     const file = e.target.files[0];
 
     if (!file) {
-      console.log('Vui lòng chọn ảnh');
       return;
     }
 
@@ -67,11 +66,12 @@ const EditUser = () => {
   };
 
   const openConfirmUpdateModal = () => {
-    setModalContent({
-      title: 'Thông báo',
+    setModal({
+      title: 'Xác nhận',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
       message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
+      type: 'confirmation',
       onConfirm: () => {
         handleUpdate();
         closeModal();
@@ -236,15 +236,16 @@ const EditUser = () => {
         </button>
       </div>
       <Modal
-        title={modalContent.title}
+        title={modal.title}
         isOpen={isOpen}
         onClose={closeModal}
-        cancelLabel={modalContent.cancelLabel}
-        confirmLabel={modalContent.confirmLabel}
-        onConfirm={modalContent.onConfirm}
-        onCancel={modalContent.onCancel}
-        message={modalContent.message}
-        buttonLabel={modalContent.buttonLabel}
+        cancelLabel={modal.cancelLabel}
+        confirmLabel={modal.confirmLabel}
+        onConfirm={modal.onConfirm}
+        onCancel={modal.onCancel}
+        message={modal.message}
+        buttonLabel={modal.buttonLabel}
+        type={modal.type}
       />
       <ToastList />
     </div>

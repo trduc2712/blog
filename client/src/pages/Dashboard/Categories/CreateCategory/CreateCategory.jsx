@@ -9,7 +9,7 @@ import { createCategory as createCategoryService } from '@services/categoryServi
 import { useNavigate } from 'react-router-dom';
 
 const CreateCategory = () => {
-  const [modalContent, setModalContent] = useState('');
+  const [modal, setModal] = useState('');
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
 
@@ -27,23 +27,24 @@ const CreateCategory = () => {
     if (!name || !slug) {
       createToast({
         type: 'warning',
-        title: 'Thông báo',
+        title: 'Cảnh báo',
         message: 'Vui lòng điền đầy đủ thông tin yêu cầu.',
       });
       return;
     }
-    setModalContent({
-      title: 'Thông báo',
+    setModal({
+      title: 'Xác nhận',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
-      message: 'Bạn có chắc chắn muốn tạo danh mục mới này không?',
+      message: 'Bạn có chắc chắn muốn tạo chủ đề mới này không?',
+      type: 'confirmation',
       onConfirm: () => {
         handleCreate();
         closeModal();
         createToast({
           type: 'success',
           title: 'Thông báo',
-          message: 'Tạo mới danh mục thành công',
+          message: 'Tạo mới chủ đề thành công',
         });
         navigate('/dashboard/categories');
       },
@@ -55,8 +56,6 @@ const CreateCategory = () => {
   };
 
   const handleCreate = () => {
-    console.log('name: ', name);
-    console.log('slug: ', slug);
     const createCategory = async (name, slug) => {
       try {
         await createCategoryService(name, slug);
@@ -70,7 +69,7 @@ const CreateCategory = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Thêm danh mục</h2>
+      <h2>Thêm chủ đề</h2>
       <div className={styles.formGroup}>
         <label htmlFor="name">Tên</label>
         <input
@@ -104,15 +103,16 @@ const CreateCategory = () => {
         </button>
       </div>
       <Modal
-        title={modalContent.title}
+        title={modal.title}
         isOpen={isOpen}
         onClose={closeModal}
-        cancelLabel={modalContent.cancelLabel}
-        confirmLabel={modalContent.confirmLabel}
-        onConfirm={modalContent.onConfirm}
-        onCancel={modalContent.onCancel}
-        message={modalContent.message}
-        buttonLabel={modalContent.buttonLabel}
+        cancelLabel={modal.cancelLabel}
+        confirmLabel={modal.confirmLabel}
+        onConfirm={modal.onConfirm}
+        onCancel={modal.onCancel}
+        message={modal.message}
+        buttonLabel={modal.buttonLabel}
+        type={modal.type}
       />
       <ToastList />
     </div>

@@ -3,31 +3,31 @@
   border-radius: 5px;
 
   &:hover {
-    background-color: #e6e6e6;
+    background-color: #ccc;
     transition: 0.3s background-color ease;
 
     .trigger {
       display: flex;
-      background-color: #e6e6e6;
+      background-color: #ccc;
       transition: 0.3s background-color ease;
 
       .left {
-        background-color: #e6e6e6;
+        background-color: #ccc;
         transition: 0.3s background-color ease;
 
         p,
         i {
-          background-color: #e6e6e6;
+          background-color: #ccc;
           transition: 0.3s background-color ease;
         }
       }
 
       .right {
-        background-color: #e6e6e6;
+        background-color: #ccc;
         transition: 0.3s background-color ease;
 
         i {
-          background-color: #e6e6e6;
+          background-color: #ccc;
           transition: 0.3s background-color ease;
         }
       }
@@ -43,7 +43,7 @@
     cursor: pointer;
 
     &:hover {
-      background-color: #e6e6e6;
+      background-color: #ccc;
       transition: 0.3s background-color ease;
     }
 
@@ -81,7 +81,7 @@
       cursor: pointer;
 
       &:hover {
-        background-color: #e6e6e6;
+        background-color: #ccc;
         transition: 0.3s background-color ease;
       }
     }

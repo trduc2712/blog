@@ -1,3 +1,5 @@
+@use '@styles/colors.scss' as colors;
+
 .overlay {
   position: fixed;
   top: 0;
@@ -10,10 +12,10 @@
   align-items: center;
   z-index: 2000;
   flex-direction: column;
+  box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
 
   .container {
     border-radius: 10px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     overflow: hidden;
 
     .header {
@@ -22,6 +24,39 @@
       align-items: center;
       justify-content: space-between;
       padding: 20px;
+
+      .headerLeft {
+        display: flex;
+        align-items: center;
+
+        .destructive {
+          color: colors.$warning-color;
+        }
+
+        .success {
+          color: colors.$success-color;
+        }
+
+        .info {
+          color: colors.$info-color;
+        }
+
+        .error {
+          color: colors.$destructive-color;
+        }
+
+        .confirmation {
+          color: colors.$info-color;
+        }
+
+        i {
+          cursor: default;
+          width: 24px !important;
+          height: 24px !important;
+          font-size: 24px !important;
+          margin-right: 10px;
+        }
+      }
 
       .close {
         display: flex;
@@ -34,11 +69,11 @@
         cursor: pointer;
 
         &:hover {
-          background-color: #e6e6e6;
+          background-color: #ccc;
           transition: 0.3s background-color ease;
 
           i {
-            background-color: #e6e6e6;
+            background-color: #ccc;
             transition: 0.3s background-color ease;
           }
         }

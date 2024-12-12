@@ -16,7 +16,7 @@ const CreateUser = () => {
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
   const [role, setRole] = useState('USER');
-  const [modalContent, setModalContent] = useState('');
+  const [modal, setModal] = useState('');
 
   const { createToast } = useToastContext();
 
@@ -32,7 +32,6 @@ const CreateUser = () => {
     const file = e.target.files[0];
 
     if (!file) {
-      console.log('Vui lòng chọn ảnh');
       return;
     }
 
@@ -49,11 +48,12 @@ const CreateUser = () => {
       });
       return;
     }
-    setModalContent({
-      title: 'Thông báo',
+    setModal({
+      title: 'Xác nhận',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
       message: 'Bạn có chắc chắn muốn tạo người dùng mới này không?',
+      type: 'confirmation',
       onConfirm: () => {
         handleCreate();
         closeModal();
@@ -205,15 +205,16 @@ const CreateUser = () => {
         </button>
       </div>
       <Modal
-        title={modalContent.title}
+        title={modal.title}
         isOpen={isOpen}
         onClose={closeModal}
-        cancelLabel={modalContent.cancelLabel}
-        confirmLabel={modalContent.confirmLabel}
-        onConfirm={modalContent.onConfirm}
-        onCancel={modalContent.onCancel}
-        message={modalContent.message}
-        buttonLabel={modalContent.buttonLabel}
+        cancelLabel={modal.cancelLabel}
+        confirmLabel={modal.confirmLabel}
+        onConfirm={modal.onConfirm}
+        onCancel={modal.onCancel}
+        message={modal.message}
+        buttonLabel={modal.buttonLabel}
+        type={modal.type}
       />
       <ToastList />
     </div>

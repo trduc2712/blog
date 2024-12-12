@@ -14,23 +14,25 @@ import Modal from '@components/Modal';
 import { useToastContext } from '@contexts/ToastContext';
 import ToastList from '@components/ToastList';
 import Footer from '@components/Footer';
+import { useRef } from 'react';
 
 const CreatePost = () => {
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [categories, setCategories] = useState();
   const [categorySlug, setCategorySlug] = useState('');
-  const [categoryName, setCategoryName] = useState('Danh mục');
+  const [categoryName, setCategoryName] = useState('Chủ đề');
   const [thumbnail, setThumbnail] = useState('');
   const [userId, setUserId] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [modalContent, setModalContent] = useState({});
-  const [error, setError] = useState();
+  const [modal, setModal] = useState({});
 
   const { user } = useAuthContext();
 
   const { createToast } = useToastContext();
   const { isOpen, openModal, closeModal } = useModal();
+
+  const quillRef = useRef(null);
 
   const dropdownChildren = [];
 
@@ -63,7 +65,6 @@ const CreatePost = () => {
 
   const openConfirmPublishModal = () => {
     if (!title || !thumbnail || !categorySlug || !content) {
-      console.log('Thieu thong tin.');
       createToast({
         type: 'warning',
         title: 'Cảnh báo',
@@ -71,11 +72,12 @@ const CreatePost = () => {
       });
       return;
     }
-    setModalContent({
-      title: 'Thông báo',
+    setModal({
+      title: 'Xác nhận',
       cancelLabel: 'Không',
       confirmLabel: 'Có',
       message: 'Bạn có chắc chắn muốn đăng bài viết không?',
+      type: 'confirmation',
       onConfirm: () => {
         handlePublish();
         closeModal();
@@ -175,12 +177,30 @@ const CreatePost = () => {
     const file = e.target.files[0];
 
     if (!file) {
-      console.log('Vui lòng chọn ảnh');
       return;
     }
 
     const base64 = await fileToBase64(file);
     setThumbnail(base64);
+  };
+
+  const openConfirmDeleteThumbnailModal = () => {
+    setModal({
+      title: 'Xác nhận',
+      cancelLabel: 'Không',
+      confirmLabel: 'Có',
+      message: `Bạn có chắc chắn muốn xóa ảnh đại diện thu nhỏ không?`,
+      type: 'confirmation',
+      onConfirm: () => {
+        setThumbnail('');
+        closeModal();
+      },
+      onCancel: () => {
+        closeModal();
+      },
+    });
+
+    openModal();
   };
 
   return (
@@ -207,7 +227,7 @@ const CreatePost = () => {
                 htmlFor="category"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                Danh mục
+                Chủ đề
               </label>
               <div
                 className={styles.categoriesList}
@@ -240,13 +260,22 @@ const CreatePost = () => {
             <div className={styles.thumbnailWrapper}>
               {!thumbnail ? (
                 <label htmlFor="thumbnail" className={styles.thumbnailLabel}>
-                  <i className="bi bi-upload"></i> Tải lên
+                  <i className="bi bi-image"></i>
+                  <p>Tải lên ảnh đại diện thu nhỏ.</p>
                 </label>
               ) : (
-                <img
-                  src={`data:image/jpeg;base64,${thumbnail}`}
-                  className={styles.thumbnail}
-                />
+                <>
+                  <img
+                    src={`data:image/jpeg;base64,${thumbnail}`}
+                    className={styles.thumbnail}
+                  />
+                  <div
+                    className={styles.deleteThumbnail}
+                    onClick={openConfirmDeleteThumbnailModal}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </div>
+                </>
               )}
               <input
                 type="file"
@@ -260,6 +289,7 @@ const CreatePost = () => {
             <div className="quill-wrapper" spellCheck="false">
               {customToolbar}
               <ReactQuill
+                ref={quillRef}
                 value={content}
                 modules={modules}
                 onChange={handleContentChange}
@@ -269,7 +299,7 @@ const CreatePost = () => {
             </div>
             <div className={styles.publishWrapper}>
               <button
-                className={`${styles.cancel} secondary-btn`}
+                className={`${styles.cancel} outline-primary-btn`}
                 onClick={() => navigate('/')}
               >
                 Hủy
@@ -289,15 +319,16 @@ const CreatePost = () => {
         )}
       </div>
       <Modal
-        title={modalContent.title}
+        title={modal.title}
         isOpen={isOpen}
         onClose={closeModal}
-        cancelLabel={modalContent.cancelLabel}
-        confirmLabel={modalContent.confirmLabel}
-        onConfirm={modalContent.onConfirm}
-        onCancel={modalContent.onCancel}
-        message={modalContent.message}
-        buttonLabel={modalContent.buttonLabel}
+        cancelLabel={modal.cancelLabel}
+        confirmLabel={modal.confirmLabel}
+        onConfirm={modal.onConfirm}
+        onCancel={modal.onCancel}
+        message={modal.message}
+        buttonLabel={modal.buttonLabel}
+        type={modal.type}
       />
       <ToastList />
       <Footer />

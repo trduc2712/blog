@@ -9,6 +9,7 @@ import {
 } from '@services/categoryService';
 
 const Categories = () => {
+  const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -18,28 +19,35 @@ const Categories = () => {
 
   const columnLabels = ['ID', 'Tên', 'Slug'];
 
-  useEffect(() => {
-    const getCategoriesWithPagination = async () => {
-      try {
-        const categoriesWithPagination =
-          await getCategoriesWithPaginationService(
-            currentPage,
-            categoriesPerPage
-          );
+  const getCategoriesWithPagination = async () => {
+    setLoading(true);
 
-        const categoryCount = await getCategoryCountService();
+    try {
+      const categoriesWithPagination = await getCategoriesWithPaginationService(
+        currentPage,
+        categoriesPerPage
+      );
 
-        if (categoriesWithPagination == null) {
-          setCategories([]);
-        } else {
-          setCategories(categoriesWithPagination);
-          setTotalPages(Math.ceil(categoryCount / categoriesPerPage));
-        }
-      } catch (err) {
-        console.log(err);
+      const categoryCount = await getCategoryCountService();
+
+      if (categoriesWithPagination == null) {
+        setCategories([]);
+      } else {
+        setCategories(categoriesWithPagination);
+        setTotalPages(Math.ceil(categoryCount / categoriesPerPage));
       }
-    };
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    getCategoriesWithPagination();
+  }, []);
+
+  useEffect(() => {
     getCategoriesWithPagination();
   }, [currentPage]);
 
@@ -49,21 +57,30 @@ const Categories = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Danh sách danh mục</h2>
-      <button
-        className={`${styles.addButton} primary-btn`}
-        onClick={() => navigate('/dashboard/categories/create')}
-      >
-        Thêm danh mục
-      </button>
-      <Table columnLabels={columnLabels} initialData={categories} />
-      <div className={styles.pagination}>
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
+      <h2>Danh sách chủ đề</h2>
+      <div className={styles.createWrapper}>
+        <button
+          className="primary-btn"
+          onClick={() => navigate('/dashboard/categories/create')}
+        >
+          <i className="bi bi-plus"></i>
+          Thêm chủ đề
+        </button>
       </div>
+      {loading ? (
+        'Đang tải...'
+      ) : (
+        <>
+          <Table columnLabels={columnLabels} initialData={categories} />
+          <div className={styles.pagination}>
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };

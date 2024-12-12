@@ -1,4 +1,8 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
+  background-color: colors.$bg-color;
+
   table {
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -7,6 +11,7 @@
     overflow: hidden;
     width: 100%;
     font-size: 14px;
+    box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
 
     thead {
       padding: 10px;
@@ -67,7 +72,7 @@
             text-decoration: none;
 
             &:hover {
-              color: #1677ff;
+              color: colors.$primary-color;
               transition: 0.3s color ease;
             }
           }

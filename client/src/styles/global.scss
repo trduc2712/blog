@@ -1,46 +1,59 @@
 @use './colors.scss' as colors;
 
 .primary-btn {
-  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px;
+  min-width: 100px;
   border: none;
   border-radius: 5px;
   font-size: 14px;
-  background-color: colors.$brand-color;
+  background-color: colors.$primary-color;
   color: #fff;
   cursor: pointer;
 
   p {
-    background-color: colors.$brand-color;
+    background-color: colors.$primary-color;
+  }
+
+  i {
+    margin-right: 5px;
+    background-color: colors.$primary-color;
   }
 
   &:hover {
-    background-color: colors.$hover-color;
+    background-color: colors.$primary-hover-color;
     transition: 0.3s background-color ease !important;
 
     i {
-      background-color: colors.$hover-color !important;
+      background-color: colors.$primary-hover-color !important;
       transition: 0.3s background-color ease;
     }
 
     p {
-      background-color: colors.$hover-color;
+      background-color: colors.$primary-hover-color;
       transition: 0.3s background-color ease !important;
     }
   }
 
   &:active {
-    background-color: colors.$active-color;
+    background-color: colors.$primary-active-color;
     transition: 0.3s background-color ease !important;
 
     i {
-      background-color: colors.$active-color !important;
+      background-color: colors.$primary-active-color !important;
       transition: 0.3s background-color ease;
+    }
+
+    p {
+      background-color: colors.$primary-active-color;
+      transition: 0.3s background-color ease !important;
     }
   }
 }
 
-.secondary-btn {
+.outline-primary-btn {
   width: 100px;
   padding: 10px;
   border-radius: 5px;
@@ -51,11 +64,64 @@
   background-color: #fff;
 
   &:hover {
-    border: 1px solid colors.$brand-color;
-    color: colors.$brand-color;
+    border: 1px solid colors.$primary-color;
+    color: colors.$primary-color;
     transition:
       0.3s border ease,
       color ease;
+  }
+}
+
+.secondary-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  min-width: 100px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: colors.$secondary-color;
+  color: #fff;
+  cursor: pointer;
+
+  p {
+    background-color: colors.$secondary-color;
+  }
+
+  i {
+    margin-right: 5px;
+    background-color: colors.$secondary-color;
+  }
+
+  &:hover {
+    background-color: colors.$secondary-hover-color;
+    transition: 0.3s background-color ease !important;
+
+    i {
+      background-color: colors.$secondary-hover-color !important;
+      transition: 0.3s background-color ease;
+    }
+
+    p {
+      background-color: colors.$secondary-hover-color;
+      transition: 0.3s background-color ease !important;
+    }
+  }
+
+  &:active {
+    background-color: colors.$secondary-active-color;
+    transition: 0.3s background-color ease !important;
+
+    i {
+      background-color: colors.$secondary-active-color !important;
+      transition: 0.3s background-color ease;
+    }
+
+    p {
+      background-color: colors.$secondary-active-color;
+      transition: 0.3s background-color ease !important;
+    }
   }
 }
 
@@ -99,7 +165,7 @@
   }
 }
 
-.destructive-secondary-btn {
+.outline-destructive-btn {
   width: 100px;
   padding: 10px;
   border-radius: 5px;
@@ -165,7 +231,7 @@
         }
 
         &:hover {
-          background-color: #e6e6e6;
+          background-color: #ccc;
           transition: 0.3s background-color ease;
           color: #000;
           transition: 0.3s color ease;
@@ -177,8 +243,10 @@
 
 .quill-wrapper {
   margin-top: 10px;
+  background-color: colors.$bg-color;
 
   .quill {
+    background-color: inherit;
     .ql-container {
       overflow: hidden;
       border-radius: 0 0 5px 5px !important;

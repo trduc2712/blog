@@ -6,7 +6,7 @@ const SearchBox = ({ placeholder, onSearch }) => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-    setValue(urlParams.get('keyword'));
+    setValue(urlParams.get('keyword') || '');
   }, []);
 
   return (

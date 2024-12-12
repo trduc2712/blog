@@ -43,7 +43,7 @@ const Overview = () => {
           </p>
         </div>
         <div className={styles.statisticCard}>
-          <h3>Số lượng danh mục</h3>
+          <h3>Số lượng chủ đề</h3>
           <p className={styles.statistic}>
             {categoryCount == 0 ? 'Đang tải...' : categoryCount}
           </p>
