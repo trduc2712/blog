@@ -10,15 +10,21 @@ import {
   searchPostsByKeyword as searchPostsByKeywordFromModel,
   getFoundPostsCount as getFoundPostsCountFromModel,
   getPostsCountByCategory as getPostsCountByCategoryFromModel,
+  getPostsCountByUsername as getPostsCountByUsernameFromModel,
 } from '../models/post.js';
 
 export const getPosts = async (req, res) => {
   try {
-    const page = parseInt(req.query.page);
+    let page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
     const keyword = req.query.keyword;
     const filter = req.query.filter;
-    const categorySlug = req.query.category;
+    const categorySlug = req.query.categorySlug;
+    const username = req.query.username;
+
+    if (page <= 0 || limit <= 0) {
+      return res.status(400).json({ error: 'Tham số không hợp lệ.' });
+    }
 
     if (keyword) {
       try {
@@ -28,70 +34,80 @@ export const getPosts = async (req, res) => {
           limit,
           filter
         );
-
         const foundPostsCount = await getFoundPostsCountFromModel(keyword);
+        const totalPages = Math.ceil(foundPostsCount / limit);
+
+        if (page > totalPages) {
+          page = 1;
+        }
 
         if (foundPosts.length === 0) {
           return res.status(404).json({ error: 'Không tìm thấy bài viết.' });
         }
 
-        res.json({
-          message: `Tìm kiếm bài viết với từ khóa ${keyword} thành công`,
+        return res.json({
+          message: `Tìm kiếm bài viết với từ khóa "${keyword}" thành công`,
           posts: foundPosts,
           meta: {
             foundPostsCount,
             currentPage: page,
-            totalPages: Math.ceil(foundPostsCount / limit),
+            totalPages,
           },
         });
       } catch (err) {
         console.error(
-          `Lỗi khi tìm kiếm bài viết với từ khóa ${keyword}: `,
+          `Lỗi khi tìm kiếm bài viết với từ khóa "${keyword}": `,
           err
         );
-        res.status(500).json({ error: 'Lỗi máy chủ.' });
+        return res.status(500).json({ error: 'Lỗi máy chủ.' });
       }
-    } else {
-      if (page && limit && (page <= 0 || limit <= 0)) {
-        return res.status(400).json({ error: 'Tham số không hợp lệ.' });
-      }
-
-      let postCount;
-      categorySlug
-        ? (postCount = await getPostsCountByCategoryFromModel(categorySlug))
-        : (postCount = await getPostsCountFromModel());
-
-      const posts =
-        page && limit
-          ? await getPostsWithPaginationFromModel(
-              page,
-              limit,
-              filter,
-              categorySlug
-            )
-          : await getAllPostsFromModel();
-
-      if (posts.length === 0) {
-        return res.status(404).json({ error: 'Không có bài viết nào.' });
-      }
-
-      res.json({
-        message:
-          page && limit
-            ? `Lấy các bài viết ở trang ${page} thành công.`
-            : 'Lấy tất cả bài viết thành công.',
-        posts,
-        meta: {
-          postCount,
-          currentPage: page || undefined,
-          // Nếu toán hạng đầu tiên là truthy thì toán tử || sẽ trả về toán hạng đầu tiên mà không cần kiểm tra toán hạng thứ hai.
-          totalPages: page && limit ? Math.ceil(postCount / limit) : undefined,
-        },
-      });
     }
+
+    let postCount;
+    if (categorySlug) {
+      postCount = await getPostsCountByCategoryFromModel(categorySlug);
+    } else if (username) {
+      postCount = await getPostsCountByUsernameFromModel(username);
+    } else {
+      postCount = await getPostsCountFromModel();
+    }
+
+    const totalPages = Math.ceil(postCount / limit);
+
+    if (page > totalPages) {
+      page = 1;
+    }
+
+    const posts =
+      page && limit
+        ? await getPostsWithPaginationFromModel(
+            page,
+            limit,
+            filter,
+            categorySlug,
+            username
+          )
+        : await getAllPostsFromModel();
+
+    if (posts.length === 0) {
+      return res.status(404).json({ error: 'Không có bài viết nào.' });
+    }
+
+    return res.json({
+      message:
+        page && limit
+          ? `Lấy các bài viết ở trang ${page} thành công.`
+          : 'Lấy tất cả bài viết thành công.',
+      posts,
+      meta: {
+        postCount,
+        currentPage: page || undefined,
+        totalPages: page && limit ? totalPages : undefined,
+      },
+    });
   } catch (err) {
-    console.log('Lỗi khi lấy bài viết: ', err);
-    res.status(500).json({ error: 'Lỗi máy chủ.' });
+    console.error('Lỗi khi lấy bài viết: ', err);
+    return res.status(500).json({ error: 'Lỗi máy chủ.' });
   }
 };
 

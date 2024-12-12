@@ -55,9 +55,11 @@ export const createUser = async (req, res) => {
 
   try {
     const userExists = await getUserByUsernameFromModel(username);
+
     if (userExists) {
       return res.status(400).json({ error: 'Người dùng đã tồn tại.' });
     }
+
     await createUserFromModel(username, password, name, avatar, role);
     return res.status(201).json({ message: 'Đăng ký thành công.' });
   } catch (err) {
@@ -74,7 +76,13 @@ export const getUser = async (req, res) => {
   }
 
   try {
-    const user = await getUserByIdFromModel(id);
+    let user;
+
+    if (!isNaN(id)) {
+      user = await getUserByIdFromModel(id);
+    } else {
+      user = await getUserByUsernameFromModel(id);
+    }
 
     if (!user) {
       return res.status(404).json({ error: 'Người dùng không tồn tại.' });

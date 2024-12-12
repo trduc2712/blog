@@ -89,18 +89,41 @@ export const getPostsCount = () => {
   });
 };
 
-export const getPostsWithPagination = (page, limit, filter, categorySlug) => {
+export const getPostsCountByUsername = (username) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+    SELECT COUNT(*) AS count FROM posts
+    JOIN users ON posts.user_id = users.id 
+    WHERE username = '${username}'`;
+
+    _query(query, (err, results) => {
+      if (err) return reject(err);
+      resolve(results[0].count);
+    });
+  });
+};
+
+export const getPostsWithPagination = (
+  page,
+  limit,
+  filter,
+  categorySlug,
+  username
+) => {
   return new Promise((resolve, reject) => {
     const offset = (page - 1) * limit;
 
-    let categoryQuery;
-    if (categorySlug) {
+    let categoryQuery = '';
+    if (categorySlug)
       categoryQuery = `WHERE posts.category_slug = '${categorySlug}'`;
-    } else {
-      categoryQuery = '';
-    }
 
-    let filterQuery;
+    let usernameQuery = '';
+    if (username)
+      usernameQuery = categoryQuery
+        ? `AND users.username = '${username}'`
+        : `WHERE users.username = '${username}'`;
+
+    let filterQuery = '';
     switch (filter) {
       case 'alphaAsc':
         filterQuery = 'ORDER BY title ASC';
@@ -115,7 +138,6 @@ export const getPostsWithPagination = (page, limit, filter, categorySlug) => {
         filterQuery = 'ORDER BY created_at ASC';
         break;
       default:
-        filterQuery = '';
         break;
     }
 
@@ -137,6 +159,7 @@ export const getPostsWithPagination = (page, limit, filter, categorySlug) => {
       JOIN users ON posts.user_id = users.id
       JOIN categories ON posts.category_slug = categories.slug
       ${categoryQuery}
+      ${usernameQuery} 
       ${filterQuery} 
       LIMIT ? OFFSET ?
     `;
