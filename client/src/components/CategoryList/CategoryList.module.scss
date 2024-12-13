@@ -1,10 +1,12 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
   .category {
     padding: 10px;
     cursor: pointer;
 
     &:hover {
-      background-color: #ccc;
+      color: colors.$primary-color;
     }
   }
 }

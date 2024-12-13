@@ -44,8 +44,6 @@ const Home = () => {
   });
   const postsPerPage = 9;
 
-  const { user } = useAuthContext();
-
   const navigate = useNavigate();
 
   const { createToast } = useToastContext();
@@ -224,181 +222,187 @@ const Home = () => {
     if (filter) {
       switch (filter) {
         case 'alphaAsc':
-          setFilterLabel('tăng dần theo bảng chữ cái');
+          setFilterLabel('Tăng dần theo bảng chữ cái');
           break;
         case 'alphaDesc':
-          setFilterLabel('giảm dần theo bảng chữ cái');
+          setFilterLabel('Giảm dần theo bảng chữ cái');
           break;
         case 'oldest':
-          setFilterLabel('tăng dần theo thời gian');
+          setFilterLabel('Tăng dần theo thời gian');
           break;
         case 'newest':
-          setFilterLabel('giảm dần theo thời gian');
+          setFilterLabel('Giảm dần theo thời gian');
           break;
       }
     }
   }, [filter]);
+
+  const handleClearFilter = () => {
+    if (filter.length == 0) {
+      createToast({
+        type: 'warning',
+        title: 'Cảnh báo',
+        message: 'Chưa có bộ lọc nào được áp dụng.',
+      });
+      return;
+    }
+    openConfirmClearFilterModal();
+  };
 
   return (
     <>
       <div className={styles.container}>
         <Header isDashboard={false} />
         <div className={styles.content}>
-          {user ? (
-            !loading ? (
-              <>
-                <div className={styles.postCardList}>
-                  {keyword && filter && (
-                    <h3 className={styles.title}>
-                      Kết quả khi tìm kiếm với từ khóa: '{keyword}' được sắp xếp
-                      theo thứ tự {filterLabel}
-                    </h3>
-                  )}
-                  {keyword && !filter && (
-                    <h3 className={styles.title}>
-                      Kết quả tìm kiếm với từ khóa: '{keyword}'
-                    </h3>
-                  )}
-                  {filter && !keyword && !categorySlug && (
-                    <h3 className={styles.title}>
-                      Danh sách bài viết được sắp xếp theo thứ tự {filterLabel}
-                    </h3>
-                  )}
-                  {categorySlug && filter && (
-                    <h3 className={styles.title}>
-                      Danh sách bài viết thuộc chủ đề{' '}
-                      {categoryName && toLowerCaseFirstLetter(categoryName)}{' '}
-                      được sắp xếp theo thứ tự
-                    </h3>
-                  )}
-                  {categorySlug && !filter && (
-                    <h3 className={styles.title}>
-                      Danh sách bài viết thuộc chủ đề{' '}
-                      {categoryName && toLowerCaseFirstLetter(categoryName)}
-                    </h3>
-                  )}
-                  {!categorySlug && !filter && !keyword && (
-                    <h3 className={styles.title}>Danh sách bài viết</h3>
-                  )}
-                  {posts.length > 0 ? (
-                    <>
-                      <PostCardList posts={posts} />
-                      <div className={styles.pagination}>
-                        <Pagination
-                          totalPages={totalPages}
-                          currentPage={currentPage}
-                          onPageChange={handlePageChange}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <div className={styles.notFound}>
-                      Không có kết quả phù hợp.
+          {!loading ? (
+            <>
+              <div className={styles.postCardList}>
+                {keyword && filter && (
+                  <h3 className={styles.title}>
+                    Kết quả khi tìm kiếm với từ khóa: '{keyword}' được sắp xếp
+                    theo thứ tự {toLowerCaseFirstLetter(filterLabel)}
+                  </h3>
+                )}
+                {keyword && !filter && (
+                  <h3 className={styles.title}>
+                    Kết quả tìm kiếm với từ khóa: '{keyword}'
+                  </h3>
+                )}
+                {filter && !keyword && !categorySlug && (
+                  <h3 className={styles.title}>
+                    Danh sách bài viết được sắp xếp theo thứ tự{' '}
+                    {toLowerCaseFirstLetter(filterLabel)}
+                  </h3>
+                )}
+                {categorySlug && filter && (
+                  <h3 className={styles.title}>
+                    Danh sách bài viết thuộc chủ đề{' '}
+                    {categoryName && toLowerCaseFirstLetter(categoryName)} được
+                    sắp xếp theo thứ tự {toLowerCaseFirstLetter(filterLabel)}
+                  </h3>
+                )}
+                {categorySlug && !filter && (
+                  <h3 className={styles.title}>
+                    Danh sách bài viết thuộc chủ đề{' '}
+                    {categoryName && toLowerCaseFirstLetter(categoryName)}
+                  </h3>
+                )}
+                {!categorySlug && !filter && !keyword && (
+                  <h3 className={styles.title}>Danh sách bài viết</h3>
+                )}
+                {posts.length > 0 ? (
+                  <>
+                    <PostCardList posts={posts} />
+                    <div className={styles.pagination}>
+                      <Pagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                      />
                     </div>
-                  )}
+                  </>
+                ) : (
+                  <div className={styles.notFound}>
+                    Không có kết quả phù hợp.
+                  </div>
+                )}
+              </div>
+              <div className={styles.sidebar}>
+                <div className={styles.searchBox}>
+                  <SearchBox
+                    placeholder="Tìm kiếm bài viết"
+                    onSearch={handleSearch}
+                  />
                 </div>
-                <div className={styles.sidebar}>
-                  <div className={styles.searchBox}>
-                    <SearchBox
-                      placeholder="Tìm kiếm bài viết"
-                      onSearch={handleSearch}
-                    />
-                  </div>
-                  <div className={styles.filter}>
-                    <div className={styles.filterTop}>
-                      <div className={styles.title}>
-                        <h3>Lọc bài viết</h3>
-                      </div>
-                    </div>
-                    <div className={styles.filterBody}>
-                      <div className={styles.filterOption}>
-                        <input
-                          type="radio"
-                          name="filter"
-                          id="alphaAsc"
-                          value="alphaAsc"
-                          checked={filter == 'alphaAsc'}
-                          onChange={(e) => {
-                            setFilter(e.target.value);
-                            addParam('filter', 'alphaAsc');
-                          }}
-                        />
-                        <label htmlFor="alphaAsc">
-                          Tăng dần theo bảng chữ cái
-                        </label>
-                      </div>
-                      <div className={styles.filterOption}>
-                        <input
-                          type="radio"
-                          name="filter"
-                          id="alphaDesc"
-                          value="alphaDesc"
-                          checked={filter == 'alphaDesc'}
-                          onChange={(e) => {
-                            setFilter(e.target.value);
-                            addParam('filter', 'alphaDesc');
-                          }}
-                        />
-                        <label htmlFor="alphaDesc">
-                          Giảm dần theo bảng chữ cái
-                        </label>
-                      </div>
-                      <div className={styles.filterOption}>
-                        <input
-                          type="radio"
-                          name="filter"
-                          id="oldest"
-                          value="oldest"
-                          checked={filter == 'oldest'}
-                          onChange={(e) => {
-                            setFilter(e.target.value);
-                            addParam('filter', 'oldest');
-                          }}
-                        />
-                        <label htmlFor="oldest">Tăng dần theo thời gian</label>
-                      </div>
-                      <div className={styles.filterOption}>
-                        <input
-                          type="radio"
-                          name="filter"
-                          id="newest"
-                          value="newest"
-                          checked={filter == 'newest'}
-                          onChange={(e) => {
-                            setFilter(e.target.value);
-                            addParam('filter', 'newest');
-                          }}
-                        />
-                        <label htmlFor="newest">Giảm dần theo thời gian</label>
-                      </div>
-                    </div>
-                    <div className={styles.filterBottom}>
-                      <div
-                        className="secondary-btn"
-                        onClick={openConfirmClearFilterModal}
-                      >
-                        Xóa lọc
-                      </div>
+                <div className={styles.filter}>
+                  <div className={styles.filterTop}>
+                    <div className={styles.title}>
+                      <h3>Lọc bài viết</h3>
                     </div>
                   </div>
+                  <div className={styles.filterBody}>
+                    <div className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="filter"
+                        id="alphaAsc"
+                        value="alphaAsc"
+                        checked={filter == 'alphaAsc'}
+                        onChange={(e) => {
+                          setFilter(e.target.value);
+                          addParam('filter', 'alphaAsc');
+                        }}
+                      />
+                      <label htmlFor="alphaAsc">
+                        Tăng dần theo bảng chữ cái
+                      </label>
+                    </div>
+                    <div className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="filter"
+                        id="alphaDesc"
+                        value="alphaDesc"
+                        checked={filter == 'alphaDesc'}
+                        onChange={(e) => {
+                          setFilter(e.target.value);
+                          addParam('filter', 'alphaDesc');
+                        }}
+                      />
+                      <label htmlFor="alphaDesc">
+                        Giảm dần theo bảng chữ cái
+                      </label>
+                    </div>
+                    <div className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="filter"
+                        id="oldest"
+                        value="oldest"
+                        checked={filter == 'oldest'}
+                        onChange={(e) => {
+                          setFilter(e.target.value);
+                          addParam('filter', 'oldest');
+                        }}
+                      />
+                      <label htmlFor="oldest">Tăng dần theo thời gian</label>
+                    </div>
+                    <div className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="filter"
+                        id="newest"
+                        value="newest"
+                        checked={filter == 'newest'}
+                        onChange={(e) => {
+                          setFilter(e.target.value);
+                          addParam('filter', 'newest');
+                        }}
+                      />
+                      <label htmlFor="newest">Giảm dần theo thời gian</label>
+                    </div>
+                  </div>
+                  <div className={styles.filterBottom}>
+                    <div className="secondary-btn" onClick={handleClearFilter}>
+                      Xóa lọc
+                    </div>
+                  </div>
+                </div>
 
-                  <div className={styles.categoryList}>
-                    <div className={styles.categoryListTop}>
-                      <div className={styles.title}>
-                        <h3>Chủ đề</h3>
-                      </div>
-                    </div>
-                    <div className={styles.categoryBottom}>
-                      <CategoryList />
+                <div className={styles.categoryList}>
+                  <div className={styles.categoryListTop}>
+                    <div className={styles.title}>
+                      <h3>Chủ đề</h3>
                     </div>
                   </div>
+                  <div className={styles.categoryBottom}>
+                    <CategoryList />
+                  </div>
                 </div>
-              </>
-            ) : (
-              <div className={styles.loading}>Đang tải...</div>
-            )
+              </div>
+            </>
           ) : (
-            <div className={styles.notLoggedIn}>Chưa đăng nhập.</div>
+            <div className={styles.loading}>Đang tải...</div>
           )}
         </div>
         <Footer />

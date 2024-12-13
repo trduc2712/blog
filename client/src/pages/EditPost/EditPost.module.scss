@@ -26,7 +26,7 @@
       margin-top: 10px;
       border: 1px solid #ccc;
       padding: 10px;
-      border-radius: 5px;
+      border-radius: 7.5px;
 
       &:hover {
         cursor: pointer;
@@ -41,7 +41,7 @@
 
     .categories,
     .users {
-      border-radius: 5px;
+      border-radius: 7.5px;
       position: absolute;
       height: 250px;
       overflow-y: auto;
@@ -66,6 +66,16 @@
     }
   }
 
+  .select {
+    margin-bottom: 20px;
+    background-color: colors.$bg-color;
+
+    p {
+      background-color: colors.$bg-color;
+      margin-bottom: 10px;
+    }
+  }
+
   .formGroup {
     background-color: colors.$bg-color;
     display: flex;
@@ -75,14 +85,12 @@
 
   .thumbnailWrapper {
     background-color: inherit;
-    margin-top: 10px;
-    margin-bottom: 15px;
     width: 100%;
     height: 500px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
+    border-radius: 7.5px;
 
     &:hover {
       cursor: pointer;
@@ -110,7 +118,7 @@
       background-color: #fff;
       width: 100%;
       height: 100%;
-      border-radius: 5px;
+      border-radius: 7.5px;
       position: relative;
 
       &:hover {
@@ -152,14 +160,13 @@
       height: 100%;
       width: 100%;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 7.5px;
     }
   }
 
   .updateButtonWrapper {
     background-color: colors.$bg-color;
     margin-top: 20px;
-    padding-bottom: 20px;
     display: flex;
     justify-content: flex-end;
     align-items: center;

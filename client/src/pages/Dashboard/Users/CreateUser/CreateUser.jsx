@@ -1,5 +1,5 @@
 import styles from './CreateUser.module.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fileToBase64 } from '@utils/file';
 import { useToastContext } from '@contexts/ToastContext';
 import ToastList from '@components/ToastList/ToastList';
@@ -7,6 +7,7 @@ import useModal from '@hooks/useModal';
 import Modal from '@components/Modal/Modal';
 import { useNavigate } from 'react-router-dom';
 import { signUp } from '@services/authService';
+import Select from '@components/Select';
 
 const CreateUser = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -17,12 +18,31 @@ const CreateUser = () => {
   const [avatar, setAvatar] = useState('');
   const [role, setRole] = useState('USER');
   const [modal, setModal] = useState('');
+  const [selectRoleItems, setSelectRoleItems] = useState([]);
 
   const { createToast } = useToastContext();
 
   const { isOpen, openModal, closeModal } = useModal();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const items = [
+      {
+        label: 'Quản trị viên',
+        onClick: () => {
+          setRole('ADMIN');
+        },
+      },
+      {
+        label: 'Người dùng',
+        onClick: () => {
+          setRole('ADMIN');
+        },
+      },
+    ];
+    setSelectRoleItems(items);
+  }, []);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -159,42 +179,12 @@ const CreateUser = () => {
           onChange={(e) => setName(e.target.value)}
         />
       </div>
-      <div className={styles.rolePicker}>
-        <label
-          htmlFor="role"
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        >
-          Vai trò
-        </label>
-        <div
-          className={styles.roleList}
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        >
-          {role == 'ADMIN' ? 'Quản trị viên' : 'Người dùng'}
-          <i className="bi bi-chevron-down"></i>
-        </div>
-        {isDropdownOpen && (
-          <div className={styles.roles}>
-            <li
-              className={styles.role}
-              onClick={() => {
-                setRole('USER');
-                setIsDropdownOpen(!isDropdownOpen);
-              }}
-            >
-              Người dùng
-            </li>
-            <li
-              className={styles.role}
-              onClick={() => {
-                setRole('ADMIN');
-                setIsDropdownOpen(!isDropdownOpen);
-              }}
-            >
-              Quản trị viên
-            </li>
-          </div>
-        )}
+      <div className={styles.select}>
+        <p>Vai trò</p>
+        <Select
+          label={`${role == 'ADMIN' ? 'Quản trị viên' : 'Người dùng'}`}
+          items={selectRoleItems}
+        />
       </div>
       <div className={styles.createButtonWrapper}>
         <button

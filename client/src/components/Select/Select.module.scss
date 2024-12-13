@@ -1,51 +1,53 @@
+@use '@styles/colors.scss';
+
 .container {
   position: relative;
-  border-radius: 5px;
+  border-radius: 7.5px;
 
-  &:hover {
-    background-color: #ccc;
-    transition: 0.3s background-color ease;
+  // &:hover {
+  //   background-color: #ccc;
+  //   transition: background-color 0.3s ease;
 
-    .trigger {
-      display: flex;
-      background-color: #ccc;
-      transition: 0.3s background-color ease;
+  //   .trigger {
+  //     display: flex;
+  //     background-color: #ccc;
+  //     transition: background-color 0.3s ease;
 
-      .left {
-        background-color: #ccc;
-        transition: 0.3s background-color ease;
+  //     .left {
+  //       background-color: #ccc;
+  //       transition: background-color 0.3s ease;
 
-        p,
-        i {
-          background-color: #ccc;
-          transition: 0.3s background-color ease;
-        }
-      }
+  //       span,
+  //       i {
+  //         background-color: #ccc;
+  //         transition: background-color 0.3s ease;
+  //       }
+  //     }
 
-      .right {
-        background-color: #ccc;
-        transition: 0.3s background-color ease;
+  //     .right {
+  //       background-color: #ccc;
+  //       transition: background-color 0.3s ease;
 
-        i {
-          background-color: #ccc;
-          transition: 0.3s background-color ease;
-        }
-      }
-    }
-  }
+  //       i {
+  //         background-color: #ccc;
+  //         transition: background-color 0.3s ease;
+  //       }
+  //     }
+  //   }
+  // }
 
   .trigger {
     display: flex;
     align-items: center;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 7.5px;
     cursor: pointer;
 
-    &:hover {
-      background-color: #ccc;
-      transition: 0.3s background-color ease;
-    }
+    // &:hover {
+    //   background-color: #ccc;
+    //   transition: background-color 0.3s ease;
+    // }
 
     .left {
       display: flex;
@@ -70,19 +72,26 @@
   .items {
     position: absolute;
     width: 100%;
+    max-height: 500px;
+    overflow-y: scroll;
     margin-top: 5px;
-    padding: 10px 0;
+    padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 7.5px;
+    z-index: 9999;
 
     .item {
       list-style: none;
       padding: 10px;
+      border-radius: 5px;
       cursor: pointer;
 
       &:hover {
-        background-color: #ccc;
-        transition: 0.3s background-color ease;
+        background-color: colors.$primary-hover-color;
+        color: #fff;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
       }
     }
   }

@@ -10,9 +10,11 @@ import { updatePost as updatePostService } from '@services/postService';
 import { stringToSlug } from '@utils/string';
 import { fileToBase64 } from '@utils/file';
 import { useToastContext } from '@contexts/ToastContext';
-import ToastList from '@components/ToastList/ToastList';
+import ToastList from '@components/ToastList';
 import useModal from '@hooks/useModal';
-import Modal from '@components/Modal/Modal';
+import Modal from '@components/Modal';
+import Select from '@components/Select';
+import { useAuthContext } from '@contexts/AuthContext';
 
 const EditPost = () => {
   const [title, setTitle] = useState('');
@@ -26,14 +28,14 @@ const EditPost = () => {
   const [users, setUsers] = useState('');
   const [userName, setUserName] = useState('');
   const [post, setPost] = useState();
-  const [isCategoriesDropdownOpen, setIsCategoriesDropdownOpen] =
-    useState(false);
-  const [isUsersDropdownOpen, setIsUsersDropdownOpen] = useState(false);
   const [modal, setModal] = useState('');
+  const [selectUserItems, setSelectUserItems] = useState([]);
+  const [selectCategoryItems, setSelectCategoryItems] = useState([]);
 
   const { postId } = useParams();
 
   const { createToast } = useToastContext();
+  const { user } = useAuthContext();
 
   const { isOpen, openModal, closeModal } = useModal();
 
@@ -71,9 +73,31 @@ const EditPost = () => {
   }, []);
 
   useEffect(() => {
+    if (categories) {
+      const items = categories.map((category) => ({
+        label: category.name,
+        onClick: () => {
+          setCategorySlug(category.slug);
+          setCategoryName(category.name);
+        },
+      }));
+      setSelectCategoryItems(items);
+    }
+  }, [categories]);
+
+  useEffect(() => {
     if (users) {
       const user = users.find((user) => user.name == userName);
       setUserId(user.id);
+
+      const items = users.map((user) => ({
+        label: user.name,
+        onClick: () => {
+          setUserName(user.name);
+          setUserId(user.id);
+        },
+      }));
+      setSelectUserItems(items);
     }
   }, [users]);
 
@@ -229,36 +253,10 @@ const EditPost = () => {
           }}
         />
       </div>
-      <div className={styles.categoryPicker}>
-        <label
-          htmlFor="category"
-          onClick={() => setIsCategoriesDropdownOpen(!isCategoriesDropdownOpen)}
-        >
-          Chủ đề
-        </label>
-        <div
-          className={styles.categoriesList}
-          onClick={() => setIsCategoriesDropdownOpen(!isCategoriesDropdownOpen)}
-        >
-          {categoryName}
-          <i className="bi bi-chevron-down"></i>
-        </div>
-        {isCategoriesDropdownOpen && (
-          <div className={styles.categories}>
-            {categories.map((category, index) => (
-              <li
-                key={index}
-                className={styles.category}
-                onClick={() => {
-                  setIsCategoriesDropdownOpen(!isCategoriesDropdownOpen);
-                  setCategoryName(category.name);
-                  setCategorySlug(stringToSlug(category.name));
-                }}
-              >
-                {category.name}
-              </li>
-            ))}
-          </div>
+      <div className={styles.select}>
+        <p>Chủ đề</p>
+        {categoryName && (
+          <Select label={categoryName} items={selectCategoryItems} />
         )}
       </div>
       <div className={styles.formGroup}>
@@ -306,37 +304,12 @@ const EditPost = () => {
           />
         </div>
       </div>
-      <div className={styles.userPicker}>
-        <label
-          htmlFor="user"
-          onClick={() => setIsUsersDropdownOpen(!isUsersDropdownOpen)}
-        >
-          Tác giả
-        </label>
-        <div
-          className={styles.usersList}
-          onClick={() => setIsUsersDropdownOpen(!isUsersDropdownOpen)}
-        >
-          {userName}
+      {user.role == 'ADMIN' && (
+        <div className={styles.select}>
+          <p>Tác giả</p>
+          {userName && <Select label={userName} items={selectUserItems} />}
         </div>
-        {isUsersDropdownOpen && (
-          <div className={styles.users}>
-            {users.map((user, index) => (
-              <li
-                key={index}
-                className={styles.user}
-                onClick={() => {
-                  setIsUsersDropdownOpen(!isUsersDropdownOpen);
-                  setUserName(user.name);
-                  setUserId(user.id);
-                }}
-              >
-                {user.name}
-              </li>
-            ))}
-          </div>
-        )}
-      </div>
+      )}
       <div className={styles.updateButtonWrapper}>
         <button
           className={`${styles.updateButton} primary-btn`}

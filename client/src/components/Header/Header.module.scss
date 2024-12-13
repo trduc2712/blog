@@ -36,7 +36,7 @@
       object-fit: cover;
       width: 40px;
       height: 40px;
-      border-radius: 5px;
+      border-radius: 7.5px;
       border: 1px solid #ccc;
 
       &:hover {
@@ -49,9 +49,9 @@
     .signUp {
       margin-right: 10px;
       width: 100px;
-      border: 1px solid colors.$primary-color;
+      border: 1px solid colors.$primary-color !important;
       background-color: #fff;
-      color: colors.$primary-color;
+      color: colors.$primary-color !important;
     }
 
     .login {

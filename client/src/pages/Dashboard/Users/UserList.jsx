@@ -69,7 +69,7 @@ const Users = () => {
       <div className={styles.createWrapper}>
         <button
           className={`${styles.create} primary-btn`}
-          onClick={() => navigate('/dashboard/users/create')}
+          onClick={() => navigate('/dashboard/users/new')}
         >
           <i className="bi bi-plus"></i>
           Thêm người dùng

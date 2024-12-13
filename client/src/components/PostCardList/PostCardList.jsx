@@ -9,7 +9,7 @@ const PostCardList = ({ posts, onDeletePost }) => {
     return <div className={styles.content}>Không có bài viết nào</div>;
 
   return (
-    <div className={`${user ? styles.container : styles.notLoggedIn}`}>
+    <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.body}>
           {posts.map((post) => (

@@ -91,7 +91,7 @@ const Header = ({ isDashboard }) => {
               <>
                 <button
                   className={`${styles.createPost} primary-btn`}
-                  onClick={() => navigate('/create-post')}
+                  onClick={() => navigate('/posts/new')}
                 >
                   <i className="bi bi-plus"></i>
                   <p>Tạo bài viết mới</p>
@@ -119,15 +119,12 @@ const Header = ({ isDashboard }) => {
         ) : (
           <>
             <button
-              className="outline-primary-btn"
+              className={`primary-btn ${styles.signUp}`}
               onClick={() => navigate('/sign-up')}
             >
               Đăng ký
             </button>
-            <button
-              className={'primary-btn'}
-              onClick={() => navigate('/login')}
-            >
+            <button className="primary-btn" onClick={() => navigate('/login')}>
               Đăng nhập
             </button>
           </>

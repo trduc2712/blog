@@ -1,7 +1,11 @@
 import styles from './CreatePost.module.scss';
-import Header from '@components/Header';
 import { useEffect, useState } from 'react';
+import Header from '@components/Header';
 import ReactQuill from 'react-quill';
+import Select from '@components/Select';
+import Modal from '@components/Modal';
+import ToastList from '@components/ToastList';
+import Footer from '@components/Footer';
 import 'react-quill/dist/quill.snow.css';
 import { getAllCategories as getAllCategoriesService } from '@services/categoryService';
 import { useAuthContext } from '@contexts/AuthContext';
@@ -10,10 +14,7 @@ import { fileToBase64 } from '@utils/file';
 import { createPost as createPostService } from '@services/postService';
 import { useNavigate } from 'react-router-dom';
 import useModal from '@hooks/useModal';
-import Modal from '@components/Modal';
 import { useToastContext } from '@contexts/ToastContext';
-import ToastList from '@components/ToastList';
-import Footer from '@components/Footer';
 import { useRef } from 'react';
 
 const CreatePost = () => {
@@ -26,6 +27,7 @@ const CreatePost = () => {
   const [userId, setUserId] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [modal, setModal] = useState({});
+  const [selectItems, setSelectItems] = useState();
 
   const { user } = useAuthContext();
 
@@ -58,6 +60,20 @@ const CreatePost = () => {
 
     getAllCategories();
   }, []);
+
+  useEffect(() => {
+    if (categories) {
+      const items = categories.map((category) => ({
+        label: category.name,
+        onClick: () => {
+          console.log('Category clicked:', category.name);
+          setCategorySlug(category.slug);
+          setCategoryName(category.name);
+        },
+      }));
+      setSelectItems(items);
+    }
+  }, [categories]);
 
   const handleContentChange = (value) => {
     setContent(value);
@@ -132,18 +148,6 @@ const CreatePost = () => {
       container: '.custom-toolbar',
     },
   };
-
-  if (categories) {
-    categories.forEach((category) => {
-      dropdownChildren.push({
-        label: category.name,
-        onClick: () => {
-          setCategorySlug(category.slug);
-          setCategoryName(category.name);
-        },
-      });
-    });
-  }
 
   const handlePublish = async () => {
     const slug = stringToSlug(title);
@@ -222,39 +226,9 @@ const CreatePost = () => {
                 />
               </div>
             </div>
-            <div className={styles.categoryPicker}>
-              <label
-                htmlFor="category"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                Chủ đề
-              </label>
-              <div
-                className={styles.categoriesList}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                {categoryName}
-                <i className="bi bi-chevron-down"></i>
-              </div>
-              {isDropdownOpen && (
-                <>
-                  <div className={styles.categories}>
-                    {categories.map((category, index) => (
-                      <li
-                        key={index}
-                        className={styles.category}
-                        onClick={() => {
-                          setIsDropdownOpen(!isDropdownOpen);
-                          setCategoryName(category.name);
-                          setCategorySlug(stringToSlug(category.name));
-                        }}
-                      >
-                        {category.name}
-                      </li>
-                    ))}
-                  </div>
-                </>
-              )}
+            <div className={styles.select}>
+              <p>Chủ đề</p>
+              <Select label="Chủ đề" items={selectItems} />
             </div>
             <label htmlFor="thumbnail">Ảnh đại diện thu nhỏ</label>
             <div className={styles.thumbnailWrapper}>
@@ -286,7 +260,10 @@ const CreatePost = () => {
               />
             </div>
             <label>Nội dung</label>
-            <div className="quill-wrapper" spellCheck="false">
+            <div
+              className={`quill-wrapper ${styles.quillWrapper}`}
+              spellCheck="false"
+            >
               {customToolbar}
               <ReactQuill
                 ref={quillRef}

@@ -22,9 +22,9 @@
       margin-bottom: 30px;
       justify-content: center;
 
-      h2 {
-        color: colors.$primary-color;
-      }
+      // h2 {
+      //   color: colors.$primary-color;
+      // }
     }
 
     form {
@@ -95,7 +95,7 @@
           height: 20px;
           width: 20px;
           border: 1px solid #ccc;
-          border-radius: 5px;
+          border-radius: 7.5px;
           cursor: pointer;
 
           &:hover {
@@ -108,7 +108,7 @@
           }
 
           i {
-            border-radius: 5px !important;
+            border-radius: 7.5px !important;
             color: #fff !important;
           }
         }

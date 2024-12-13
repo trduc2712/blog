@@ -61,7 +61,7 @@ const Categories = () => {
       <div className={styles.createWrapper}>
         <button
           className="primary-btn"
-          onClick={() => navigate('/dashboard/categories/create')}
+          onClick={() => navigate('/dashboard/categories/new')}
         >
           <i className="bi bi-plus"></i>
           Thêm chủ đề

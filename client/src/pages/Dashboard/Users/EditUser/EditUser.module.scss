@@ -22,7 +22,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        border-radius: 5px;
+        border-radius: 7.5px;
         top: 20px;
         background-color: rgba(0, 0, 0, 0);
         width: 100px;
@@ -51,7 +51,7 @@
         width: 100px;
         height: 100px;
         object-fit: cover;
-        border-radius: 5px;
+        border-radius: 7.5px;
         margin: 20px auto 10px;
         border: 1px solid #ccc;
 
@@ -70,7 +70,7 @@
       width: 100px;
       height: 100px;
       object-fit: cover;
-      border-radius: 5px;
+      border-radius: 7.5px;
       margin: 20px auto;
       border: 1px solid #ccc;
       cursor: pointer;
@@ -92,7 +92,7 @@
         width: 100px;
         height: 100px;
         object-fit: cover;
-        border-radius: 5px;
+        border-radius: 7.5px;
         margin: 20px auto 10px;
         border: 1px solid #ccc;
 
@@ -154,60 +154,19 @@
     }
   }
 
-  .rolePicker {
-    background-color: inherit;
+  .select {
     margin-bottom: 20px;
-    position: relative;
+    background-color: colors.$bg-color;
 
-    .roleList {
-      font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      border-radius: 5px;
-
-      &:hover {
-        cursor: pointer;
-      }
-
-      i {
-        width: 14px;
-        height: 14px;
-        font-size: 14px;
-      }
-    }
-
-    .roles {
-      position: absolute;
-      border-radius: 5px;
-      width: 100%;
-      margin-top: 5px;
-      padding: 10px 0;
-      border: 1px solid #ccc;
-      z-index: 100;
-
-      .role {
-        padding: 10px;
-        font-size: 14px;
-        list-style: none;
-
-        &:hover {
-          background-color: #ccc;
-          transition: 0.3s background-color ease;
-          cursor: pointer;
-        }
-      }
+    p {
+      background-color: colors.$bg-color;
+      margin-bottom: 10px;
     }
   }
 
   .updateButtonWrapper {
     background-color: inherit;
     margin-top: 20px;
-    padding-bottom: 20px;
     display: flex;
     justify-content: flex-end;
     align-items: center;

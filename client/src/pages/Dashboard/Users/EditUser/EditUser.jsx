@@ -7,13 +7,13 @@ import {
 } from '@services/userService';
 import { fileToBase64 } from '@utils/file';
 import { useToastContext } from '@contexts/ToastContext';
-import ToastList from '@components/ToastList/ToastList';
+import ToastList from '@components/ToastList';
 import useModal from '@hooks/useModal';
-import Modal from '@components/Modal/Modal';
+import Modal from '@components/Modal';
+import Select from '@components/Select';
 
 const EditUser = () => {
   const { userId } = useParams();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [user, setUser] = useState();
   const [username, setUsername] = useState('');
@@ -22,6 +22,7 @@ const EditUser = () => {
   const [avatar, setAvatar] = useState('');
   const [role, setRole] = useState('');
   const [modal, setModal] = useState('');
+  const [selectRoleItems, setSelectRoleItems] = useState([]);
 
   const { createToast } = useToastContext();
 
@@ -32,6 +33,22 @@ const EditUser = () => {
   };
 
   useEffect(() => {
+    const items = [
+      {
+        label: 'Quản trị viên',
+        onClick: () => {
+          setRole('ADMIN');
+        },
+      },
+      {
+        label: 'Người dùng',
+        onClick: () => {
+          setRole('ADMIN');
+        },
+      },
+    ];
+    setSelectRoleItems(items);
+
     const getUser = async (id) => {
       try {
         const user = await getUserService(id);
@@ -190,41 +207,13 @@ const EditUser = () => {
           onChange={(e) => setName(e.target.value)}
         />
       </div>
-      <div className={styles.rolePicker}>
-        <label
-          htmlFor="role"
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        >
-          Vai trò
-        </label>
-        <div
-          className={styles.roleList}
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        >
-          {role == 'ADMIN' ? 'Quản trị viên' : 'Người dùng'}
-          <i className="bi bi-chevron-down"></i>
-        </div>
-        {isDropdownOpen && (
-          <div className={styles.roles}>
-            <li
-              className={styles.role}
-              onClick={() => {
-                setRole('USER');
-                setIsDropdownOpen(!isDropdownOpen);
-              }}
-            >
-              Người dùng
-            </li>
-            <li
-              className={styles.role}
-              onClick={() => {
-                setRole('ADMIN');
-                setIsDropdownOpen(!isDropdownOpen);
-              }}
-            >
-              Quản trị viên
-            </li>
-          </div>
+      <div className={styles.select}>
+        <p>Vai trò</p>
+        {role && (
+          <Select
+            label={`${role == 'ADMIN' ? 'Quản trị viên' : 'Người dùng'}`}
+            items={selectRoleItems}
+          />
         )}
       </div>
       <div className={styles.updateButtonWrapper}>

@@ -20,7 +20,7 @@
       margin-bottom: 30px;
 
       h2 {
-        color: colors.$primary-color;
+        // color: colors.$primary-color;
       }
 
       .close {
@@ -30,7 +30,7 @@
         width: 40px;
         height: 40px;
         border: none;
-        border-radius: 5px;
+        border-radius: 7.5px;
         cursor: pointer;
 
         &:hover {

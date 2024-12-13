@@ -14,11 +14,10 @@
       .title {
         padding: 10px;
         margin-bottom: 20px;
-        border: 1px solid colors.$primary-color;
-        color: colors.$primary-color;
-        border-radius: 5px;
+        border: 1px solid #ccc;
+        border-radius: 7.5px;
         box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
-        border-radius: 5px;
+        border-radius: 7.5px;
       }
 
       .pagination {
@@ -60,16 +59,15 @@
         .filterTop {
           padding: 10px;
           text-align: center;
-          background-color: colors.$primary-color;
+          border-bottom: 1px solid #ccc;
 
           h3 {
-            background-color: colors.$primary-color;
-            color: #fff;
+            color: #000;
           }
         }
 
         .filterBody {
-          padding: 10px;
+          padding: 5px 10px;
 
           .filterOption {
             display: flex;
@@ -99,7 +97,7 @@
         }
 
         .filterBottom {
-          padding: 10px;
+          padding: 0 10px 10px;
         }
       }
 
@@ -114,11 +112,10 @@
         .categoryListTop {
           padding: 10px;
           text-align: center;
-          background-color: colors.$primary-color;
+          border-bottom: 1px solid #ccc;
 
           h3 {
-            background-color: colors.$primary-color;
-            color: #fff;
+            color: #000;
           }
         }
       }

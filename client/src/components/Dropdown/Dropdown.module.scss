@@ -1,3 +1,5 @@
+@use '@styles/colors.scss';
+
 .container {
   position: relative;
   z-index: 1000;
@@ -12,8 +14,8 @@
     position: absolute;
     top: 100%;
     right: 0;
-    width: 150px;
-    padding: 10px 0;
+    width: 175px;
+    padding: 10px;
     margin-top: 5px;
     pointer-events: none;
     transition:
@@ -22,7 +24,7 @@
     opacity: 0;
     transform: translateY(-5px);
     background-color: #fff;
-    border-radius: 7.5px;
+    border-radius: 10px;
     list-style: none;
     overflow-y: auto;
     box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
@@ -34,16 +36,18 @@
       border: 1px solid #ccc;
       padding: 10px;
       text-align: left;
+      border-radius: 5px;
       border: none;
       font-size: 16px;
       cursor: pointer;
 
       &:hover {
-        background-color: #ccc;
+        background-color: colors.$primary-hover-color;
+        color: #fff;
         transition: 0.3s background-color ease;
 
         p {
-          background-color: #ccc;
+          background-color: colors.$primary-hover-color;
           transition: 0.3s background-color ease;
         }
       }

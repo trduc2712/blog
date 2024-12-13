@@ -30,7 +30,7 @@ const PostCard = ({
             src={`data:image/jpeg;base64,${thumbnail}`}
             alt="Hình đại diện của bài viết."
             className={styles.thumbnail}
-            onClick={() => navigate(`/post/${slug}`)}
+            onClick={() => navigate(`/posts/${slug}`)}
           />
         </div>
         <div className={styles.body}>
@@ -44,7 +44,7 @@ const PostCard = ({
             <p className={styles.createdAt}>{formatShortDate(createdAt)}</p>
           </div>
           <h3 className={styles.title}>
-            <Link to={`/post/${slug}`}>{title}</Link>
+            <Link to={`/posts/${slug}`}>{title}</Link>
           </h3>
         </div>
         <div className={styles.footer}>
@@ -53,7 +53,7 @@ const PostCard = ({
               <div className={styles.actions}>
                 <div
                   className={styles.action}
-                  onClick={() => navigate(`/post/${slug}`)}
+                  onClick={() => navigate(`/posts/${slug}`)}
                 >
                   <i className="bi bi-eye"></i>
                 </div>
@@ -62,11 +62,14 @@ const PostCard = ({
               <div className={styles.actions}>
                 <div
                   className={styles.action}
-                  onClick={() => navigate(`/post/${slug}`)}
+                  onClick={() => navigate(`/posts/${slug}`)}
                 >
                   <i className="bi bi-eye"></i>
                 </div>
-                <div className={styles.action} onClick={() => navigate(`/`)}>
+                <div
+                  className={styles.action}
+                  onClick={() => navigate(`posts/edit/${id}`)}
+                >
                   <i className="bi bi-pen"></i>
                 </div>
                 <div
