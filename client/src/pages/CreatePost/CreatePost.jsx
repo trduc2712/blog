@@ -1,21 +1,20 @@
 import styles from './CreatePost.module.scss';
 import { useEffect, useState } from 'react';
 import Header from '@components/Header';
-import ReactQuill from 'react-quill';
 import Select from '@components/Select';
 import Modal from '@components/Modal';
+import Upload from '@components/Upload';
 import ToastList from '@components/ToastList';
 import Footer from '@components/Footer';
-import 'react-quill/dist/quill.snow.css';
+import Input from '@components/Input';
+import TextEditor from '@components/TextEditor';
 import { getAllCategories as getAllCategoriesService } from '@services/categoryService';
 import { useAuthContext } from '@contexts/AuthContext';
 import { stringToSlug } from '@utils/string';
-import { fileToBase64 } from '@utils/file';
 import { createPost as createPostService } from '@services/postService';
 import { useNavigate } from 'react-router-dom';
 import useModal from '@hooks/useModal';
 import { useToastContext } from '@contexts/ToastContext';
-import { useRef } from 'react';
 
 const CreatePost = () => {
   const [content, setContent] = useState('');
@@ -25,7 +24,6 @@ const CreatePost = () => {
   const [categoryName, setCategoryName] = useState('Chủ đề');
   const [thumbnail, setThumbnail] = useState('');
   const [userId, setUserId] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [modal, setModal] = useState({});
   const [selectItems, setSelectItems] = useState();
 
@@ -34,17 +32,7 @@ const CreatePost = () => {
   const { createToast } = useToastContext();
   const { isOpen, openModal, closeModal } = useModal();
 
-  const quillRef = useRef(null);
-
-  const dropdownChildren = [];
-
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) {
-      setUserId(user.id);
-    }
-  }, [user]);
 
   useEffect(() => {
     document.title = 'Tạo bài viết mới | Blog';
@@ -62,11 +50,16 @@ const CreatePost = () => {
   }, []);
 
   useEffect(() => {
+    if (user) {
+      setUserId(user.id);
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (categories) {
       const items = categories.map((category) => ({
         label: category.name,
         onClick: () => {
-          console.log('Category clicked:', category.name);
           setCategorySlug(category.slug);
           setCategoryName(category.name);
         },
@@ -74,10 +67,6 @@ const CreatePost = () => {
       setSelectItems(items);
     }
   }, [categories]);
-
-  const handleContentChange = (value) => {
-    setContent(value);
-  };
 
   const openConfirmPublishModal = () => {
     if (!title || !thumbnail || !categorySlug || !content) {
@@ -103,50 +92,6 @@ const CreatePost = () => {
       },
     });
     openModal();
-  };
-
-  const customToolbar = (
-    <div className="custom-toolbar">
-      <select className="ql-header">
-        <option value="1">Tiêu đề 1</option>
-        <option value="2">Tiêu đề 2</option>
-        <option value="3">Tiêu đề 3</option>
-        <option value="">Văn bản</option>
-      </select>
-      <button className="ql-bold" aria-label="In đậm">
-        <i className="bi bi-type-bold"></i>
-      </button>
-      <button className="ql-italic" aria-label="In nghiêng">
-        <i className="bi bi-type-italic"></i>
-      </button>
-      <button className="ql-underline" aria-label="Gạch chân">
-        <i className="bi bi-type-underline"></i>
-      </button>
-      <button
-        className="ql-list"
-        value="ordered"
-        aria-label="Danh sách có thứ tự"
-      >
-        <i className="bi bi-list-ol"></i>
-      </button>
-      <button
-        className="ql-list"
-        value="bullet"
-        aria-label="Danh sách không thứ tự"
-      >
-        <i className="bi bi-list-ul"></i>
-      </button>
-      <button className="ql-image" aria-label="Chèn ảnh">
-        <i className="bi bi-image"></i>
-      </button>
-      <button className="ql-clean" aria-label="Xóa định dạng"></button>
-    </div>
-  );
-
-  const modules = {
-    toolbar: {
-      container: '.custom-toolbar',
-    },
   };
 
   const handlePublish = async () => {
@@ -177,116 +122,56 @@ const CreatePost = () => {
     }
   };
 
-  const handleChangeThumbnail = async (e) => {
-    const file = e.target.files[0];
-
-    if (!file) {
-      return;
-    }
-
-    const base64 = await fileToBase64(file);
-    setThumbnail(base64);
-  };
-
-  const openConfirmDeleteThumbnailModal = () => {
-    setModal({
-      title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
-      message: `Bạn có chắc chắn muốn xóa ảnh đại diện thu nhỏ không?`,
-      type: 'confirmation',
-      onConfirm: () => {
-        setThumbnail('');
-        closeModal();
-      },
-      onCancel: () => {
-        closeModal();
-      },
-    });
-
-    openModal();
+  const handleChangeTitle = (title) => {
+    setTitle(title);
   };
 
   return (
-    <div className={styles.container}>
+    <>
       <Header isDashboard={false} />
-      <div className={styles.contentWrapper}>
+      <div className={styles.container}>
         {user ? (
-          <div className={styles.content}>
-            <h2>Tạo bài viết mới</h2>
-            <div className={styles.formGroups}>
-              <div className={styles.formGroup} style={{ flexGrow: '1' }}>
-                <label htmlFor="title">Tiêu đề</label>
-                <input
+          <div className="card">
+            <div className="card-header">
+              <h3>Tạo bài viết mới</h3>
+            </div>
+            <div className="card-body">
+              <div className="form-group">
+                <label>Tiêu đề</label>
+                <Input
                   type="text"
-                  placeholder="Tiêu đề bài viết"
+                  placeholder="Tiêu đề"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  id="title"
+                  onChangeValue={(e) => handleChangeTitle(e.target.value)}
                 />
               </div>
-            </div>
-            <div className={styles.select}>
-              <p>Chủ đề</p>
-              <Select label="Chủ đề" items={selectItems} />
-            </div>
-            <label htmlFor="thumbnail">Ảnh đại diện thu nhỏ</label>
-            <div className={styles.thumbnailWrapper}>
-              {!thumbnail ? (
-                <label htmlFor="thumbnail" className={styles.thumbnailLabel}>
-                  <i className="bi bi-image"></i>
-                  <p>Tải lên ảnh đại diện thu nhỏ.</p>
-                </label>
-              ) : (
-                <>
-                  <img
-                    src={`data:image/jpeg;base64,${thumbnail}`}
-                    className={styles.thumbnail}
-                  />
-                  <div
-                    className={styles.deleteThumbnail}
-                    onClick={openConfirmDeleteThumbnailModal}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </div>
-                </>
-              )}
-              <input
-                type="file"
-                id="thumbnail"
-                style={{ display: 'none' }}
-                onChange={handleChangeThumbnail}
-                className={styles.inputThumbnail}
+              <div className="select">
+                <p>Chủ đề</p>
+                <Select label="Chủ đề" items={selectItems} />
+              </div>
+              <Upload
+                type="thumbnail"
+                upload={thumbnail}
+                setUpload={setThumbnail}
               />
-            </div>
-            <label>Nội dung</label>
-            <div
-              className={`quill-wrapper ${styles.quillWrapper}`}
-              spellCheck="false"
-            >
-              {customToolbar}
-              <ReactQuill
-                ref={quillRef}
-                value={content}
-                modules={modules}
-                onChange={handleContentChange}
-                placeholder=""
-                spellCheck={false}
-              />
-            </div>
-            <div className={styles.publishWrapper}>
-              <button
-                className={`${styles.cancel} outline-primary-btn`}
-                onClick={() => navigate('/')}
-              >
-                Hủy
-              </button>
-              <button
-                className={`${styles.publish} primary-btn`}
-                onClick={openConfirmPublishModal}
-              >
-                Đăng
-              </button>
+              <div className="form-group">
+                <label>Nội dung</label>
+                <TextEditor content={content} setContent={setContent} />
+              </div>
+              <div className={styles.publishWrapper}>
+                <button
+                  className={`${styles.cancel} outline-primary-btn`}
+                  onClick={() => navigate('/')}
+                >
+                  Hủy
+                </button>
+                <button
+                  className={`${styles.publish} primary-btn`}
+                  onClick={openConfirmPublishModal}
+                >
+                  Đăng
+                </button>
+              </div>
             </div>
           </div>
         ) : (
@@ -309,7 +194,7 @@ const CreatePost = () => {
       />
       <ToastList />
       <Footer />
-    </div>
+    </>
   );
 };
 

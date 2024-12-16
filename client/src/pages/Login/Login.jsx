@@ -6,44 +6,32 @@ import { useToastContext } from '@contexts/ToastContext';
 import Header from '@components/Header';
 import ToastList from '@components/ToastList';
 import Footer from '@components/Footer';
+import Input from '@components/Input';
 
 const Login = () => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isRememberMe, setIsRememberMe] = useState(false);
   const [username, setUsername] = useState('');
-  const [usernameError, setUsernameError] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
 
   const navigate = useNavigate();
 
-  const { error, setError, login } = useAuthContext();
+  const { error, login } = useAuthContext();
   const { createToast } = useToastContext();
 
-  const handleReset = () => {
-    setUsername('');
-    setPassword('');
-    setError('');
-    setUsernameError('');
-    setPasswordError('');
+  const handleToggleRememberMe = () => {
+    setIsRememberMe(!isRememberMe);
   };
 
-  const handleResetUsernameError = () => {
-    setUsernameError('');
+  const handleChangeUsername = (username) => {
+    setUsername(username);
   };
 
-  const handleResetPasswordError = () => {
-    setPasswordError('');
+  const handleChangePassword = (password) => {
+    setPassword(password);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!username || !password) {
-      if (!username) setUsernameError('Vui lòng điền tên người dùng.');
-      if (!password) setPasswordError('Vui lòng điền mật khẩu.');
-      return;
-    }
 
     const isSuccess = await login(username, password);
     if (isSuccess) {
@@ -52,88 +40,57 @@ const Login = () => {
         title: 'Thành công',
         message: 'Đăng nhập thành công.',
       });
-      handleReset();
       navigate('/');
     } else return;
-  };
-
-  const handleTogglePassword = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
-
-  const handleToggleRememberMe = () => {
-    setIsRememberMe(!isRememberMe);
   };
 
   return (
     <>
       <Header isDashborad={false} />
       <div className={styles.container}>
-        <div className={styles.content}>
-          <div className={styles.header}>
-            <h2>Đăng nhập</h2>
+        <div className="card">
+          <div className="card-header">
+            <h3>Đăng nhập</h3>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className={styles.formGroup}>
-              <label htmlFor="username">
-                <p>Tên người dùng</p>
-              </label>
-              <input
-                id="username"
-                className={usernameError ? styles.redBorder : ''}
-                type="text"
-                placeholder="Tên người dùng"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                onFocus={handleResetUsernameError}
-              />
-              <p className={styles.usernameError}>{usernameError}</p>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="password">
-                <p>Mật khẩu</p>
-              </label>
-              <div className={styles.inputPasswordWrapper}>
-                <input
-                  id="password"
-                  className={passwordError ? styles.redBorder : ''}
-                  type={isPasswordVisible ? 'text' : 'password'}
+          <div className="card-body">
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Tên người dùng</label>
+                <Input
+                  variant="text"
+                  placeholder="Tên người dùng"
+                  value={username}
+                  onChangeValue={(e) => handleChangeUsername(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label>Mật khẩu</label>
+                <Input
+                  variant="password"
                   placeholder="Mật khẩu"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onFocus={handleResetPasswordError}
+                  onChangeValue={(e) => handleChangePassword(e.target.value)}
                 />
-                <div
-                  className={styles.togglePassword}
-                  onClick={handleTogglePassword}
-                >
-                  {isPasswordVisible ? (
-                    <i className="bi bi-eye-slash"></i>
-                  ) : (
-                    <i className="bi bi-eye"></i>
-                  )}
-                </div>
               </div>
-              <p className={styles.passwordError}>{passwordError}</p>
-            </div>
-            <label className={styles.rememberMe}>
-              <input
-                type="checkbox"
-                isRememberMe
-                onChange={handleToggleRememberMe}
-              />
-              <span
-                className={`${styles.checkMark} ${isRememberMe && styles.checked}`}
-              >
-                {isRememberMe && <i className="bi bi-check"></i>}
-              </span>
-              <p>Nhớ tôi</p>
-            </label>
-            <button className={`${styles.submit} primary-btn`} type="submit">
-              Đăng nhập
-            </button>
-          </form>
-          {error && <p className={styles.error}>{error}</p>}
+              <label className={styles.rememberMe}>
+                <input
+                  type="checkbox"
+                  isRememberMe
+                  onChange={handleToggleRememberMe}
+                />
+                <span
+                  className={`${styles.checkMark} ${isRememberMe && styles.checked}`}
+                >
+                  {isRememberMe && <i className="bi bi-check"></i>}
+                </span>
+                <p>Nhớ tôi</p>
+              </label>
+              <button className="primary-btn" type="submit">
+                Đăng nhập
+              </button>
+            </form>
+            {error && <p className={styles.error}>{error}</p>}
+          </div>
         </div>
       </div>
       <ToastList />

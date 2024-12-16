@@ -4,7 +4,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: colors.$bg-color;
   width: auto;
 
   .disabled {
@@ -90,7 +89,6 @@
   .pages {
     display: flex;
     height: 35.5px;
-    background-color: colors.$bg-color;
 
     .page {
       box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;

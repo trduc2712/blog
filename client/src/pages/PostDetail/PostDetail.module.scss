@@ -1,3 +1,5 @@
+@use '@styles/colors.scss' as colors;
+
 .container {
   .loading {
     display: flex;
@@ -5,13 +7,14 @@
     align-items: center;
     min-height: 100vh;
     min-width: 100vw;
-    padding: 79px 40px 20px;
+    padding: 79px 20px 20px;
   }
 
   .contentWrapper {
-    padding: 79px 40px 20px;
+    padding: 79px 20px 20px;
+    background-color: colors.$bg-color;
 
-    .content {
+    :global(.card) {
       h2 {
         margin: 20px 0;
       }

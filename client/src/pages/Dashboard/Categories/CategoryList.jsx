@@ -57,30 +57,43 @@ const Categories = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Danh sách chủ đề</h2>
-      <div className={styles.createWrapper}>
-        <button
-          className="primary-btn"
-          onClick={() => navigate('/dashboard/categories/new')}
-        >
-          <i className="bi bi-plus"></i>
-          Thêm chủ đề
-        </button>
+      <div className="card">
+        {!loading ? (
+          <>
+            <div className="card-header">
+              <h3>Danh sách chủ đề</h3>
+            </div>
+            <div className="card-body">
+              <div className={styles.createWrapper}>
+                <button
+                  className="primary-btn"
+                  onClick={() => navigate('/dashboard/categories/new')}
+                >
+                  <i className="bi bi-plus"></i>
+                  Thêm chủ đề
+                </button>
+              </div>
+              <Table columnLabels={columnLabels} initialData={categories} />
+              <div className={styles.pagination}>
+                <Pagination
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="card-header">
+              <h3>Danh sách chủ đề</h3>
+            </div>
+            <div className="card-body">
+              <div className={styles.loading}>Đang tải...</div>
+            </div>
+          </>
+        )}
       </div>
-      {loading ? (
-        'Đang tải...'
-      ) : (
-        <>
-          <Table columnLabels={columnLabels} initialData={categories} />
-          <div className={styles.pagination}>
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-          </div>
-        </>
-      )}
     </div>
   );
 };

@@ -3,11 +3,6 @@
 .container {
   background-color: colors.$bg-color;
 
-  h2 {
-    margin-bottom: 20px;
-    background-color: inherit;
-  }
-
   .formGroup {
     background-color: inherit;
     display: flex;
@@ -17,8 +12,6 @@
 
   .updateButtonWrapper {
     background-color: inherit;
-    margin-top: 20px;
-    padding-bottom: 20px;
     display: flex;
     justify-content: flex-end;
     align-items: center;

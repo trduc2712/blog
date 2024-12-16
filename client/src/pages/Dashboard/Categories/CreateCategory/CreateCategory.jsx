@@ -2,9 +2,10 @@ import styles from './CreateCategory.module.scss';
 import { useEffect, useState } from 'react';
 import { stringToSlug } from '@utils/string';
 import { useToastContext } from '@contexts/ToastContext';
-import ToastList from '@components/ToastList/ToastList';
+import ToastList from '@components/ToastList';
 import useModal from '@hooks/useModal';
-import Modal from '@components/Modal/Modal';
+import Modal from '@components/Modal';
+import Input from '@components/Input';
 import { createCategory as createCategoryService } from '@services/categoryService';
 import { useNavigate } from 'react-router-dom';
 
@@ -67,40 +68,44 @@ const CreateCategory = () => {
     createCategory(name, slug);
   };
 
+  const handleChangeName = (name) => {
+    setName(name);
+    setSlug(stringToSlug(name));
+  };
+
   return (
-    <div className={styles.container}>
-      <h2>Thêm chủ đề</h2>
-      <div className={styles.formGroup}>
-        <label htmlFor="name">Tên</label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            setSlug(stringToSlug(e.target.value));
-          }}
-        />
-      </div>
-      <div className={styles.formGroup}>
-        <label htmlFor="slug">Slug</label>
-        <input
-          disabled={true}
-          type="text"
-          name="slug"
-          id="slug"
-          value={slug}
-          onChange={(e) => setSlug(stringToSlug(name))}
-        />
-      </div>
-      <div className={styles.updateButtonWrapper}>
-        <button
-          className={`${styles.updateButton} primary-btn`}
-          onClick={openConfirmCreateModal}
-        >
-          Thêm
-        </button>
+    <>
+      <div className={styles.container}>
+        <div className="card">
+          <div className="card-header">
+            <h3>Thêm chủ đề</h3>
+          </div>
+          <div className="card-body">
+            <div className="form-group">
+              <label>Tên</label>
+              <Input
+                type="text"
+                placeholder="Tên"
+                value={name}
+                onChangeValue={(e) => handleChangeName(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>Slug</label>
+              <Input
+                type="text"
+                placeholder="Tên"
+                value={slug}
+                isDisabled={true}
+              />
+            </div>
+            <div className={styles.updateButtonWrapper}>
+              <button className="primary-btn" onClick={openConfirmCreateModal}>
+                Thêm
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <Modal
         title={modal.title}
@@ -115,7 +120,7 @@ const CreateCategory = () => {
         type={modal.type}
       />
       <ToastList />
-    </div>
+    </>
   );
 };
 

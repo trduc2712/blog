@@ -1,12 +1,13 @@
 import styles from './Overview.module.scss';
 import Pagination from '@components/Pagination';
 import PostCardList from '@components/PostCardList';
-import { fileToBase64 } from '@utils/file';
+import Upload from '@components/Upload';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useToastContext } from '@contexts/ToastContext';
 import useModal from '@hooks/useModal';
 import Modal from '@components/Modal';
+import Input from '@components/Input';
 import {
   updateUser as updateUserService,
   getUser as getUserService,
@@ -19,7 +20,6 @@ import { useParams, useLocation } from 'react-router-dom';
 import { deletePostById as deletePostByIdService } from '@services/postService';
 
 const Overview = () => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [userId, setUserId] = useState('');
   const [role, setRole] = useState('');
   const [password, setPassword] = useState('');
@@ -27,12 +27,10 @@ const Overview = () => {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
-  const [nameError, setNameError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const postsPerPage = 9;
+  const postsPerPage = 6;
   const [modal, setModal] = useState({
     title: '',
     cancelLabel: '',
@@ -137,56 +135,23 @@ const Overview = () => {
     window.scrollTo(0, 0);
   };
 
-  const handleAvatarChange = async (e) => {
-    const file = e.target.files[0];
-
-    if (!file) {
-      return;
-    }
-
-    const base64 = await fileToBase64(file);
-    setAvatar(base64);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!name) {
-      setNameError('Vui lòng điền tên.');
-      return;
-    }
-
-    if (!password) {
-      setPasswordError('Vui lòng điền mật khẩu.');
-      return;
-    }
 
     const validNamePattern = /^[a-zA-ZÀ-ỹà-ý ]*$/;
     const validPasswordPattern = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
     if (!validNamePattern.test(name)) {
-      setNameError('Tên không hợp lệ.');
+      console.log('Tên không hợp lệ.');
       return;
     }
 
     if (!validPasswordPattern.test(password)) {
-      setPasswordError('Mật khẩu không hợp lệ.');
+      console.log('Mật khẩu không hợp lệ.');
       return;
     }
 
     openConfirmUpdateModal();
-  };
-
-  const handleResetPasswordError = () => {
-    setPasswordError('');
-  };
-
-  const handleResetNameError = () => {
-    setNameError('');
-  };
-
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
   };
 
   const handleDeletePost = (id) => {
@@ -253,6 +218,24 @@ const Overview = () => {
   };
 
   const updateUser = async (id, username, password, name, avatar, role) => {
+    if (!id || !username || !password || !name || !avatar || !role) {
+      console.log('Thieu thong tin');
+      if (!id) {
+        console.log('Thieu id');
+      } else if (!username) {
+        console.log('Thieu username');
+      } else if (!password) {
+        console.log('Thieu password');
+      } else if (!name) {
+        console.log('Thieu name');
+      } else if (!avatar) {
+        console.log('Thieu avatar');
+      } else if (!role) {
+        console.log('Thieu role');
+      }
+      return;
+    }
+
     if (user) {
       try {
         const updatedUser = await updateUserService(
@@ -271,145 +254,61 @@ const Overview = () => {
     }
   };
 
+  const handleChangePassword = (password) => {
+    setPassword(password);
+  };
+
+  const handleChangeName = (name) => {
+    setName(name);
+  };
+
   return (
     <>
       <div className={styles.container}>
         {!loading ? (
           <>
-            <div className={styles.content}>
-              <div className={styles.title}>
-                <h3>
-                  Danh sách bài viết của{' '}
-                  {user &&
-                    username &&
-                    (user.username == username
-                      ? 'tôi'
-                      : `người dùng ${username}`)}
-                </h3>
+            <div className="card">
+              <div className="card-header">
+                <h3>Thông tin cá nhân</h3>
               </div>
-              {posts.length > 0 ? (
-                <div className={styles.postCardList}>
-                  <PostCardList posts={posts} onDeletePost={handleDeletePost} />
-                  <div className={styles.pagination}>
-                    <Pagination
-                      totalPages={totalPages}
-                      currentPage={currentPage}
-                      onPageChange={handlePageChange}
+              <div className="card-body">
+                <form onSubmit={handleSubmit}>
+                  <Upload type="avatar" upload={avatar} setUpload={setAvatar} />
+                  <div className="form-group">
+                    <label>Tên người dùng</label>
+                    <Input
+                      variant="text"
+                      placeholder="Tên người dùng"
+                      value={userUsername}
+                      isDisabled={true}
                     />
                   </div>
-                </div>
-              ) : (
-                <div className={styles.notFound}>Không có bài viết nào.</div>
-              )}
-            </div>
-            <div className={styles.sidebar}>
-              <div className={styles.userInfo}>
-                <div className={styles.userInfoTop}>
-                  <h3>Thông tin cá nhân</h3>
-                </div>
-                <div className={styles.userInfoBody}>
-                  <form onSubmit={handleSubmit}>
-                    <input
-                      type="file"
-                      id="avatar"
-                      accept="image/*"
-                      style={{ display: 'none' }}
-                      onChange={handleAvatarChange}
+                  {user && username && user.username == username && (
+                    <div className="form-group">
+                      <label>Mật khẩu</label>
+                      <Input
+                        variant="password"
+                        placeholder="Mật khẩu"
+                        value={password}
+                        onChangeValue={(e) =>
+                          handleChangePassword(e.target.value)
+                        }
+                      />
+                    </div>
+                  )}
+                  <div className="form-group">
+                    <label>Tên</label>
+                    <Input
+                      variant="text"
+                      placeholder="Tên"
+                      value={name}
+                      onChangeValue={(e) => handleChangeName(e.target.value)}
+                      isDisabled={
+                        (user && username && user.username != username) || false
+                      }
                     />
-                    <div className={styles.avatarWrapper}>
-                      <label
-                        htmlFor="avatar"
-                        className={`${avatar ? styles.avatarLabel : styles.notFoundAvatar}`}
-                        style={{
-                          pointerEvents: `${user && username && user.username == userUsername ? 'auto' : 'none'}`,
-                        }}
-                      >
-                        <img
-                          src={`data:image/jpeg;base64,${avatar}`}
-                          alt="Hình đại diện của người dùng"
-                          className={`${avatar ? styles.avatar : styles.hide}`}
-                        />
-                        <>
-                          {avatar ? (
-                            <div className={styles.change}>
-                              <i className="bi bi-pen"></i>
-                            </div>
-                          ) : (
-                            <div className={styles.upload}>
-                              <i className="bi bi-plus"></i>
-                              <p>Tải lên</p>
-                            </div>
-                          )}
-                        </>
-                      </label>
-                    </div>
-                    <div className={styles.formGroups}>
-                      <div className={styles.formGroup}>
-                        <label htmlFor="username">Tên người dùng</label>
-                        <input
-                          id="username"
-                          type="text"
-                          value={userUsername}
-                          disabled
-                          onChange={(e) => setUserUsername(e.target.value)}
-                        />
-                      </div>
-                      {user && username && user.username == username && (
-                        <div className={styles.formGroup}>
-                          <label htmlFor="password">Mật khẩu</label>
-                          <div className={styles.inputPasswordWrapper}>
-                            <input
-                              id="password"
-                              className={passwordError ? styles.redBorder : ''}
-                              type={isPasswordVisible ? 'text' : 'password'}
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
-                              onFocus={handleResetPasswordError}
-                            />
-                            <div
-                              className={styles.togglePassword}
-                              onClick={togglePasswordVisibility}
-                            >
-                              {isPasswordVisible ? (
-                                <i className="bi bi-eye-slash"></i>
-                              ) : (
-                                <i className="bi bi-eye"></i>
-                              )}
-                            </div>
-                          </div>
-                          <p className={styles.passwordError}>
-                            {passwordError}
-                          </p>
-                        </div>
-                      )}
-                      <div
-                        className={styles.formGroup}
-                        style={{
-                          marginBottom: `${user && username && user.username == username ? '' : '10px'}`,
-                        }}
-                      >
-                        <label htmlFor="name">Tên</label>
-                        <input
-                          id="name"
-                          className={nameError ? styles.redBorder : ''}
-                          type="text"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          onFocus={handleResetNameError}
-                          disabled={
-                            (user && username && user.username != username) ||
-                            true
-                          }
-                        />
-                        {user && username && user.username == username && (
-                          <p className={styles.nameError}>{nameError}</p>
-                        )}
-                      </div>
-                    </div>
-                  </form>
-                </div>
-                {user && username && user.username == username && (
-                  <div className={styles.userInfoBottom}>
+                  </div>
+                  {user && username && user.username == username && (
                     <button
                       type="submit"
                       className="secondary-btn"
@@ -417,7 +316,31 @@ const Overview = () => {
                     >
                       Lưu
                     </button>
+                  )}
+                </form>
+              </div>
+            </div>
+            <div className="card">
+              <div className="card-header">
+                <h3>Danh sách bài viết</h3>
+              </div>
+              <div className="card-body">
+                {posts.length > 0 ? (
+                  <div className={styles.postCardList}>
+                    <PostCardList
+                      posts={posts}
+                      onDeletePost={handleDeletePost}
+                    />
+                    <div className={styles.pagination}>
+                      <Pagination
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                      />
+                    </div>
                   </div>
+                ) : (
+                  <div className={styles.notFound}>Không có bài viết nào.</div>
                 )}
               </div>
             </div>

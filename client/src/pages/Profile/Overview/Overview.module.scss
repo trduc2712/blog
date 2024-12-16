@@ -1,7 +1,6 @@
 @use '@styles/colors.scss' as colors;
 
 .container {
-  display: flex;
   background-color: colors.$bg-color;
   width: 100%;
 
@@ -15,234 +14,24 @@
     background-color: inherit;
   }
 
-  .sidebar {
-    flex: 0 0 275px;
-    border-radius: 7.5px;
-    background-color: inherit;
+  :global(.card) {
+    margin-top: 20px;
 
-    .userInfo {
-      box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
-      border: 1px solid #ccc;
-      border-radius: 7.5px;
-      overflow: hidden;
-
-      .userInfoTop {
-        padding: 10px;
-        text-align: center;
-        border-bottom: 1px solid #ccc;
-      }
-
-      .userInfoBody {
-        padding: 10px;
-        padding-bottom: 0;
-
-        label {
-          background-color: #fff;
-        }
-
-        .avatarWrapper {
-          width: 100%;
-          display: flex;
-          justify-content: center;
-
-          .avatarLabel {
-            position: relative;
-
-            .change {
-              position: absolute;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              border-radius: 7.5px;
-              top: 0px;
-              background-color: rgba(0, 0, 0, 0);
-              width: 100px;
-              height: 100px;
-
-              i {
-                opacity: 0;
-              }
-
-              &:hover {
-                background-color: rgba(0, 0, 0, 0.2);
-                cursor: pointer;
-                transition: 0.3s background-color ease;
-
-                i {
-                  opacity: 1;
-                  background-color: transparent;
-                  color: #fff;
-                  transition: 0.3s opacity ease;
-                }
-              }
-            }
-
-            .avatar {
-              display: block;
-              width: 100px;
-              height: 100px;
-              object-fit: cover;
-              border-radius: 7.5px;
-              margin: 0 auto 10px;
-              border: 1px solid #ccc;
-
-              &:hover {
-                cursor: pointer;
-                opacity: 0.8;
-                transition: 0.3s opacity ease;
-              }
-            }
-          }
-
-          .notFoundAvatar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 7.5px;
-            margin: 0 auto 20px;
-            border: 1px solid #ccc;
-            cursor: pointer;
-
-            &:hover {
-              color: colors.$primary-color;
-              border: 1px solid colors.$primary-color;
-              transition:
-                color 0.3s ease,
-                border 0.3s ease;
-            }
-
-            .hide {
-              display: none;
-            }
-
-            .avatar {
-              display: block;
-              width: 100px;
-              height: 100px;
-              object-fit: cover;
-              border-radius: 7.5px;
-              margin: 20px auto 10px;
-              border: 1px solid #ccc;
-
-              &:hover {
-                cursor: pointer;
-                opacity: 0.8;
-                transition: 0.3s opacity ease;
-              }
-            }
-
-            .upload {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-
-              i {
-                width: 25px;
-                height: 25px;
-                font-size: 25px;
-                margin-bottom: 5px;
-              }
-
-              span {
-                font-size: 30px;
-              }
-            }
-          }
-        }
-
-        form {
-          .formGroups {
-            .formGroup {
-              display: flex;
-              flex-direction: column;
-
-              &:first-child {
-                margin-bottom: 25px;
-              }
-
-              .redBorder {
-                border: 1px solid red;
-              }
-
-              .usernameError,
-              .passwordError,
-              .nameError {
-                height: 20px;
-                margin: 2.5px 0;
-                color: red;
-              }
-
-              .inputPasswordWrapper {
-                position: relative;
-                display: flex;
-                align-items: center;
-
-                input {
-                  flex-grow: 1;
-                  width: 100%;
-                }
-
-                .togglePassword {
-                  position: absolute;
-                  right: 11px;
-
-                  i {
-                    opacity: 0.7;
-
-                    &:hover {
-                      opacity: 1;
-                      transition: 0.3s opacity ease;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      .userInfoBottom {
-        padding: 0 10px 10px;
-        display: flex;
-        justify-content: center;
-
+    :global(.card-body) {
+      form {
         button {
           width: 100%;
         }
       }
     }
-  }
 
-  .content {
-    background-color: inherit;
-    margin-right: 20px;
-    flex-grow: 1;
+    .pagination {
+      margin-top: 20px;
+    }
 
     .notFound {
       text-align: center;
-    }
-
-    .title {
-      padding: 10px;
-      margin-bottom: 20px;
-      border-radius: 7.5px;
-      border: 1px solid #ccc;
-    }
-
-    .notFound {
       background-color: inherit;
-    }
-
-    .postCardList {
-      background-color: inherit;
-
-      .pagination {
-        margin-top: 20px;
-      }
     }
   }
 }

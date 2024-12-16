@@ -12,6 +12,7 @@
     width: 100%;
     font-size: 14px;
     box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
+    text-align: left;
 
     thead {
       padding: 10px;
@@ -24,6 +25,15 @@
 
           &:not(:last-child) {
             border-right: 1px solid #ccc;
+          }
+
+          &:first-child {
+            text-align: center !important;
+          }
+
+          &:nth-last-child(2),
+          &:last-child {
+            text-align: center !important;
           }
         }
       }
@@ -40,7 +50,7 @@
           border-bottom: 1px solid #ccc;
 
           &:first-child {
-            text-align: center;
+            text-align: center !important;
           }
 
           &:not(:last-child) {
@@ -49,7 +59,7 @@
 
           &:nth-last-child(2),
           &:last-child {
-            text-align: center;
+            text-align: center !important;
           }
 
           img {

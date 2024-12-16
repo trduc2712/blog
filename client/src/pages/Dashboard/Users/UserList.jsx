@@ -65,30 +65,43 @@ const Users = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Danh sách người dùng</h2>
-      <div className={styles.createWrapper}>
-        <button
-          className={`${styles.create} primary-btn`}
-          onClick={() => navigate('/dashboard/users/new')}
-        >
-          <i className="bi bi-plus"></i>
-          Thêm người dùng
-        </button>
+      <div className="card">
+        {loading ? (
+          <>
+            <div className="card-header">
+              <h3>Danh sách người dùng</h3>
+            </div>
+            <div className="card-body">
+              <div className={styles.loading}>Đang tải...</div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="card-header">
+              <h3>Danh sách người dùng</h3>
+            </div>
+            <div className="card-body">
+              <div className={styles.createWrapper}>
+                <button
+                  className={`${styles.create} primary-btn`}
+                  onClick={() => navigate('/dashboard/users/new')}
+                >
+                  <i className="bi bi-plus"></i>
+                  Thêm người dùng
+                </button>
+              </div>
+              <Table columnLabels={columnLabels} initialData={users} />
+              <div className={styles.pagination}>
+                <Pagination
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            </div>
+          </>
+        )}
       </div>
-      {loading ? (
-        'Đang tải...'
-      ) : (
-        <>
-          <Table columnLabels={columnLabels} initialData={users} />
-          <div className={styles.pagination}>
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-          </div>
-        </>
-      )}
     </div>
   );
 };

@@ -3,12 +3,8 @@
 .container {
   background-color: colors.$bg-color;
 
-  h2 {
-    background-color: inherit;
-    margin-bottom: 20px;
-  }
-
   .statisticCards {
+    border-radius: 0 0 7.5px 7.5px;
     background-color: inherit;
     display: grid;
     gap: 20px;

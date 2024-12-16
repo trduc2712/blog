@@ -23,7 +23,7 @@ const Select = ({ icon, label, items }) => {
         </div>
       </div>
       {isOpen && (
-        <>
+        <div className={styles.itemsWrapper}>
           {items && (
             <div className={styles.items}>
               {items.map((item, index) => (
@@ -33,11 +33,12 @@ const Select = ({ icon, label, items }) => {
                   onClick={() => handleClickItem(item)}
                 >
                   {item.label}
+                  {item.label == newLabel && <i className="bi bi-check"></i>}
                 </li>
               ))}
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

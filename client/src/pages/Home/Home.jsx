@@ -42,7 +42,7 @@ const Home = () => {
     onConfirm: () => {},
     onCancel: () => {},
   });
-  const postsPerPage = 9;
+  const postsPerPage = 6;
 
   const navigate = useNavigate();
 
@@ -256,64 +256,77 @@ const Home = () => {
         <div className={styles.content}>
           {!loading ? (
             <>
-              <div className={styles.postCardList}>
-                {keyword && filter && (
-                  <h3 className={styles.title}>
-                    Kết quả khi tìm kiếm với từ khóa: '{keyword}' được sắp xếp
-                    theo thứ tự {toLowerCaseFirstLetter(filterLabel)}
+              <div className="card">
+                <div className="card-header">
+                  <h3>
+                    {keyword || filter || categorySlug ? (
+                      <>
+                        {keyword && filter && (
+                          <>
+                            Kết quả khi tìm kiếm với từ khóa: '{keyword}' được
+                            sắp xếp theo thứ tự{' '}
+                            {toLowerCaseFirstLetter(filterLabel)}
+                          </>
+                        )}
+                        {keyword && !filter && (
+                          <>Kết quả tìm kiếm với từ khóa: '{keyword}'</>
+                        )}
+                        {filter && !keyword && !categorySlug && (
+                          <>
+                            Danh sách bài viết được sắp xếp theo thứ tự{' '}
+                            {toLowerCaseFirstLetter(filterLabel)}
+                          </>
+                        )}
+                        {categorySlug && filter && (
+                          <>
+                            Danh sách bài viết thuộc chủ đề{' '}
+                            {categoryName &&
+                              toLowerCaseFirstLetter(categoryName)}{' '}
+                            được sắp xếp theo thứ tự{' '}
+                            {toLowerCaseFirstLetter(filterLabel)}
+                          </>
+                        )}
+                        {categorySlug && !filter && (
+                          <>
+                            Danh sách bài viết thuộc chủ đề{' '}
+                            {categoryName &&
+                              toLowerCaseFirstLetter(categoryName)}
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <>Danh sách bài viết</>
+                    )}
                   </h3>
-                )}
-                {keyword && !filter && (
-                  <h3 className={styles.title}>
-                    Kết quả tìm kiếm với từ khóa: '{keyword}'
-                  </h3>
-                )}
-                {filter && !keyword && !categorySlug && (
-                  <h3 className={styles.title}>
-                    Danh sách bài viết được sắp xếp theo thứ tự{' '}
-                    {toLowerCaseFirstLetter(filterLabel)}
-                  </h3>
-                )}
-                {categorySlug && filter && (
-                  <h3 className={styles.title}>
-                    Danh sách bài viết thuộc chủ đề{' '}
-                    {categoryName && toLowerCaseFirstLetter(categoryName)} được
-                    sắp xếp theo thứ tự {toLowerCaseFirstLetter(filterLabel)}
-                  </h3>
-                )}
-                {categorySlug && !filter && (
-                  <h3 className={styles.title}>
-                    Danh sách bài viết thuộc chủ đề{' '}
-                    {categoryName && toLowerCaseFirstLetter(categoryName)}
-                  </h3>
-                )}
-                {!categorySlug && !filter && !keyword && (
-                  <h3 className={styles.title}>Danh sách bài viết</h3>
-                )}
-                {posts.length > 0 ? (
-                  <>
-                    <PostCardList posts={posts} />
-                    <div className={styles.pagination}>
-                      <Pagination
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        onPageChange={handlePageChange}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <div className={styles.notFound}>
-                    Không có kết quả phù hợp.
+                </div>
+                <div className="card-body">
+                  <div className={styles.searchBox}>
+                    <SearchBox
+                      placeholder="Tìm kiếm bài viết"
+                      onSearch={handleSearch}
+                    />
                   </div>
-                )}
+                  <div className={styles.postCardList}>
+                    {posts.length > 0 ? (
+                      <>
+                        <PostCardList posts={posts} />
+                        <div className={styles.pagination}>
+                          <Pagination
+                            totalPages={totalPages}
+                            currentPage={currentPage}
+                            onPageChange={handlePageChange}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <div className={styles.notFound}>
+                        Không có kết quả phù hợp.
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
               <div className={styles.sidebar}>
-                <div className={styles.searchBox}>
-                  <SearchBox
-                    placeholder="Tìm kiếm bài viết"
-                    onSearch={handleSearch}
-                  />
-                </div>
                 <div className={styles.filter}>
                   <div className={styles.filterTop}>
                     <div className={styles.title}>

@@ -7,9 +7,10 @@ import {
   updateCategory as updateCategoryService,
 } from '@services/categoryService';
 import { useToastContext } from '@contexts/ToastContext';
-import ToastList from '@components/ToastList/ToastList';
+import ToastList from '@components/ToastList';
 import useModal from '@hooks/useModal';
-import Modal from '@components/Modal/Modal';
+import Modal from '@components/Modal';
+import Input from '@components/Input';
 
 const EditCategory = () => {
   const [category, setCategory] = useState();
@@ -80,40 +81,42 @@ const EditCategory = () => {
     updateCategory(categoryId, name, slug);
   };
 
+  const handleChangeName = (name) => {
+    setName(name);
+    setSlug(stringToSlug(name));
+  };
+
   return (
     <div className={styles.container}>
-      <h2>Sửa chủ đề</h2>
-      <div className={styles.formGroup}>
-        <label htmlFor="name">Tên</label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            setSlug(stringToSlug(e.target.value));
-          }}
-        />
-      </div>
-      <div className={styles.formGroup}>
-        <label htmlFor="slug">Slug</label>
-        <input
-          disabled={true}
-          type="text"
-          name="slug"
-          id="slug"
-          value={slug}
-          onChange={() => setSlug(stringToSlug(name))}
-        />
-      </div>
-      <div className={styles.updateButtonWrapper}>
-        <button
-          className={`${styles.updateButton} primary-btn`}
-          onClick={openConfirmUpdateModal}
-        >
-          Cập nhật
-        </button>
+      <div className="card">
+        <div className="card-header">
+          <h3>Sửa chủ đề</h3>
+        </div>
+        <div className="card-body">
+          <div className="form-group">
+            <label>Tên</label>
+            <Input
+              type="text"
+              placeholder="Tên"
+              value={name}
+              onChangeValue={(e) => handleChangeName(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="slug">Slug</label>
+            <Input
+              type="text"
+              placeholder="Tên"
+              value={slug}
+              isDisabled={true}
+            />
+          </div>
+          <div className={styles.updateButtonWrapper}>
+            <button className="primary-btn" onClick={openConfirmUpdateModal}>
+              Cập nhật
+            </button>
+          </div>
+        </div>
       </div>
       <Modal
         title={modal.title}

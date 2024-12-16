@@ -1,6 +1,6 @@
 import styles from './ToastList.module.scss';
 import { useEffect } from 'react';
-import Toast from '@components/Toast/Toast';
+import Toast from '@components/Toast';
 import { useToastContext } from '@contexts/ToastContext';
 
 const ToastList = () => {

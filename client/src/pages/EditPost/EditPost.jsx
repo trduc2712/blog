@@ -2,18 +2,18 @@ import { useParams } from 'react-router-dom';
 import styles from './EditPost.module.scss';
 import { getPost as getPostService } from '@services/postService';
 import { useEffect, useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import { getAllCategories as getAllCategoriesService } from '@services/categoryService';
 import { getUsers as getUsersService } from '@services/userService';
 import { updatePost as updatePostService } from '@services/postService';
 import { stringToSlug } from '@utils/string';
-import { fileToBase64 } from '@utils/file';
 import { useToastContext } from '@contexts/ToastContext';
 import ToastList from '@components/ToastList';
 import useModal from '@hooks/useModal';
 import Modal from '@components/Modal';
 import Select from '@components/Select';
+import Input from '@components/Input';
+import Upload from '@components/Upload';
+import TextEditor from '@components/TextEditor';
 import { useAuthContext } from '@contexts/AuthContext';
 
 const EditPost = () => {
@@ -114,22 +114,16 @@ const EditPost = () => {
     }
   }, [post]);
 
-  const handleContentChange = (value) => {
-    setContent(value);
-  };
-
-  const handleThumbnailChange = async (e) => {
-    const file = e.target.files[0];
-
-    if (!file) {
+  const openConfirmUpdateModal = () => {
+    if (!title || !thumbnail || !categorySlug || !content) {
+      createToast({
+        type: 'warning',
+        title: 'Cảnh báo',
+        message: 'Vui lòng điền đầy đủ thông tin.',
+      });
       return;
     }
 
-    const base64 = await fileToBase64(file);
-    setThumbnail(base64);
-  };
-
-  const openConfirmUpdateModal = () => {
     setModal({
       title: 'Xác nhận',
       cancelLabel: 'Không',
@@ -184,139 +178,58 @@ const EditPost = () => {
     updatePost(postId, title, content, userId, thumbnail, categorySlug, slug);
   };
 
-  const customToolbar = (
-    <div className="custom-toolbar">
-      <select className="ql-header">
-        <option value="1">Tiêu đề 1</option>
-        <option value="2">Tiêu đề 2</option>
-        <option value="3">Tiêu đề 3</option>
-        <option value="">Văn bản</option>
-      </select>
-      <button className="ql-bold" aria-label="In đậm"></button>
-      <button className="ql-italic" aria-label="In nghiêng"></button>
-      <button className="ql-underline" aria-label="Gạch chân"></button>
-      <button
-        className="ql-list"
-        value="ordered"
-        aria-label="Danh sách có thứ tự"
-      ></button>
-      <button
-        className="ql-list"
-        value="bullet"
-        aria-label="Danh sách không thứ tự"
-      ></button>
-      <button className="ql-image" aria-label="Chèn ảnh"></button>
-      <button className="ql-clean" aria-label="Xóa định dạng">
-        <i className="bi bi-eraser"></i>
-      </button>
-    </div>
-  );
-
-  const modules = {
-    toolbar: {
-      container: '.custom-toolbar',
-    },
-  };
-
-  const openConfirmDeleteThumbnailModal = () => {
-    setModal({
-      title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
-      message: `Bạn có chắc chắn muốn xóa ảnh đại diện thu nhỏ không?`,
-      type: 'confirmation',
-      onConfirm: () => {
-        setThumbnail('');
-        closeModal();
-      },
-      onCancel: () => {
-        closeModal();
-      },
-    });
-
-    openModal();
+  const handleChangeTitle = (title) => {
+    setTitle(title);
+    setSlug(stringToSlug(title));
   };
 
   return (
-    <div className={styles.container}>
-      <h2>Sửa bài viết</h2>
-      <div className={styles.formGroup}>
-        <label htmlFor="title">Tiêu đề</label>
-        <input
-          type="text"
-          name="title"
-          id="title"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            setSlug(stringToSlug(title));
-          }}
-        />
-      </div>
-      <div className={styles.select}>
-        <p>Chủ đề</p>
-        {categoryName && (
-          <Select label={categoryName} items={selectCategoryItems} />
-        )}
-      </div>
-      <div className={styles.formGroup}>
-        <label htmlFor="thumbnail">Thumbnail</label>
-        <div className={styles.thumbnailWrapper}>
-          {!thumbnail ? (
-            <label htmlFor="thumbnail" className={styles.thumbnailLabel}>
-              <i className="bi bi-image"></i>
-              <p>Tải lên ảnh đại diện thu nhỏ.</p>
-            </label>
-          ) : (
-            <>
-              <img
-                src={`data:image/jpeg;base64,${thumbnail}`}
-                className={styles.thumbnail}
+    <>
+      <div className={styles.container}>
+        <div className="card">
+          <div className="card-header">
+            <h3>Sửa bài viết</h3>
+          </div>
+          <div className="card-body">
+            <div className="form-group">
+              <label>Tiêu đề</label>
+              <Input
+                type="text"
+                value={title}
+                onChangeValue={(e) => handleChangeTitle(e.target.value)}
+                placeholder="Tiêu đề"
               />
-              <div
-                className={styles.deleteThumbnail}
-                onClick={openConfirmDeleteThumbnailModal}
-              >
-                <i className="bi bi-trash"></i>
+            </div>
+            <div className="select">
+              <p>Chủ đề</p>
+              {categoryName && (
+                <Select label={categoryName} items={selectCategoryItems} />
+              )}
+            </div>
+            <Upload
+              type="thumbnail"
+              upload={thumbnail}
+              setUpload={setThumbnail}
+            />
+            <div className="form-group">
+              <label>Nội dung</label>
+              <TextEditor content={content} setContent={setContent} />
+            </div>
+            {user.role == 'ADMIN' && (
+              <div className="select">
+                <p>Tác giả</p>
+                {userName && (
+                  <Select label={userName} items={selectUserItems} />
+                )}
               </div>
-            </>
-          )}
-          <input
-            type="file"
-            id="thumbnail"
-            accept="image/*"
-            style={{ display: 'none' }}
-            onChange={handleThumbnailChange}
-          />
+            )}
+            <div className={styles.updateButtonWrapper}>
+              <button className="primary-btn" onClick={openConfirmUpdateModal}>
+                Cập nhật
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className={styles.formGroup}>
-        <label>Nội dung</label>
-        <div className="quill-wrapper" spellCheck="false">
-          {customToolbar}
-          <ReactQuill
-            value={content}
-            modules={modules}
-            onChange={handleContentChange}
-            placeholder=""
-            spellCheck={false}
-            className={styles.quill}
-          />
-        </div>
-      </div>
-      {user.role == 'ADMIN' && (
-        <div className={styles.select}>
-          <p>Tác giả</p>
-          {userName && <Select label={userName} items={selectUserItems} />}
-        </div>
-      )}
-      <div className={styles.updateButtonWrapper}>
-        <button
-          className={`${styles.updateButton} primary-btn`}
-          onClick={openConfirmUpdateModal}
-        >
-          Cập nhật
-        </button>
       </div>
       <Modal
         title={modal.title}
@@ -331,7 +244,7 @@ const EditPost = () => {
         type={modal.type}
       />
       <ToastList />
-    </div>
+    </>
   );
 };
 

@@ -4,8 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import useModal from '@hooks/useModal';
 import { useAuthContext } from '@contexts/AuthContext';
 import { useToastContext } from '@contexts/ToastContext';
-import Dropdown from '@components/Dropdown/Dropdown';
-import Modal from '@components/Modal/Modal';
+import Dropdown from '@components/Dropdown';
+import Modal from '@components/Modal';
+import Navbar from '@components/Navbar';
 
 const Header = ({ isDashboard }) => {
   const [modal, setModal] = useState({});
@@ -20,22 +21,10 @@ const Header = ({ isDashboard }) => {
 
   const generateDropdownItems = () => {
     const items = [];
-
-    if (!isDashboard) {
-      if (user) {
-        user.role === 'ADMIN' &&
-          items.push({
-            label: 'Trang quản trị',
-            onClick: () => navigate('/dashboard'),
-          });
-      }
-      items.push({
-        label: 'Hồ sơ của tôi',
-        onClick: () => navigate(`/profile/${user.username}`),
-      });
-    } else {
-      items.push({ label: 'Trang chủ', onClick: () => navigate('/') });
-    }
+    items.push({
+      label: 'Hồ sơ của tôi',
+      onClick: () => navigate(`/profile/${user.username}`),
+    });
 
     items.push({
       label: 'Đăng xuất',
@@ -84,20 +73,12 @@ const Header = ({ isDashboard }) => {
           </h1>
         )}
       </div>
+      <div className={styles.middle}>
+        <Navbar />
+      </div>
       <div className={styles.right}>
         {user ? (
           <>
-            {!isDashboard && (
-              <>
-                <button
-                  className={`${styles.createPost} primary-btn`}
-                  onClick={() => navigate('/posts/new')}
-                >
-                  <i className="bi bi-plus"></i>
-                  <p>Tạo bài viết mới</p>
-                </button>
-              </>
-            )}
             <Dropdown
               trigger={
                 user.avatar ? (

@@ -6,28 +6,37 @@ import { useToastContext } from '@contexts/ToastContext';
 import Header from '@components/Header';
 import ToastList from '@components/ToastList';
 import Footer from '@components/Footer';
+import Input from '@components/Input';
 
 const SignUp = () => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [usernameError, setUsernameError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [nameError, setNameError] = useState('');
 
   const navigate = useNavigate();
 
-  const { error, setError, signUp } = useAuthContext();
+  const { error, signUp } = useAuthContext();
   const { createToast } = useToastContext();
+
+  const handleChangeUsername = (username) => {
+    setUsername(username);
+  };
+
+  const handleChangePassword = (password) => {
+    setPassword(password);
+  };
+
+  const handleChangeName = (name) => {
+    setName(name);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (username == '' || password == '') {
-      if (username == '') setUsernameError('Vui lòng điền tên người dùng.');
-      if (password == '') setPasswordError('Vui lòng điền mật khẩu.');
-      if (name == '') setNameError('Vui lòng điền tên.');
+      if (username == '') console.log('Vui lòng điền tên người dùng.');
+      if (password == '') console.log('Vui lòng điền mật khẩu.');
+      if (name == '') console.log('Vui lòng điền tên.');
       return;
     }
 
@@ -36,17 +45,17 @@ const SignUp = () => {
     const validPasswordPattern = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
     if (!validUsernamePattern.test(username)) {
-      setUsernameError('Tên người dùng không được chứa ký tự đặc biệt.');
+      console.log('Tên người dùng không được chứa ký tự đặc biệt.');
       return;
     }
 
     if (!validNamePattern.test(name)) {
-      setNameError('Tên không được chứa ký tự đặc biệt.');
+      console.log('Tên không được chứa ký tự đặc biệt.');
       return;
     }
 
     if (!validPasswordPattern.test(password)) {
-      setPasswordError(
+      console.log(
         'Mật khẩu phải có ít nhất 8 ký tự và bao gồm cả chữ cái và số.'
       );
       return;
@@ -61,118 +70,53 @@ const SignUp = () => {
         title: 'Thông báo',
         message: 'Đăng ký thành công',
       });
-      handleReset();
       navigate('/login');
     } else return;
-  };
-
-  const handleReset = () => {
-    setUsername('');
-    setPassword('');
-    setName('');
-    setError('');
-    setUsernameError('');
-    setPasswordError('');
-    setNameError('');
-  };
-
-  const handleResetUsernameError = () => {
-    setUsernameError('');
-  };
-
-  const handleResetPasswordError = () => {
-    setPasswordError('');
-  };
-
-  const handleResetNameError = () => {
-    setNameError('');
-  };
-
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
   };
 
   return (
     <>
       <Header isDashboard={false} />
       <div className={styles.container}>
-        <div className={styles.content}>
-          <div className={styles.header}>
-            <h2>Đăng ký</h2>
+        <div className="card">
+          <div className="card-header">
+            <h3>Đăng ký</h3>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className={styles.formGroup}>
-              <label htmlFor="username">
-                <p>Tên người dùng</p>
-              </label>
-              <input
-                id="username"
-                className={usernameError ? styles.redBorder : ''}
-                type="text"
-                placeholder="Tên người dùng"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                onFocus={handleResetUsernameError}
-              />
-              <p className={styles.usernameError}>{usernameError}</p>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="password">
-                <p>Mật khẩu</p>
-              </label>
-              <div className={styles.inputPasswordWrapper}>
-                <input
-                  id="password"
-                  className={passwordError ? styles.redBorder : ''}
-                  type={isPasswordVisible ? 'text' : 'password'}
+          <div className="card-body">
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Tên người dùng</label>
+                <Input
+                  variant="text"
+                  placeholder="Tên người dùng"
+                  value={username}
+                  onChangeValue={(e) => handleChangeUsername(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label>Mật khẩu</label>
+                <Input
+                  variant="password"
                   placeholder="Mật khẩu"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onFocus={handleResetPasswordError}
+                  onChangeValue={(e) => handleChangePassword(e.target.value)}
                 />
-                <div
-                  className={styles.togglePassword}
-                  onClick={togglePasswordVisibility}
-                >
-                  {isPasswordVisible ? (
-                    <i className="bi bi-eye-slash"></i>
-                  ) : (
-                    <i className="bi bi-eye"></i>
-                  )}
-                </div>
               </div>
-              <p className={styles.passwordError}>{passwordError}</p>
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="name">
-                <p>Tên</p>
-              </label>
-              <input
-                id="name"
-                className={nameError ? styles.redBorder : ''}
-                type="text"
-                placeholder="Tên"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onFocus={handleResetNameError}
-              />
-              <p className={styles.nameError}>{nameError}</p>
-            </div>
-            <button type="submit" className={`${styles.submit} primary-btn`}>
-              Đăng ký
-            </button>
-          </form>
-          {error && (
-            <p
-              style={{
-                color: 'red',
-                marginTop: '20px',
-                textAlign: 'center',
-              }}
-            >
-              {error}
-            </p>
-          )}
+              <div className="form-group">
+                <label>Tên</label>
+                <Input
+                  variant="text"
+                  placeholder="Tên"
+                  value={name}
+                  onChangeValue={(e) => handleChangeName(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="primary-btn">
+                Đăng ký
+              </button>
+              {error && <p className={styles.error}>{error}</p>}
+            </form>
+          </div>
         </div>
       </div>
       <ToastList />

@@ -3,18 +3,9 @@
 .container {
   height: 100%;
   background-color: colors.$bg-color;
-
-  h2 {
-    margin-bottom: 20px;
-    background-color: colors.$bg-color;
-  }
-
-  .loading {
-    background-color: colors.$bg-color;
-  }
+  text-align: center;
 
   .pagination {
-    background-color: colors.$bg-color;
     margin-top: 20px;
   }
 }

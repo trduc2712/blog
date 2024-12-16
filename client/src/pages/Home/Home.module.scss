@@ -2,22 +2,12 @@
 
 .container {
   .content {
-    padding: 79px 40px 20px;
-    display: flex;
+    padding: 79px 20px 20px;
     background-color: colors.$bg-color;
 
-    .postCardList {
-      margin-right: 20px;
-      flex-grow: 1;
-      background-color: colors.$bg-color;
-
-      .title {
-        padding: 10px;
+    :global(.card) {
+      .searchBox {
         margin-bottom: 20px;
-        border: 1px solid #ccc;
-        border-radius: 7.5px;
-        box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
-        border-radius: 7.5px;
       }
 
       .pagination {
@@ -55,6 +45,7 @@
         border: 1px solid #ccc;
         border-radius: 7.5px;
         overflow: hidden;
+        display: none;
 
         .filterTop {
           padding: 10px;
@@ -108,6 +99,7 @@
         border: 1px solid #ccc;
         border-radius: 7.5px;
         overflow: hidden;
+        display: none;
 
         .categoryListTop {
           padding: 10px;

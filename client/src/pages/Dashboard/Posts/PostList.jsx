@@ -67,21 +67,27 @@ const PostList = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Danh sách bài viết</h2>
-      {loading ? (
-        <div className={styles.loading}>Đang tải...</div>
-      ) : (
-        <>
-          <Table columnLabels={columnLabels} initialData={posts} />
-          <div className={styles.pagination}>
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-          </div>
-        </>
-      )}
+      <div className="card">
+        <div className="card-header">
+          <h3>Danh sách bài viết</h3>
+        </div>
+        <div className="card-body">
+          {loading ? (
+            <div className={styles.loading}>Đang tải...</div>
+          ) : (
+            <>
+              <Table columnLabels={columnLabels} initialData={posts} />
+              <div className={styles.pagination}>
+                <Pagination
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

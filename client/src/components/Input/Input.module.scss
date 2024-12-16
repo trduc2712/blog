@@ -1,0 +1,54 @@
+@use '@styles/colors.scss' as colors;
+
+.container {
+  .redBorder {
+    border: 1px solid red !important;
+  }
+
+  .inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+      flex-grow: 1;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 7.5px;
+      font-size: 14px;
+
+      &:focus {
+        outline: none;
+        border: 1px solid colors.$primary-color;
+        transition: 0.3s border ease;
+      }
+
+      &:hover {
+        border: 1px solid colors.$primary-color;
+        transition: 0.3s border ease;
+      }
+    }
+
+    .togglePassword {
+      position: absolute;
+      right: 11px;
+
+      i {
+        opacity: 0.7;
+
+        &:hover {
+          opacity: 1;
+          transition: 0.3s opacity ease;
+        }
+      }
+    }
+  }
+
+  .error {
+    display: flex;
+    align-items: center;
+    height: 20px;
+    color: red;
+  }
+}

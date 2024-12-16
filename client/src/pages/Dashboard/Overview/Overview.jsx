@@ -28,25 +28,31 @@ const Overview = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Tổng quan</h2>
-      <div className={styles.statisticCards}>
-        <div className={styles.statisticCard}>
-          <h3>Số lượng người dùng</h3>
-          <p className={styles.statistic}>
-            {userCount == 0 ? 'Đang tải...' : userCount}
-          </p>
+      <div className="card">
+        <div className="card-header">
+          <h3>Tổng quan</h3>
         </div>
-        <div className={styles.statisticCard}>
-          <h3>Số lượng bài viết</h3>
-          <p className={styles.statistic}>
-            {postCount == 0 ? 'Đang tải...' : postCount}
-          </p>
-        </div>
-        <div className={styles.statisticCard}>
-          <h3>Số lượng chủ đề</h3>
-          <p className={styles.statistic}>
-            {categoryCount == 0 ? 'Đang tải...' : categoryCount}
-          </p>
+        <div className="card-body">
+          <div className={styles.statisticCards}>
+            <div className={styles.statisticCard}>
+              <h3>Số lượng người dùng</h3>
+              <p className={styles.statistic}>
+                {userCount == 0 ? 'Đang tải...' : userCount}
+              </p>
+            </div>
+            <div className={styles.statisticCard}>
+              <h3>Số lượng bài viết</h3>
+              <p className={styles.statistic}>
+                {postCount == 0 ? 'Đang tải...' : postCount}
+              </p>
+            </div>
+            <div className={styles.statisticCard}>
+              <h3>Số lượng chủ đề</h3>
+              <p className={styles.statistic}>
+                {categoryCount == 0 ? 'Đang tải...' : categoryCount}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

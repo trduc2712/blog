@@ -5,16 +5,16 @@ import {
   getUser as getUserService,
   updateUser as updateUserService,
 } from '@services/userService';
-import { fileToBase64 } from '@utils/file';
 import { useToastContext } from '@contexts/ToastContext';
 import ToastList from '@components/ToastList';
+import Upload from '@components/Upload';
 import useModal from '@hooks/useModal';
 import Modal from '@components/Modal';
 import Select from '@components/Select';
+import Input from '@components/Input';
 
 const EditUser = () => {
   const { userId } = useParams();
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [user, setUser] = useState();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -27,10 +27,6 @@ const EditUser = () => {
   const { createToast } = useToastContext();
 
   const { isOpen, openModal, closeModal } = useModal();
-
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
 
   useEffect(() => {
     const items = [
@@ -70,17 +66,6 @@ const EditUser = () => {
       setRole(user.role);
     }
   }, [user]);
-
-  const handleAvatarChange = async (e) => {
-    const file = e.target.files[0];
-
-    if (!file) {
-      return;
-    }
-
-    const base64 = await fileToBase64(file);
-    setAvatar(base64);
-  };
 
   const openConfirmUpdateModal = () => {
     setModal({
@@ -132,97 +117,70 @@ const EditUser = () => {
     updateUser(userId, username, password, name, avatar, role);
   };
 
+  const handleChangeUsername = (username) => {
+    setUsername(username);
+  };
+
+  const handleChangePassword = (password) => {
+    setPassword(password);
+  };
+
+  const handleChangeName = (name) => {
+    setName(name);
+  };
+
   return (
-    <div className={styles.container}>
-      <h2>Sửa người dùng</h2>
-      <div className={styles.avatarWrapper}>
-        <input
-          type="file"
-          id="avatar"
-          accept="image/*"
-          style={{ display: 'none' }}
-          onChange={handleAvatarChange}
-        />
-        <label
-          htmlFor="avatar"
-          className={`${avatar ? styles.avatarLabel : styles.notFoundAvatar}`}
-        >
-          <img
-            src={`data:image/jpeg;base64,${avatar}`}
-            alt="Hình đại diện của người dùng"
-            className={`${avatar ? styles.avatar : styles.hide}`}
-          />
-          <>
-            {avatar ? (
-              <div className={styles.change}>
-                <i className="bi bi-pen"></i>
-              </div>
-            ) : (
-              <div className={styles.upload}>
-                <i className="bi bi-plus"></i>
-                <p>Tải lên</p>
-              </div>
-            )}
-          </>
-        </label>
-      </div>
-      <div className={styles.formGroup}>
-        <label htmlFor="username">Tên người dùng</label>
-        <input
-          type="text"
-          name="username"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div className={styles.formGroup}>
-        <label htmlFor="password">Mật khẩu</label>
-        <div className={styles.inputPasswordWrapper}>
-          <input
-            id="password"
-            type={isPasswordVisible ? 'text' : 'password'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <div
-            className={styles.togglePassword}
-            onClick={togglePasswordVisibility}
-          >
-            {isPasswordVisible ? (
-              <i className="bi bi-eye-slash"></i>
-            ) : (
-              <i className="bi bi-eye"></i>
-            )}
+    <>
+      <div className={styles.container}>
+        <div className="card">
+          <div className="card-header">
+            <h3>Sửa người dùng</h3>
+          </div>
+          <div className="card-body">
+            <Upload type="avatar" upload={avatar} setUpload={setAvatar} />
+            <div className="form-group">
+              <label>Tên người dùng</label>
+              <Input
+                value={username}
+                variant="text"
+                placeholder="Tên người dùng"
+                onChangeValue={(e) => handleChangeUsername(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>Mật khẩu</label>
+              <Input
+                value={password}
+                variant="password"
+                placeholder="Mật khẩu"
+                onChangeValue={(e) => handleChangePassword(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>Tên</label>
+              <Input
+                value={name}
+                variant="text"
+                placeholder="Tên"
+                onChangeValue={(e) => handleChangeName(e.target.value)}
+              />
+            </div>
+            <div className="select">
+              <p>Vai trò</p>
+              {role && (
+                <Select
+                  label={`${role == 'ADMIN' ? 'Quản trị viên' : 'Người dùng'}`}
+                  items={selectRoleItems}
+                />
+              )}
+            </div>
+            <div className={styles.updateButtonWrapper}>
+              <button className="primary-btn" onClick={openConfirmUpdateModal}>
+                Cập nhật
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className={styles.formGroup}>
-        <label htmlFor="name">Tên</label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div className={styles.select}>
-        <p>Vai trò</p>
-        {role && (
-          <Select
-            label={`${role == 'ADMIN' ? 'Quản trị viên' : 'Người dùng'}`}
-            items={selectRoleItems}
-          />
-        )}
-      </div>
-      <div className={styles.updateButtonWrapper}>
-        <button
-          className={`${styles.updateButton} primary-btn`}
-          onClick={openConfirmUpdateModal}
-        >
-          Cập nhật
-        </button>
       </div>
       <Modal
         title={modal.title}
@@ -237,7 +195,7 @@ const EditUser = () => {
         type={modal.type}
       />
       <ToastList />
-    </div>
+    </>
   );
 };
 

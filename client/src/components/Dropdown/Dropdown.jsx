@@ -39,7 +39,7 @@ const Dropdown = ({ trigger, items }) => {
             className={styles.item}
             onClick={() => handleClickItem(item)}
           >
-            <p>{item.label}</p>
+            {item.label}
           </li>
         ))}
       </ul>
