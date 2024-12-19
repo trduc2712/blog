@@ -1,4 +1,3 @@
-import styles from './CreateCategory.module.scss';
 import { useEffect, useState } from 'react';
 import { stringToSlug } from '@utils/string';
 import { useToastContext } from '@contexts/ToastContext';
@@ -35,8 +34,8 @@ const CreateCategory = () => {
     }
     setModal({
       title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Tạo',
       message: 'Bạn có chắc chắn muốn tạo chủ đề mới này không?',
       type: 'confirmation',
       onConfirm: () => {
@@ -75,36 +74,34 @@ const CreateCategory = () => {
 
   return (
     <>
-      <div className={styles.container}>
-        <div className="card">
-          <div className="card-header">
-            <h3>Thêm chủ đề</h3>
+      <div className="card">
+        <div className="card-header">
+          <h3>Thêm chủ đề</h3>
+        </div>
+        <div className="card-body">
+          <div className="form-group">
+            <label>Tên</label>
+            <Input
+              type="text"
+              placeholder="Tên"
+              value={name}
+              onChangeValue={(e) => handleChangeName(e.target.value)}
+            />
           </div>
-          <div className="card-body">
-            <div className="form-group">
-              <label>Tên</label>
-              <Input
-                type="text"
-                placeholder="Tên"
-                value={name}
-                onChangeValue={(e) => handleChangeName(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label>Slug</label>
-              <Input
-                type="text"
-                placeholder="Tên"
-                value={slug}
-                isDisabled={true}
-              />
-            </div>
-            <div className={styles.updateButtonWrapper}>
-              <button className="primary-btn" onClick={openConfirmCreateModal}>
-                Thêm
-              </button>
-            </div>
+          <div className="form-group">
+            <label>Slug</label>
+            <Input
+              type="text"
+              placeholder="Slug"
+              value={slug}
+              isDisabled={true}
+            />
           </div>
+        </div>
+        <div className="card-footer end">
+          <button className="primary-btn" onClick={openConfirmCreateModal}>
+            Thêm
+          </button>
         </div>
       </div>
       <Modal

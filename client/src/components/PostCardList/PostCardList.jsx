@@ -1,10 +1,7 @@
 import styles from './PostCardList.module.scss';
 import PostCard from '@components/PostCard/PostCard';
-import { useAuthContext } from '@contexts/AuthContext';
 
 const PostCardList = ({ posts, onDeletePost }) => {
-  const { user } = useAuthContext();
-
   if (posts == null)
     return <div className={styles.content}>Không có bài viết nào</div>;
 

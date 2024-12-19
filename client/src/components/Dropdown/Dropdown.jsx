@@ -33,15 +33,24 @@ const Dropdown = ({ trigger, items }) => {
         {trigger}
       </div>
       <ul className={`${styles.items} ${isOpen ? styles.open : ''}`}>
-        {items.map((item, index) => (
-          <li
-            key={index}
-            className={styles.item}
-            onClick={() => handleClickItem(item)}
-          >
-            {item.label}
-          </li>
-        ))}
+        {items.map((item, index) =>
+          item.isDivider ? (
+            <div className={styles.divider} />
+          ) : (
+            <li
+              key={index}
+              className={styles.item}
+              onClick={() => handleClickItem(item)}
+            >
+              {item.icon ? (
+                <i className={`bi bi-${item.icon}`}></i>
+              ) : (
+                <i className="bi"></i>
+              )}
+              {item.label}
+            </li>
+          )
+        )}
       </ul>
     </div>
   );

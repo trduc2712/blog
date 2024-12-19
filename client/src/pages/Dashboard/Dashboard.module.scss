@@ -22,14 +22,15 @@
         margin: 0;
 
         .active {
+          color: colors.$primary-color !important;
           background-color: #d8f3dc !important;
           transition:
             background-color 0.3s ease,
             color 0.3s ease;
 
           p {
-            background-color: #d8f3dc !important;
             color: colors.$primary-color !important;
+            background-color: #d8f3dc !important;
             transition:
               background-color 0.3s ease,
               color 0.3s ease;
@@ -39,6 +40,8 @@
         .sidebarItem {
           padding: 10px;
           border-radius: 5px;
+          display: flex;
+          align-items: center;
 
           &:hover {
             background-color: #e6e6e6;
@@ -55,7 +58,10 @@
 
           p {
             color: #000;
-            // background-color: #fff;
+          }
+
+          i {
+            margin-right: 15px;
           }
         }
       }

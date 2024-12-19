@@ -36,24 +36,28 @@ const Dashboard = () => {
               className={`${styles.sidebarItem} ${currentRoute == 'overview' ? styles.active : ''}`}
               onClick={() => navigate('/dashboard')}
             >
+              <i className="bi bi-bar-chart"></i>
               <p>Tổng quan</p>
             </li>
             <li
               className={`${styles.sidebarItem} ${currentRoute == 'posts' ? styles.active : ''}`}
               onClick={() => navigate('/dashboard/posts')}
             >
+              <i className="bi bi-journal-text"></i>
               <p>Bài viết</p>
             </li>
             <li
               className={`${styles.sidebarItem} ${currentRoute == 'users' ? styles.active : ''}`}
               onClick={() => navigate('/dashboard/users')}
             >
+              <i className="bi bi-people"></i>
               <p>Người dùng</p>
             </li>
             <li
               className={`${styles.sidebarItem} ${currentRoute == 'categories' ? styles.active : ''}`}
               onClick={() => navigate('/dashboard/categories')}
             >
+              <i className="bi bi-tags"></i>
               <p>Chủ đề</p>
             </li>
           </ul>

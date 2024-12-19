@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
+    "bootstrap-icons": "^1.11.3",
     "quill": "^2.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -27,6 +28,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
+    "immutable-js-debuglog": "^1.0.2",
     "prettier": "^3.3.3",
     "sass": "^1.81.0",
     "vite": "^5.4.10"

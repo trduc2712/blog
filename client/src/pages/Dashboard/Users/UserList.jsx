@@ -72,7 +72,7 @@ const Users = () => {
               <h3>Danh sách người dùng</h3>
             </div>
             <div className="card-body">
-              <div className={styles.loading}>Đang tải...</div>
+              <div className="loading">Đang tải...</div>
             </div>
           </>
         ) : (

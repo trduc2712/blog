@@ -10,9 +10,23 @@
     position: relative;
 
     input {
-      width: 100%;
-      font-size: 14px;
+      flex-grow: 1;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #ccc;
       border-radius: 7.5px;
+      font-size: 14px;
+
+      &:focus {
+        outline: none;
+        border: 1px solid colors.$primary-color;
+        transition: 0.3s border ease;
+      }
+
+      &:hover {
+        border: 1px solid colors.$primary-color;
+        transition: 0.3s border ease;
+      }
     }
 
     .search {

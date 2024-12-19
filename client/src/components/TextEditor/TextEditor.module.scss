@@ -1,27 +1,46 @@
 @use '@styles/colors.scss';
 
-.container {
-  background-color: colors.$bg-color;
+.ql-snow.ql-toolbar button:hover,
+.ql-snow .ql-toolbar button:hover,
+.ql-snow.ql-toolbar button:focus,
+.ql-snow .ql-toolbar button:focus,
+.ql-snow.ql-toolbar button.ql-active,
+.ql-snow .ql-toolbar button.ql-active,
+.ql-snow.ql-toolbar .ql-picker-label:hover,
+.ql-snow .ql-toolbar .ql-picker-label:hover,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker-item:hover,
+.ql-snow .ql-toolbar .ql-picker-item:hover,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+  color: red !important;
+}
 
-  .quill {
-    background-color: inherit;
-    .ql-container {
+.container {
+  background-color: #fff;
+  margin-bottom: 20px;
+
+  :global(.quill) {
+    :global(.ql-container) {
       overflow: hidden;
       border-radius: 0 0 7.5px 7.5px !important;
 
-      .ql-editor {
+      :global(.ql-editor) {
         min-height: 500px;
         padding: 10px;
         font-size: 14px !important;
         font-family: Arial, Helvetica, sans-serif;
 
         img {
-          margin: 10px 0 !important;
+          margin: 20px auto;
           display: block;
-          width: 100%;
+          width: 50%;
+          padding: 5px;
           height: 100%;
           object-fit: cover;
-          border-radius: 7.5px;
+          border: 1px solid #ccc;
+          background-color: #f5f5f5;
         }
       }
     }
@@ -40,45 +59,88 @@
     margin-left: 10px;
     padding: 0px !important;
     width: 24px !important;
-
     svg {
-      padding: 3px;
+      padding: 4px;
+      fill: #fff !important;
     }
 
-    i {
-      display: block;
+    &:hover {
+      svg {
+        color: colors.$primary-color !important;
+      }
     }
   }
 
-  .ql-header {
+  :global(.ql-expanded) {
+    :global(.ql-picker-label) {
+      background-color: colors.$primary-color !important;
+      color: #fff !important;
+    }
+  }
+
+  :global(.ql-header) {
     color: #000 !important;
 
-    .ql-picker-label {
-      padding: 0;
+    .ql-picker-label.ql-active,
+    .ql-snow .ql-toolbar .ql-picker-label.ql-active,
+    .ql-snow.ql-toolbar .ql-picker-item:hover,
+    .ql-snow .ql-toolbar .ql-picker-item:hover,
+    .ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+    .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+      color: colors.$primary-color !important;
+    }
+
+    :global(.ql-picker-label) {
+      background-color: #fff;
+      color: colors.$primary-color;
+      justify-content: center;
+      padding-right: 8px;
       margin: 0;
       display: flex;
       align-items: center;
-      border-radius: 3px;
+      border-radius: 5px;
       border: none !important;
+
+      svg {
+        display: none;
+      }
+
+      &:hover {
+        background-color: colors.$primary-color;
+        opacity: 0.8;
+        transition:
+          0.3s opacity ease,
+          0.3s background-color ease;
+
+        &::before {
+          color: #fff;
+        }
+      }
     }
 
-    .ql-picker-options {
-      margin-top: 10px !important;
-      padding: 10px 0 !important;
+    :global(.ql-picker-options) {
+      width: 200px;
+      margin-top: 20px !important;
+      padding: 7.5px;
       border-radius: 7.5px !important;
 
-      .ql-picker-item {
-        padding: 10px !important;
+      :global(.ql-picker-item) {
+        padding: 7.5px !important;
+        border-radius: 5px;
 
         &::before {
           font-size: 14px !important;
         }
 
         &:hover {
-          background-color: #ccc;
+          background-color: colors.$primary-color;
           transition: 0.3s background-color ease;
           color: #000;
           transition: 0.3s color ease;
+
+          &::before {
+            color: #fff;
+          }
         }
       }
     }

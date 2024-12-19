@@ -1,0 +1,74 @@
+@use '@styles/colors.scss';
+
+.container {
+  .filterGroup {
+    button {
+      width: 100%;
+    }
+
+    .title {
+      margin-bottom: 7.5px;
+      font-weight: 600;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 7.5px 0;
+      background-color: #ccc;
+    }
+
+    .optionContainer {
+      display: flex;
+      align-items: center;
+      margin-bottom: 7.5px;
+
+      .checkBox {
+        display: flex;
+        align-items: center;
+
+        input {
+          display: none;
+        }
+
+        .checked {
+          border: 1px solid colors.$primary-color !important;
+          background-color: colors.$primary-color;
+
+          i {
+            background-color: colors.$primary-color;
+            color: #fff !important;
+          }
+        }
+
+        .checkMark {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 20px;
+          width: 20px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          cursor: pointer;
+
+          &:hover {
+            border: 1px solid colors.$primary-color;
+            transition: 0.3s border ease;
+          }
+
+          &:focus {
+            background-color: colors.$primary-color;
+          }
+
+          i {
+            border-radius: 7.5px !important;
+            color: #fff !important;
+          }
+        }
+      }
+
+      .option {
+        margin-left: 7.5px;
+      }
+    }
+  }
+}

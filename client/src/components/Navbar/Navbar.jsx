@@ -1,13 +1,19 @@
 import styles from './Navbar.module.scss';
-import { useNavigate } from 'react-router-dom';
+import Select from '@components/Select';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthContext } from '@contexts/AuthContext';
 import { getAllCategories as getAllCategoriesService } from '@services/categoryService';
 import { useEffect, useState } from 'react';
+import Filter from '@components/Filter';
 
 const Navbar = () => {
   const [categories, setCategories] = useState();
+  const [selectCategoryItems, setSelectCategoryItems] = useState();
+  const [filters, setFilters] = useState();
 
   const { user } = useAuthContext();
+
+  const location = useLocation();
 
   const navigate = useNavigate();
 
@@ -22,7 +28,45 @@ const Navbar = () => {
     };
 
     getAllCategories();
+
+    setFilters([
+      {
+        title: 'Thời gian',
+        type: 'time',
+        options: [
+          { label: 'Cũ nhất', value: 'oldest' },
+          { label: 'Mới nhất', value: 'newest' },
+        ],
+      },
+      {
+        title: 'Bảng chữ cái',
+        type: 'order',
+        options: [
+          {
+            label: 'Theo bảng chữ cái',
+            value: 'alphaAsc',
+          },
+          {
+            label: 'Ngược bảng chữ cái',
+            value: 'alphaDesc',
+          },
+        ],
+      },
+    ]);
   }, []);
+
+  useEffect(() => {
+    if (categories) {
+      const items = categories.map((category) => ({
+        label: category.name,
+        onClick: () => {
+          navigate(`/?categorySlug=${category.slug}`);
+        },
+      }));
+
+      setSelectCategoryItems(items);
+    }
+  }, [categories]);
 
   const handleNavigate = (address) => {
     if (address) {
@@ -35,39 +79,30 @@ const Navbar = () => {
       <ul className={styles.items}>
         {user && user.role == 'ADMIN' && (
           <li
-            className={styles.item}
+            className={`${styles.item} ${location.pathname == '/dashboard' ? styles.active : ''}`}
             onClick={() => handleNavigate('/dashboard')}
           >
             <p>Trang quản trị</p>
           </li>
         )}
-        <li className={styles.item} onClick={() => handleNavigate('/')}>
+        <li
+          className={`${styles.item} ${location.pathname == '/' ? styles.active : ''}`}
+          onClick={() => handleNavigate('/')}
+        >
           <p>Trang chủ</p>
         </li>
-        <li className={styles.item} onClick={() => handleNavigate()}>
-          <p>Chủ đề</p>
-          <div className={styles.subitemsWrapper}>
-            <div className={styles.subitems}>
-              {categories &&
-                categories.map((category) => (
-                  <button
-                    key={category.id}
-                    className={styles.subitem}
-                    onClick={() =>
-                      handleNavigate(`?categorySlug=${category.slug}`)
-                    }
-                  >
-                    {category.name}
-                  </button>
-                ))}
-            </div>
-          </div>
-        </li>
-        <li className={styles.item} onClick={() => handleNavigate()}>
-          <p>Lọc bài viết</p>
-        </li>
+        <Select
+          label="Chủ đề"
+          items={selectCategoryItems}
+          trigger={<li className={styles.item}>Chủ đề</li>}
+        />
+        <Select
+          label="Chủ đề"
+          children={<Filter filters={filters} />}
+          trigger={<li className={styles.item}>Lọc bài viết</li>}
+        />
         <li
-          className={styles.item}
+          className={`${styles.item} ${location.pathname == '/posts/new' ? styles.active : ''}`}
           onClick={() => handleNavigate('/posts/new')}
         >
           <p>Đăng bài</p>

@@ -33,15 +33,6 @@
     .togglePassword {
       position: absolute;
       right: 11px;
-
-      i {
-        opacity: 0.7;
-
-        &:hover {
-          opacity: 1;
-          transition: 0.3s opacity ease;
-        }
-      }
     }
   }
 

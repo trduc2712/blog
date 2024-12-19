@@ -33,9 +33,9 @@ const PostDetail = () => {
   if (!post) return null;
 
   return (
-    <div className={styles.container}>
+    <>
       <Header isDashboard={false} />
-      <div className={styles.contentWrapper}>
+      <div className="container">
         <div className="card">
           <div className="card-body">
             <div
@@ -64,7 +64,7 @@ const PostDetail = () => {
         </div>
       </div>
       <Footer />
-    </div>
+    </>
   );
 };
 

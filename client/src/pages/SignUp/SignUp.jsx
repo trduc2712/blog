@@ -15,7 +15,7 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
-  const { error, signUp } = useAuthContext();
+  const { error, setError, signUp } = useAuthContext();
   const { createToast } = useToastContext();
 
   const handleChangeUsername = (username) => {
@@ -33,10 +33,12 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (username == '' || password == '') {
-      if (username == '') console.log('Vui lòng điền tên người dùng.');
-      if (password == '') console.log('Vui lòng điền mật khẩu.');
-      if (name == '') console.log('Vui lòng điền tên.');
+    if (!username || !password || !name) {
+      createToast({
+        type: 'warning',
+        title: 'Cảnh báo',
+        message: 'Vui lòng điền đầy đủ thông tin.',
+      });
       return;
     }
 
@@ -45,19 +47,30 @@ const SignUp = () => {
     const validPasswordPattern = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
     if (!validUsernamePattern.test(username)) {
-      console.log('Tên người dùng không được chứa ký tự đặc biệt.');
+      createToast({
+        type: 'warning',
+        title: 'Cảnh báo',
+        message: 'Tên người dùng không được chứa ký tự đặc biệt.',
+      });
       return;
     }
 
     if (!validNamePattern.test(name)) {
-      console.log('Tên không được chứa ký tự đặc biệt.');
+      createToast({
+        type: 'warning',
+        title: 'Cảnh báo',
+        message: 'Tên không được chứa ký tự đặc biệt.',
+      });
       return;
     }
 
     if (!validPasswordPattern.test(password)) {
-      console.log(
-        'Mật khẩu phải có ít nhất 8 ký tự và bao gồm cả chữ cái và số.'
-      );
+      createToast({
+        type: 'warning',
+        title: 'Cảnh báo',
+        message:
+          'Mật khẩu phải có ít nhất 8 ký tự và bao gồm cả chữ cái và số.',
+      });
       return;
     }
 
@@ -71,13 +84,19 @@ const SignUp = () => {
         message: 'Đăng ký thành công',
       });
       navigate('/login');
-    } else return;
+    } else {
+      createToast({
+        type: 'error',
+        title: 'Lỗi',
+        message: error,
+      });
+    }
   };
 
   return (
     <>
       <Header isDashboard={false} />
-      <div className={styles.container}>
+      <div className="container">
         <div className="card">
           <div className="card-header">
             <h3>Đăng ký</h3>
@@ -114,7 +133,6 @@ const SignUp = () => {
               <button type="submit" className="primary-btn">
                 Đăng ký
               </button>
-              {error && <p className={styles.error}>{error}</p>}
             </form>
           </div>
         </div>

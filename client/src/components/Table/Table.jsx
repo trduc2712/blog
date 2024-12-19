@@ -97,8 +97,8 @@ const Table = ({ columnLabels, initialData }) => {
   const openConfirmDeleteModal = (rowId) => {
     setModal({
       title: 'Cảnh báo',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Xóa',
       message: `Bạn có chắc chắn muốn xóa ${entityName} này không?`,
       type: 'destructive',
       onConfirm: () => {

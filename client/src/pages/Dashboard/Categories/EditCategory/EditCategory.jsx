@@ -49,8 +49,8 @@ const EditCategory = () => {
   const openConfirmUpdateModal = () => {
     setModal({
       title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Lưu',
       message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
       type: 'confirmation',
       onConfirm: () => {
@@ -87,7 +87,7 @@ const EditCategory = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <>
       <div className="card">
         <div className="card-header">
           <h3>Sửa chủ đề</h3>
@@ -111,11 +111,11 @@ const EditCategory = () => {
               isDisabled={true}
             />
           </div>
-          <div className={styles.updateButtonWrapper}>
-            <button className="primary-btn" onClick={openConfirmUpdateModal}>
-              Cập nhật
-            </button>
-          </div>
+        </div>
+        <div className="card-footer end">
+          <button className="primary-btn" onClick={openConfirmUpdateModal}>
+            Cập nhật
+          </button>
         </div>
       </div>
       <Modal
@@ -131,7 +131,7 @@ const EditCategory = () => {
         type={modal.type}
       />
       <ToastList />
-    </div>
+    </>
   );
 };
 

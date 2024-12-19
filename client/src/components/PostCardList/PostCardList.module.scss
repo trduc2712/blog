@@ -37,18 +37,6 @@
   }
 }
 
-.notLoggedIn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: calc(100vw - 80px);
-  height: calc(100vh - 100px);
-
-  .pagination {
-    display: none;
-  }
-}
-
 @media (max-width: 1000px) {
   .container {
     .content {

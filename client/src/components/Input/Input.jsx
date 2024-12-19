@@ -28,6 +28,10 @@ const Input = ({ value, placeholder, onChangeValue, variant, isDisabled }) => {
     type == 'password' ? setType('text') : setType('password');
   };
 
+  document.querySelectorAll('input[type="password"]').forEach((input) => {
+    input.removeAttribute('data-bs-toggle');
+  });
+
   return (
     <div className={styles.container}>
       <div className={styles.inputWrapper}>

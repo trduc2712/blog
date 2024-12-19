@@ -23,11 +23,18 @@ const Header = ({ isDashboard }) => {
     const items = [];
     items.push({
       label: 'Hồ sơ của tôi',
+      icon: 'person',
       onClick: () => navigate(`/profile/${user.username}`),
     });
-
+    items.push({
+      label: 'Cài đặt',
+      icon: 'gear',
+      onClick: () => navigate(`/settings`),
+    });
+    items.push({ isDivider: true });
     items.push({
       label: 'Đăng xuất',
+      icon: 'box-arrow-right',
       onClick: openConfirmLogoutModal,
     });
 
@@ -41,8 +48,8 @@ const Header = ({ isDashboard }) => {
   const openConfirmLogoutModal = () => {
     setModal({
       title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Đăng xuất',
       message: 'Bạn có chắc chắn muốn đăng xuất không?',
       type: 'confirmation',
       onConfirm: () => {

@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom';
-import styles from './EditPost.module.scss';
 import { getPost as getPostService } from '@services/postService';
 import { useEffect, useState } from 'react';
 import { getAllCategories as getAllCategoriesService } from '@services/categoryService';
@@ -126,8 +125,8 @@ const EditPost = () => {
 
     setModal({
       title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Lưu',
       message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
       type: 'confirmation',
       onConfirm: () => {
@@ -185,50 +184,56 @@ const EditPost = () => {
 
   return (
     <>
-      <div className={styles.container}>
-        <div className="card">
-          <div className="card-header">
-            <h3>Sửa bài viết</h3>
+      <div className="card">
+        <div className="card-header">
+          <h3>Sửa bài viết</h3>
+        </div>
+        <div className="card-body">
+          <div className="form-group">
+            <label>Tiêu đề</label>
+            <Input
+              type="text"
+              value={title}
+              onChangeValue={(e) => handleChangeTitle(e.target.value)}
+              placeholder="Tiêu đề"
+            />
           </div>
-          <div className="card-body">
-            <div className="form-group">
-              <label>Tiêu đề</label>
-              <Input
-                type="text"
-                value={title}
-                onChangeValue={(e) => handleChangeTitle(e.target.value)}
-                placeholder="Tiêu đề"
+          <div className="select">
+            <p>Chủ đề</p>
+            {categoryName && (
+              <Select
+                label={categoryName}
+                items={selectCategoryItems}
+                isShowCheckIcon={true}
               />
-            </div>
+            )}
+          </div>
+          <Upload
+            type="thumbnail"
+            upload={thumbnail}
+            setUpload={setThumbnail}
+          />
+          <div className="form-group">
+            <label>Nội dung</label>
+            <TextEditor content={content} setContent={setContent} />
+          </div>
+          {user.role == 'ADMIN' && (
             <div className="select">
-              <p>Chủ đề</p>
-              {categoryName && (
-                <Select label={categoryName} items={selectCategoryItems} />
+              <p>Tác giả</p>
+              {userName && (
+                <Select
+                  label={userName}
+                  items={selectUserItems}
+                  isShowCheckIcon={true}
+                />
               )}
             </div>
-            <Upload
-              type="thumbnail"
-              upload={thumbnail}
-              setUpload={setThumbnail}
-            />
-            <div className="form-group">
-              <label>Nội dung</label>
-              <TextEditor content={content} setContent={setContent} />
-            </div>
-            {user.role == 'ADMIN' && (
-              <div className="select">
-                <p>Tác giả</p>
-                {userName && (
-                  <Select label={userName} items={selectUserItems} />
-                )}
-              </div>
-            )}
-            <div className={styles.updateButtonWrapper}>
-              <button className="primary-btn" onClick={openConfirmUpdateModal}>
-                Cập nhật
-              </button>
-            </div>
-          </div>
+          )}
+        </div>
+        <div className="card-footer end">
+          <button className="primary-btn" onClick={openConfirmUpdateModal}>
+            Cập nhật
+          </button>
         </div>
       </div>
       <Modal

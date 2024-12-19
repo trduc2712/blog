@@ -1,4 +1,3 @@
-import styles from './CreateUser.module.scss';
 import { useEffect, useState } from 'react';
 import { useToastContext } from '@contexts/ToastContext';
 import ToastList from '@components/ToastList/ToastList';
@@ -54,8 +53,8 @@ const CreateUser = () => {
     }
     setModal({
       title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Tạo',
       message: 'Bạn có chắc chắn muốn tạo người dùng mới này không?',
       type: 'confirmation',
       onConfirm: () => {
@@ -101,7 +100,7 @@ const CreateUser = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <>
       <div className="card">
         <div className="card-header">
           <h3>Thêm người dùng</h3>
@@ -140,13 +139,14 @@ const CreateUser = () => {
             <Select
               label={`${role == 'ADMIN' ? 'Quản trị viên' : 'Người dùng'}`}
               items={selectRoleItems}
+              isShowCheckIcon={true}
             />
           </div>
-          <div className={styles.createButtonWrapper}>
-            <button className="primary-btn" onClick={openConfirmCreateModal}>
-              Thêm
-            </button>
-          </div>
+        </div>
+        <div className="card-footer end">
+          <button className="primary-btn" onClick={openConfirmCreateModal}>
+            Thêm
+          </button>
         </div>
       </div>
       <Modal
@@ -162,7 +162,7 @@ const CreateUser = () => {
         type={modal.type}
       />
       <ToastList />
-    </div>
+    </>
   );
 };
 

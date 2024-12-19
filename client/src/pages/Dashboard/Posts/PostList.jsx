@@ -73,7 +73,7 @@ const PostList = () => {
         </div>
         <div className="card-body">
           {loading ? (
-            <div className={styles.loading}>Đang tải...</div>
+            <div className="loading">Đang tải...</div>
           ) : (
             <>
               <Table columnLabels={columnLabels} initialData={posts} />

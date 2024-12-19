@@ -161,8 +161,8 @@ const Overview = () => {
   const openConfirmDeletePostModal = (id) => {
     setModal({
       title: 'Cảnh báo',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Xóa',
       message: `Bạn có chắc chắn muốn xóa bài viết này không?`,
       type: 'destructive',
       onConfirm: () => {
@@ -197,8 +197,8 @@ const Overview = () => {
   const openConfirmUpdateModal = () => {
     setModal({
       title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Lưu',
       message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
       type: 'confirmation',
       onConfirm: () => {
@@ -265,88 +265,99 @@ const Overview = () => {
   return (
     <>
       <div className={styles.container}>
-        {!loading ? (
-          <>
-            <div className="card">
-              <div className="card-header">
-                <h3>Thông tin cá nhân</h3>
-              </div>
-              <div className="card-body">
-                <form onSubmit={handleSubmit}>
-                  <Upload type="avatar" upload={avatar} setUpload={setAvatar} />
-                  <div className="form-group">
-                    <label>Tên người dùng</label>
-                    <Input
-                      variant="text"
-                      placeholder="Tên người dùng"
-                      value={userUsername}
-                      isDisabled={true}
+        {user ? (
+          !loading ? (
+            <>
+              <div className="card">
+                <div className="card-header">
+                  <h3>Thông tin cá nhân</h3>
+                </div>
+                <div className="card-body">
+                  <form onSubmit={handleSubmit}>
+                    <Upload
+                      type="avatar"
+                      upload={avatar}
+                      setUpload={setAvatar}
                     />
-                  </div>
-                  {user && username && user.username == username && (
                     <div className="form-group">
-                      <label>Mật khẩu</label>
+                      <label>Tên người dùng</label>
                       <Input
-                        variant="password"
-                        placeholder="Mật khẩu"
-                        value={password}
-                        onChangeValue={(e) =>
-                          handleChangePassword(e.target.value)
+                        variant="text"
+                        placeholder="Tên người dùng"
+                        value={userUsername}
+                        isDisabled={true}
+                      />
+                    </div>
+                    {user && username && user.username == username && (
+                      <div className="form-group">
+                        <label>Mật khẩu</label>
+                        <Input
+                          variant="password"
+                          placeholder="Mật khẩu"
+                          value={password}
+                          onChangeValue={(e) =>
+                            handleChangePassword(e.target.value)
+                          }
+                        />
+                      </div>
+                    )}
+                    <div className="form-group">
+                      <label>Tên</label>
+                      <Input
+                        variant="text"
+                        placeholder="Tên"
+                        value={name}
+                        onChangeValue={(e) => handleChangeName(e.target.value)}
+                        isDisabled={
+                          (user && username && user.username != username) ||
+                          false
                         }
                       />
                     </div>
-                  )}
-                  <div className="form-group">
-                    <label>Tên</label>
-                    <Input
-                      variant="text"
-                      placeholder="Tên"
-                      value={name}
-                      onChangeValue={(e) => handleChangeName(e.target.value)}
-                      isDisabled={
-                        (user && username && user.username != username) || false
-                      }
-                    />
-                  </div>
-                  {user && username && user.username == username && (
-                    <button
-                      type="submit"
-                      className="secondary-btn"
-                      onClick={handleSubmit}
-                    >
-                      Lưu
-                    </button>
-                  )}
-                </form>
+                    {user && username && user.username == username && (
+                      <button
+                        type="submit"
+                        className="secondary-btn"
+                        onClick={handleSubmit}
+                      >
+                        Lưu
+                      </button>
+                    )}
+                  </form>
+                </div>
               </div>
-            </div>
-            <div className="card">
-              <div className="card-header">
-                <h3>Danh sách bài viết</h3>
-              </div>
-              <div className="card-body">
-                {posts.length > 0 ? (
-                  <div className={styles.postCardList}>
-                    <PostCardList
-                      posts={posts}
-                      onDeletePost={handleDeletePost}
-                    />
-                    <div className={styles.pagination}>
-                      <Pagination
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        onPageChange={handlePageChange}
+              <div className="card">
+                <div className="card-header">
+                  <h3>Danh sách bài viết</h3>
+                </div>
+                <div className="card-body">
+                  {posts.length > 0 ? (
+                    <div className={styles.postCardList}>
+                      <PostCardList
+                        posts={posts}
+                        onDeletePost={handleDeletePost}
                       />
+                      <div className={styles.pagination}>
+                        <Pagination
+                          totalPages={totalPages}
+                          currentPage={currentPage}
+                          onPageChange={handlePageChange}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className={styles.notFound}>Không có bài viết nào.</div>
-                )}
+                  ) : (
+                    <div className={styles.notFound}>
+                      Không có bài viết nào.
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </>
+            </>
+          ) : (
+            <div className="loading">Đang tải...</div>
+          )
         ) : (
-          <div className={styles.loading}>Đang tải...</div>
+          <div className="notLoggedIn">Chưa đăng nhập.</div>
         )}
       </div>
       <Modal

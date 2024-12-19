@@ -1,12 +1,9 @@
 @use '@styles/colors.scss' as colors;
 
-.container {
+:global(.container) {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 79px 20px 20px;
-  height: 100vh;
-  background-color: colors.$bg-color;
 
   form {
     width: 400px;

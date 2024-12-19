@@ -1,12 +1,9 @@
 @use '@styles/colors.scss' as colors;
 
-.container {
+:global(.container) {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 79px 20px 20px;
-  height: 100vh;
-  background-color: colors.$bg-color;
 
   form {
     width: 400px;
@@ -38,7 +35,7 @@
         height: 20px;
         width: 20px;
         border: 1px solid #ccc;
-        border-radius: 7.5px;
+        border-radius: 5px;
         cursor: pointer;
 
         &:hover {
@@ -60,11 +57,5 @@
     button {
       width: 100%;
     }
-  }
-
-  .error {
-    text-align: center;
-    color: red;
-    margin-top: 20px;
   }
 }

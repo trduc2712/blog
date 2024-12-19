@@ -2,20 +2,11 @@
 
 .container {
   background-color: colors.$bg-color;
-  width: 100%;
-
-  .notLoggedIn,
-  .loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: calc(100vw - 80px);
-    height: calc(100vh - 100px);
-    background-color: inherit;
-  }
 
   :global(.card) {
-    margin-top: 20px;
+    &:last-child {
+      margin-top: 20px;
+    }
 
     :global(.card-body) {
       form {

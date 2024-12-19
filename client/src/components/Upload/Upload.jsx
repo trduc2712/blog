@@ -39,8 +39,8 @@ const Upload = ({ type, upload, setUpload }) => {
   const openConfirmDeleteThumbnailModal = () => {
     setModal({
       title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Xóa',
       message: `Bạn có chắc chắn muốn xóa ảnh đại diện thu nhỏ không?`,
       type: 'confirmation',
       onConfirm: () => {

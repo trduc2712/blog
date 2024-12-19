@@ -1,10 +1,31 @@
 @use './colors.scss' as colors;
 
+i {
+  width: 18px;
+  height: 18px;
+}
+
+.container {
+  padding: 79px 20px 20px;
+  background-color: colors.$bg-color;
+  min-height: 100vh;
+}
+
+.loading,
+.notLoggedIn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: inherit;
+  height: calc(100vh - 99px);
+}
+
 .card {
   border-radius: 7.5px;
   border: 1px solid #ccc;
   background-color: #fff;
   overflow: hidden;
+  box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
 
   .card-header {
     text-align: center;
@@ -19,11 +40,26 @@
   .card-body {
     padding: 20px;
   }
+
+  .card-footer {
+    display: flex;
+    padding: 20px;
+  }
+
+  .start {
+    justify-content: flex-start;
+  }
+
+  .center {
+    justify-content: center;
+  }
+
+  .end {
+    justify-content: flex-end;
+  }
 }
 
 .select {
-  margin-bottom: 20px;
-
   p {
     margin-bottom: 10px;
     cursor: default;

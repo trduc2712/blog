@@ -1,15 +1,9 @@
 @use '@styles/colors.scss' as colors;
 
 .container {
-  background-color: colors.$bg-color;
-
   h2 {
     margin-bottom: 20px;
     background-color: inherit;
-  }
-
-  .loading {
-    text-align: center;
   }
 
   .pagination {

@@ -33,6 +33,15 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!username || !password) {
+      createToast({
+        type: 'warning',
+        title: 'Cảnh báo',
+        message: 'Vui lòng điền đầy đủ thông tin.',
+      });
+      return;
+    }
+
     const isSuccess = await login(username, password);
     if (isSuccess) {
       createToast({
@@ -41,13 +50,19 @@ const Login = () => {
         message: 'Đăng nhập thành công.',
       });
       navigate('/');
-    } else return;
+    } else {
+      createToast({
+        type: 'error',
+        title: 'Lỗi',
+        message: error,
+      });
+    }
   };
 
   return (
     <>
       <Header isDashborad={false} />
-      <div className={styles.container}>
+      <div className="container">
         <div className="card">
           <div className="card-header">
             <h3>Đăng nhập</h3>
@@ -89,7 +104,6 @@ const Login = () => {
                 Đăng nhập
               </button>
             </form>
-            {error && <p className={styles.error}>{error}</p>}
           </div>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom';
-import styles from './EditUser.module.scss';
 import { useEffect, useState } from 'react';
 import {
   getUser as getUserService,
@@ -70,8 +69,8 @@ const EditUser = () => {
   const openConfirmUpdateModal = () => {
     setModal({
       title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Lưu',
       message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
       type: 'confirmation',
       onConfirm: () => {
@@ -131,55 +130,54 @@ const EditUser = () => {
 
   return (
     <>
-      <div className={styles.container}>
-        <div className="card">
-          <div className="card-header">
-            <h3>Sửa người dùng</h3>
+      <div className="card">
+        <div className="card-header">
+          <h3>Sửa người dùng</h3>
+        </div>
+        <div className="card-body">
+          <Upload type="avatar" upload={avatar} setUpload={setAvatar} />
+          <div className="form-group">
+            <label>Tên người dùng</label>
+            <Input
+              value={username}
+              variant="text"
+              placeholder="Tên người dùng"
+              onChangeValue={(e) => handleChangeUsername(e.target.value)}
+            />
           </div>
-          <div className="card-body">
-            <Upload type="avatar" upload={avatar} setUpload={setAvatar} />
-            <div className="form-group">
-              <label>Tên người dùng</label>
-              <Input
-                value={username}
-                variant="text"
-                placeholder="Tên người dùng"
-                onChangeValue={(e) => handleChangeUsername(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label>Mật khẩu</label>
-              <Input
-                value={password}
-                variant="password"
-                placeholder="Mật khẩu"
-                onChangeValue={(e) => handleChangePassword(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label>Tên</label>
-              <Input
-                value={name}
-                variant="text"
-                placeholder="Tên"
-                onChangeValue={(e) => handleChangeName(e.target.value)}
-              />
-            </div>
-            <div className="select">
-              <p>Vai trò</p>
-              {role && (
-                <Select
-                  label={`${role == 'ADMIN' ? 'Quản trị viên' : 'Người dùng'}`}
-                  items={selectRoleItems}
-                />
-              )}
-            </div>
-            <div className={styles.updateButtonWrapper}>
-              <button className="primary-btn" onClick={openConfirmUpdateModal}>
-                Cập nhật
-              </button>
-            </div>
+          <div className="form-group">
+            <label>Mật khẩu</label>
+            <Input
+              value={password}
+              variant="password"
+              placeholder="Mật khẩu"
+              onChangeValue={(e) => handleChangePassword(e.target.value)}
+            />
           </div>
+          <div className="form-group">
+            <label>Tên</label>
+            <Input
+              value={name}
+              variant="text"
+              placeholder="Tên"
+              onChangeValue={(e) => handleChangeName(e.target.value)}
+            />
+          </div>
+          <div className="select">
+            <p>Vai trò</p>
+            {role && (
+              <Select
+                label={`${role == 'ADMIN' ? 'Quản trị viên' : 'Người dùng'}`}
+                items={selectRoleItems}
+                isShowCheckIcon={true}
+              />
+            )}
+          </div>
+        </div>
+        <div className="card-footer end">
+          <button className="primary-btn" onClick={openConfirmUpdateModal}>
+            Cập nhật
+          </button>
         </div>
       </div>
       <Modal

@@ -1,30 +1,54 @@
 import styles from './Select.module.scss';
-import { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
-const Select = ({ icon, label, items }) => {
+const Select = ({ isShowCheckIcon, icon, label, items, trigger, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [newLabel, setNewLabel] = useState(label);
+  const selectRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (selectRef.current && !selectRef.current.contains(e.target))
+        setIsOpen(false);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleClickItem = (item) => {
     item.onClick();
     setNewLabel(item.label);
-    setIsOpen(!isOpen);
+    setIsOpen(false);
+  };
+
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev);
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.trigger} onClick={() => setIsOpen(!isOpen)}>
-        <div className={styles.left}>
-          {icon && <i className={`bi bi-${icon}`}></i>}
-          <span>{newLabel}</span>
+    <div className={styles.container} ref={selectRef}>
+      {trigger ? (
+        React.cloneElement(trigger, {
+          onClick: handleToggle,
+        })
+      ) : (
+        <div className={styles.trigger} onClick={handleToggle}>
+          <div className={styles.left}>
+            {icon && <i className={`bi bi-${icon}`}></i>}
+            <span>{newLabel}</span>
+          </div>
+          <div className={styles.right}>
+            <i className="bi bi-chevron-expand"></i>
+          </div>
         </div>
-        <div className={styles.right}>
-          <i className="bi bi-chevron-down"></i>
-        </div>
-      </div>
+      )}
       {isOpen && (
-        <div className={styles.itemsWrapper}>
-          {items && (
+        <div className={styles.itemsContainer}>
+          {items ? (
             <div className={styles.items}>
               {items.map((item, index) => (
                 <li
@@ -32,11 +56,23 @@ const Select = ({ icon, label, items }) => {
                   className={styles.item}
                   onClick={() => handleClickItem(item)}
                 >
+                  {isShowCheckIcon ? (
+                    <>
+                      {item.label == newLabel ? (
+                        <i className="bi bi-check-lg"></i>
+                      ) : (
+                        <i className="bi"></i>
+                      )}
+                    </>
+                  ) : (
+                    ''
+                  )}
                   {item.label}
-                  {item.label == newLabel && <i className="bi bi-check"></i>}
                 </li>
               ))}
             </div>
+          ) : (
+            <div className={styles.items}>{children}</div>
           )}
         </div>
       )}

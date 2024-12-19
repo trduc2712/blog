@@ -79,8 +79,8 @@ const CreatePost = () => {
     }
     setModal({
       title: 'Xác nhận',
-      cancelLabel: 'Không',
-      confirmLabel: 'Có',
+      cancelLabel: 'Hủy',
+      confirmLabel: 'Đăng',
       message: 'Bạn có chắc chắn muốn đăng bài viết không?',
       type: 'confirmation',
       onConfirm: () => {
@@ -147,7 +147,11 @@ const CreatePost = () => {
               </div>
               <div className="select">
                 <p>Chủ đề</p>
-                <Select label="Chủ đề" items={selectItems} />
+                <Select
+                  label="Chủ đề"
+                  items={selectItems}
+                  isShowCheckIcon={true}
+                />
               </div>
               <Upload
                 type="thumbnail"
@@ -158,25 +162,25 @@ const CreatePost = () => {
                 <label>Nội dung</label>
                 <TextEditor content={content} setContent={setContent} />
               </div>
-              <div className={styles.publishWrapper}>
-                <button
-                  className={`${styles.cancel} outline-primary-btn`}
-                  onClick={() => navigate('/')}
-                >
-                  Hủy
-                </button>
-                <button
-                  className={`${styles.publish} primary-btn`}
-                  onClick={openConfirmPublishModal}
-                >
-                  Đăng
-                </button>
-              </div>
+            </div>
+            <div className="card-footer end">
+              <button
+                className={`${styles.cancel} outline-primary-btn`}
+                onClick={() => navigate('/')}
+              >
+                Hủy
+              </button>
+              <button
+                className={`${styles.publish} primary-btn`}
+                onClick={openConfirmPublishModal}
+              >
+                Đăng
+              </button>
             </div>
           </div>
         ) : (
-          <div className={styles.notLoggedIn}>
-            <p>Chưa đăng nhập.</p>
+          <div className="notLoggedIn">
+            <p>Vui lòng đăng nhập để sử dụng chức năng này.</p>
           </div>
         )}
       </div>

@@ -34,23 +34,29 @@ const Overview = () => {
         </div>
         <div className="card-body">
           <div className={styles.statisticCards}>
-            <div className={styles.statisticCard}>
-              <h3>Số lượng người dùng</h3>
-              <p className={styles.statistic}>
-                {userCount == 0 ? 'Đang tải...' : userCount}
-              </p>
+            <div className="card">
+              <div className="card-body">
+                <h3>Số lượng người dùng</h3>
+                <p className={styles.statistic}>
+                  {userCount == 0 ? 'Đang tải...' : userCount}
+                </p>
+              </div>
             </div>
-            <div className={styles.statisticCard}>
-              <h3>Số lượng bài viết</h3>
-              <p className={styles.statistic}>
-                {postCount == 0 ? 'Đang tải...' : postCount}
-              </p>
+            <div className="card">
+              <div className="card-body">
+                <h3>Số lượng bài viết</h3>
+                <p className={styles.statistic}>
+                  {postCount == 0 ? 'Đang tải...' : postCount}
+                </p>
+              </div>
             </div>
-            <div className={styles.statisticCard}>
-              <h3>Số lượng chủ đề</h3>
-              <p className={styles.statistic}>
-                {categoryCount == 0 ? 'Đang tải...' : categoryCount}
-              </p>
+            <div className="card">
+              <div className="card-body">
+                <h3>Số lượng chủ đề</h3>
+                <p className={styles.statistic}>
+                  {categoryCount == 0 ? 'Đang tải...' : categoryCount}
+                </p>
+              </div>
             </div>
           </div>
         </div>
