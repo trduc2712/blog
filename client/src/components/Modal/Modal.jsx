@@ -45,7 +45,7 @@ const Modal = ({
         </div>
         <div className={styles.footer}>
           <button
-            className={`${styles.cancel} ${type == 'destructive' ? 'outline-destructive-btn' : 'outline-primary-btn'}`}
+            className={`${styles.cancel} ${type == 'destructive' ? 'outline-destructive-btn' : 'secondary-btn'}`}
             onClick={onCancel}
           >
             {cancelLabel}

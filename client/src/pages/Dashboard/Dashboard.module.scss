@@ -1,5 +1,19 @@
 @use '@styles/colors.scss' as colors;
 
+.w20 {
+  width: 20%;
+}
+
+.w80 {
+  width: 80%;
+  margin-left: 20%;
+}
+
+.w100 {
+  width: 100%;
+  margin-left: 59px;
+}
+
 .container {
   height: 100%;
 
@@ -12,11 +26,14 @@
     .sidebar {
       position: fixed;
       padding: 10px;
-      width: 20%;
       height: 100%;
+      padding-bottom: 69px;
       border-right: 1px solid #ccc;
+      display: flex;
+      flex-direction: column;
 
       .sidebarItems {
+        flex-grow: 1;
         list-style-type: none;
         padding: 0;
         margin: 0;
@@ -58,10 +75,29 @@
 
           p {
             color: #000;
+            margin-left: 15px;
+          }
+        }
+      }
+
+      .sidebarFooter {
+        display: flex;
+
+        .toggleMenu {
+          padding: 10px;
+          border-radius: 5px;
+          background-color: colors.$primary-color;
+          color: #fff;
+          cursor: pointer;
+
+          &:hover {
+            background-color: colors.$primary-hover-color;
+            transition: 0.3s background-color ease;
           }
 
-          i {
-            margin-right: 15px;
+          &:active {
+            background-color: colors.$primary-active-color;
+            transition: 0.3s background-color ease;
           }
         }
       }
@@ -69,9 +105,7 @@
 
     .content {
       background-color: colors.$bg-color;
-      margin-left: 20%;
       padding: 20px;
-      width: 80%;
       height: 100%;
       min-height: calc(100vh - 61px);
     }

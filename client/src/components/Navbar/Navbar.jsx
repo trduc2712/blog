@@ -34,21 +34,24 @@ const Navbar = () => {
         title: 'Thời gian',
         type: 'time',
         options: [
-          { label: 'Cũ nhất', value: 'oldest' },
-          { label: 'Mới nhất', value: 'newest' },
+          { label: 'Hôm nay', value: 'today' },
+          { label: 'Tuần này', value: 'this-week' },
+          { label: 'Tháng này', value: 'this-month' },
+          // { label: 'Cũ nhất', value: 'oldest' },
+          // { label: 'Mới nhất', value: 'newest' },
         ],
       },
       {
         title: 'Bảng chữ cái',
-        type: 'order',
+        type: 'alphabet',
         options: [
           {
             label: 'Theo bảng chữ cái',
-            value: 'alphaAsc',
+            value: 'asc',
           },
           {
             label: 'Ngược bảng chữ cái',
-            value: 'alphaDesc',
+            value: 'desc',
           },
         ],
       },
@@ -60,7 +63,7 @@ const Navbar = () => {
       const items = categories.map((category) => ({
         label: category.name,
         onClick: () => {
-          navigate(`/?categorySlug=${category.slug}`);
+          navigate(`/?category=${category.slug}`);
         },
       }));
 

@@ -31,7 +31,10 @@ const PostList = () => {
           currentPage,
           postsPerPage
         );
-        const postCount = await getPostsCountService();
+        const postsCount = await getPostsCountService(
+          currentPage,
+          postsPerPage
+        );
 
         if (postsWithPagination == null) {
           setPosts([]);
@@ -49,7 +52,7 @@ const PostList = () => {
             ])
           );
           setPosts(newPosts);
-          setTotalPages(Math.ceil(postCount / postsPerPage));
+          setTotalPages(Math.ceil(postsCount / postsPerPage));
         }
       } catch (err) {
         console.log(err);

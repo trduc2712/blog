@@ -1,4 +1,3 @@
-import styles from './CreatePost.module.scss';
 import { useEffect, useState } from 'react';
 import Header from '@components/Header';
 import Select from '@components/Select';
@@ -129,7 +128,7 @@ const CreatePost = () => {
   return (
     <>
       <Header isDashboard={false} />
-      <div className={styles.container}>
+      <div className="container">
         {user ? (
           <div className="card">
             <div className="card-header">
@@ -164,22 +163,16 @@ const CreatePost = () => {
               </div>
             </div>
             <div className="card-footer end">
-              <button
-                className={`${styles.cancel} outline-primary-btn`}
-                onClick={() => navigate('/')}
-              >
+              <button className="secondary-btn" onClick={() => navigate('/')}>
                 Hủy
               </button>
-              <button
-                className={`${styles.publish} primary-btn`}
-                onClick={openConfirmPublishModal}
-              >
+              <button className="primary-btn" onClick={openConfirmPublishModal}>
                 Đăng
               </button>
             </div>
           </div>
         ) : (
-          <div className="notLoggedIn">
+          <div className="not-logged-in">
             <p>Vui lòng đăng nhập để sử dụng chức năng này.</p>
           </div>
         )}

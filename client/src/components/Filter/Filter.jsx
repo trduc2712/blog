@@ -3,13 +3,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const Filter = ({ filters }) => {
   const navigate = useNavigate();
-
   const location = useLocation();
 
   const addFilter = (type, value) => {
     const url = new URL(window.location.href);
 
-    if (url.pathname == '/') {
+    if (url.pathname === '/' || url.pathname.startsWith('/profile/')) {
       const params = url.searchParams;
 
       if (params.get(type) === value) {

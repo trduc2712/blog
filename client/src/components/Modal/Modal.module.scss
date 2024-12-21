@@ -97,6 +97,12 @@
       display: flex;
       justify-content: flex-end;
       width: 450px;
+
+      button {
+        &:first-child {
+          margin-right: 10px;
+        }
+      }
     }
   }
 }

@@ -9,159 +9,66 @@ import SearchBox from '@components/SearchBox';
 import {
   getPostsWithPagination as getPostsWithPaginationService,
   getPostsCount as getPostsCountService,
-  searchPost as searchPostService,
-  getFoundPostsCount as getFoundPostsCountService,
-  getPostsCountByCategory as getPostsCountByCategoryService,
 } from '@services/postService';
-import { getAllCategories as getAllCategoriesService } from '@services/categoryService';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useToastContext } from '@contexts/ToastContext';
-import { toLowerCaseFirstLetter } from '@utils/string';
-import Modal from '@components/Modal';
-import useModal from '@hooks/useModal';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [keyword, setKeyword] = useState('');
-  const [filter, setFilter] = useState('');
-  const [categorySlug, setCategorySlug] = useState('');
-  const [categories, setCategories] = useState('');
-  const [categoryName, setCategoryName] = useState('');
 
-  const [modal, setModal] = useState({
-    title: '',
-    cancelLabel: '',
-    confirmLabel: '',
-    message: '',
-    type: 'destructive',
-    onConfirm: () => {},
-    onCancel: () => {},
-  });
   const postsPerPage = 6;
-
   const navigate = useNavigate();
-
   const { createToast } = useToastContext();
-
-  const { isOpen, openModal, closeModal } = useModal();
-
   const location = useLocation();
-
-  const handleSearch = (keyword) => {
-    if (keyword.length == 0) {
-      createToast({
-        type: 'warning',
-        title: 'Cảnh báo',
-        message: 'Vui lòng nhập từ khóa.',
-      });
-      return;
-    }
-
-    setCurrentPage(1);
-    navigate(`?keyword=${keyword}`);
-  };
 
   useEffect(() => {
     document.title = 'Trang chủ | Blog';
     window.scrollTo(0, 0);
-
-    const getAllCategories = async () => {
-      try {
-        const categories = await getAllCategoriesService();
-        setCategories(categories);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getAllCategories();
   }, []);
-
-  useEffect(() => {
-    if (categories && categorySlug) {
-      const categoryMatched = categories.find(
-        (category) => category.slug === categorySlug
-      );
-
-      setCategoryName(categoryMatched.name);
-    }
-  }, [categorySlug]);
 
   useEffect(() => {
     const getPosts = async () => {
       const urlParams = new URLSearchParams(location.search);
-      const newKeyword = urlParams.get('keyword') || '';
-      const newFilter = urlParams.get('filter') || '';
-      const newCategorySlug = urlParams.get('categorySlug') || '';
+      const keyword = urlParams.get('keyword') || '';
+      const time = urlParams.get('time') || '';
+      const alphabet = urlParams.get('alphabet') || '';
+      const categorySlug = urlParams.get('category') || '';
 
-      setKeyword(newKeyword);
-      setFilter(newFilter);
-      setCategorySlug(newCategorySlug);
-
-      if (newKeyword) {
-        await searchPost(newKeyword, newFilter);
-      } else {
-        await getPostsWithPagination(newFilter, newCategorySlug);
-      }
+      await getPostsWithPagination(keyword, time, alphabet, categorySlug);
     };
 
     getPosts();
   }, [location.search, currentPage]);
 
-  const searchPost = async (keyword, filter) => {
+  const getPostsWithPagination = async (
+    keyword,
+    time,
+    alphabet,
+    categorySlug
+  ) => {
     window.scrollTo(0, 0);
 
     try {
       setLoading(true);
 
-      const foundPosts = await searchPostService(
-        keyword,
+      const postsCount = await getPostsCountService(
         currentPage,
         postsPerPage,
-        filter
-      );
-
-      const foundPostsCount = await getFoundPostsCountService(
         keyword,
-        currentPage,
-        postsPerPage
+        time,
+        alphabet,
+        categorySlug
       );
-
-      if (!foundPosts || foundPosts.length === 0) {
-        setPosts([]);
-        setTotalPages(0);
-      } else {
-        setPosts(foundPosts);
-        setTotalPages(Math.ceil(foundPostsCount / postsPerPage));
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getPostsWithPagination = async (filter, categorySlug) => {
-    window.scrollTo(0, 0);
-
-    try {
-      setLoading(true);
-
-      const postCount = categorySlug
-        ? await getPostsCountByCategoryService(
-            categorySlug,
-            currentPage,
-            postsPerPage
-          )
-        : await getPostsCountService();
 
       const postsWithPagination = await getPostsWithPaginationService(
         currentPage,
         postsPerPage,
-        filter,
+        keyword,
+        time,
+        alphabet,
         categorySlug
       );
 
@@ -169,7 +76,7 @@ const Home = () => {
         setPosts([]);
       } else {
         setPosts(postsWithPagination);
-        const totalPages = Math.ceil(postCount / postsPerPage);
+        const totalPages = Math.ceil(postsCount / postsPerPage);
         setTotalPages(totalPages);
         if (totalPages == 1) setCurrentPage(1);
       }
@@ -183,6 +90,20 @@ const Home = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
+  };
+
+  const handleSearch = (keyword) => {
+    if (keyword.length == 0) {
+      createToast({
+        type: 'warning',
+        title: 'Cảnh báo',
+        message: 'Vui lòng nhập từ khóa.',
+      });
+      return;
+    }
+
+    setCurrentPage(1);
+    navigate(`?keyword=${keyword}`);
   };
 
   return (
@@ -209,9 +130,7 @@ const Home = () => {
                         <PostCardList posts={posts} />
                       </>
                     ) : (
-                      <div className={styles.notFound}>
-                        Không có kết quả phù hợp.
-                      </div>
+                      <div className="not-found">Không có kết quả phù hợp.</div>
                     )}
                   </div>
                 </div>
@@ -233,18 +152,6 @@ const Home = () => {
         <Footer />
       </div>
       <ToastList />
-      <Modal
-        title={modal.title}
-        isOpen={isOpen}
-        onClose={closeModal}
-        cancelLabel={modal.cancelLabel}
-        confirmLabel={modal.confirmLabel}
-        onConfirm={modal.onConfirm}
-        onCancel={modal.onCancel}
-        message={modal.message}
-        buttonLabel={modal.buttonLabel}
-        type={modal.type}
-      />
     </>
   );
 };

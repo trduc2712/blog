@@ -5,9 +5,8 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import ToastList from '@components/ToastList/ToastList';
 
 const Dashboard = () => {
-  const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
-  const [isModalSignUpOpen, setIsModalSignUpOpen] = useState(false);
   const [currentRoute, setCurrentRoute] = useState('');
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,48 +25,63 @@ const Dashboard = () => {
     document.title = 'Trang quản trị | Blog';
   }, []);
 
+  const handleToggleSidebar = () => {
+    setIsSidebarExpanded(!isSidebarExpanded);
+  };
+
   return (
-    <div className={styles.container}>
+    <>
       <Header isDashboard={true} />
-      <div className={styles.main}>
-        <div className={styles.sidebar}>
-          <ul className={styles.sidebarItems}>
-            <li
-              className={`${styles.sidebarItem} ${currentRoute == 'overview' ? styles.active : ''}`}
-              onClick={() => navigate('/dashboard')}
-            >
-              <i className="bi bi-bar-chart"></i>
-              <p>Tổng quan</p>
-            </li>
-            <li
-              className={`${styles.sidebarItem} ${currentRoute == 'posts' ? styles.active : ''}`}
-              onClick={() => navigate('/dashboard/posts')}
-            >
-              <i className="bi bi-journal-text"></i>
-              <p>Bài viết</p>
-            </li>
-            <li
-              className={`${styles.sidebarItem} ${currentRoute == 'users' ? styles.active : ''}`}
-              onClick={() => navigate('/dashboard/users')}
-            >
-              <i className="bi bi-people"></i>
-              <p>Người dùng</p>
-            </li>
-            <li
-              className={`${styles.sidebarItem} ${currentRoute == 'categories' ? styles.active : ''}`}
-              onClick={() => navigate('/dashboard/categories')}
-            >
-              <i className="bi bi-tags"></i>
-              <p>Chủ đề</p>
-            </li>
-          </ul>
-        </div>
-        <div className={styles.content}>
-          <Outlet />
+      <div className={styles.container}>
+        <div className={styles.main}>
+          <div
+            className={`${styles.sidebar} ${isSidebarExpanded ? styles.w20 : styles.wAuto}`}
+          >
+            <ul className={styles.sidebarItems}>
+              <li
+                className={`${styles.sidebarItem} ${currentRoute == 'overview' ? styles.active : ''}`}
+                onClick={() => navigate('/dashboard')}
+              >
+                <i className="bi bi-bar-chart"></i>
+                {isSidebarExpanded && <p>Tổng quan</p>}
+              </li>
+              <li
+                className={`${styles.sidebarItem} ${currentRoute == 'posts' ? styles.active : ''}`}
+                onClick={() => navigate('/dashboard/posts')}
+              >
+                <i className="bi bi-journal-text"></i>
+                {isSidebarExpanded && <p>Bài viết</p>}
+              </li>
+              <li
+                className={`${styles.sidebarItem} ${currentRoute == 'users' ? styles.active : ''}`}
+                onClick={() => navigate('/dashboard/users')}
+              >
+                <i className="bi bi-people"></i>
+                {isSidebarExpanded && <p>Người dùng</p>}
+              </li>
+              <li
+                className={`${styles.sidebarItem} ${currentRoute == 'categories' ? styles.active : ''}`}
+                onClick={() => navigate('/dashboard/categories')}
+              >
+                <i className="bi bi-tags"></i>
+                {isSidebarExpanded && <p>Chủ đề</p>}
+              </li>
+            </ul>
+            <div className={styles.sidebarFooter}>
+              <div className={styles.toggleMenu} onClick={handleToggleSidebar}>
+                <i className="bi bi-list-ul"></i>
+              </div>
+            </div>
+          </div>
+          <div
+            className={`${styles.content} ${isSidebarExpanded ? styles.w80 : styles.w100} `}
+          >
+            <Outlet />
+          </div>
         </div>
       </div>
       <ToastList />
-    </div>
+    </>
   );
 };
 

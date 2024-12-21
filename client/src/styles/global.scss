@@ -9,11 +9,15 @@ i {
   padding: 79px 20px 20px;
   background-color: colors.$bg-color;
   min-height: 100vh;
+  width: 100% !important;
+  max-width: none !important;
 }
 
 .loading,
-.notLoggedIn {
+.not-logged-in,
+.not-found {
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: center;
   background-color: inherit;
@@ -25,6 +29,7 @@ i {
   border: 1px solid #ccc;
   background-color: #fff;
   overflow: hidden;
+  width: 100%;
   box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
 
   .card-header {

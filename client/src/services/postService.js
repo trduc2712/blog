@@ -40,40 +40,21 @@ export const createPost = async (
   }
 };
 
-export const getPostsCount = async () => {
-  try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
-      withCredentials: true,
-    });
-    return response.data.meta.postCount;
-  } catch (err) {
-    console.log(err.response.data.error);
-  }
-};
-
-export const getPostsCountByCategory = async (category, page, limit) => {
+export const getPostsCount = async (
+  page,
+  limit,
+  keyword,
+  time,
+  alphabet,
+  categorySlug,
+  username
+) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/posts?categorySlug=${category}&page=${page}&limit=${limit}`,
-      {
-        withCredentials: true,
-      }
+      `${import.meta.env.VITE_API_URL}/posts?alphabet=${alphabet ? alphabet : ''}&time=${time ? time : ''}&keyword=${keyword ? keyword : ''}&page=${page}&limit=${limit}&categorySlug=${categorySlug ? categorySlug : ''}&username=${username ? username : ''}`,
+      { withCredentials: true }
     );
-    return response.data.meta.postCount;
-  } catch (err) {
-    console.log(err.response.data.error);
-  }
-};
-
-export const getPostsCountByUsername = async (username, page, limit) => {
-  try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/posts?username=${username}&page=${page}&limit=${limit}`,
-      {
-        withCredentials: true,
-      }
-    );
-    return response.data.meta.postCount;
+    return response.data.meta.postsCount;
   } catch (err) {
     console.log(err.response.data.error);
   }
@@ -82,13 +63,23 @@ export const getPostsCountByUsername = async (username, page, limit) => {
 export const getPostsWithPagination = async (
   page,
   limit,
-  filter,
+  keyword,
+  time,
+  alphabet,
   categorySlug,
   username
 ) => {
+  console.log('-------------------------');
+  console.log('Trang hiện tại: ', page);
+  console.log('Số bài viết trên 1 trang: ', limit);
+  console.log('Keyword: ', keyword);
+  console.log('Time: ', time);
+  console.log('Alphabet: ', alphabet);
+  console.log('CategorySlug: ', categorySlug);
+  console.log('Username: ', username);
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/posts?filter=${filter ? filter : ''}&page=${page}&limit=${limit}&categorySlug=${categorySlug ? categorySlug : ''}&username=${username ? username : ''}`,
+      `${import.meta.env.VITE_API_URL}/posts?alphabet=${alphabet ? alphabet : ''}&time=${time ? time : ''}&keyword=${keyword ? keyword : ''}&page=${page}&limit=${limit}&categorySlug=${categorySlug ? categorySlug : ''}&username=${username ? username : ''}`,
       { withCredentials: true }
     );
     return response.data.posts.length > 0 ? response.data.posts : null;
@@ -136,32 +127,6 @@ export const updatePost = async (
     );
 
     return response.data.post;
-  } catch (err) {
-    console.log(err.response.data.error);
-  }
-};
-
-export const searchPost = async (keyword, page, limit, filter) => {
-  try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/posts?filter=${filter}&keyword=${keyword}&page=${page}&limit=${limit}`,
-      { withCredentials: true }
-    );
-
-    return response.data.posts;
-  } catch (err) {
-    console.log(err.response.data.error);
-  }
-};
-
-export const getFoundPostsCount = async (keyword, page, limit) => {
-  try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/posts?keyword=${keyword}&page=${page}&limit=${limit}`,
-      { withCredentials: true }
-    );
-
-    return response.data.meta.foundPostsCount;
   } catch (err) {
     console.log(err.response.data.error);
   }

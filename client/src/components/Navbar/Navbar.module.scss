@@ -39,6 +39,10 @@
           0.3s color ease,
           0.3s background-color ease;
       }
+
+      &:active {
+        color: colors.$primary-active-color;
+      }
     }
   }
 }

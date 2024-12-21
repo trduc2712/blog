@@ -16,7 +16,17 @@
     &:hover {
       .right {
         i {
-          background-color: colors.$primary-color;
+          background-color: colors.$primary-hover-color;
+          color: #fff;
+          transition: 0.3s background-color ease;
+        }
+      }
+    }
+
+    &:active {
+      .right {
+        i {
+          background-color: colors.$primary-active-color;
           color: #fff;
           transition: 0.3s background-color ease;
         }
@@ -78,6 +88,10 @@
         &:hover {
           background-color: colors.$primary-color;
           color: #fff;
+        }
+
+        &:active {
+          background-color: colors.$primary-active-color;
         }
 
         i {

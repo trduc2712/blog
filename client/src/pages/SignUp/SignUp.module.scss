@@ -5,17 +5,19 @@
   justify-content: center;
   align-items: center;
 
-  form {
-    width: 400px;
+  .cardWrapper {
+    width: 500px;
 
-    button {
-      width: 100%;
-    }
+    form {
+      button {
+        width: 100%;
+      }
 
-    .error {
-      text-align: center;
-      color: red;
-      margin-top: 20px;
+      .error {
+        text-align: center;
+        color: red;
+        margin-top: 20px;
+      }
     }
   }
 }

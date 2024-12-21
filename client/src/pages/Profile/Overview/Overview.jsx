@@ -14,7 +14,7 @@ import {
 } from '@services/userService';
 import {
   getPostsWithPagination as getPostsWithPaginationService,
-  getPostsCountByUsername as getPostsCountByUsernameService,
+  getPostsCount as getPostsCountService,
 } from '@services/postService';
 import { useParams, useLocation } from 'react-router-dom';
 import { deletePostById as deletePostByIdService } from '@services/postService';
@@ -77,51 +77,67 @@ const Overview = () => {
     };
 
     getUser();
-    getPosts();
   }, [user, username]);
 
   useEffect(() => {
+    const getPosts = async () => {
+      const urlParams = new URLSearchParams(location.search);
+      const keyword = urlParams.get('keyword') || '';
+      const time = urlParams.get('time') || '';
+      const alphabet = urlParams.get('alphabet') || '';
+      const categorySlug = urlParams.get('category') || '';
+
+      await getPostsWithPagination(
+        keyword,
+        time,
+        alphabet,
+        categorySlug,
+        username
+      );
+    };
+
     getPosts();
   }, [location.search, currentPage]);
 
-  const getPosts = async () => {
-    const urlParams = new URLSearchParams(location.search);
-    const newKeyword = urlParams.get('keyword') || '';
-    const newFilter = urlParams.get('filter') || '';
-    const newCategorySlug = urlParams.get('categorySlug') || '';
-
-    if (newKeyword) {
-      await searchPost(newKeyword, newFilter);
-    } else {
-      await getPostsWithPagination(newFilter, newCategorySlug, username);
-    }
-  };
-
-  const getPostsWithPagination = async (filter, categorySlug, username) => {
+  const getPostsWithPagination = async (
+    keyword,
+    time,
+    alphabet,
+    categorySlug,
+    username
+  ) => {
     window.scrollTo(0, 0);
 
     try {
       setLoading(true);
 
-      const postsWithPagination = await getPostsWithPaginationService(
+      const postsCount = await getPostsCountService(
         currentPage,
         postsPerPage,
-        filter,
+        keyword,
+        time,
+        alphabet,
         categorySlug,
         username
       );
 
-      const postCount = await getPostsCountByUsernameService(
-        username,
+      const postsWithPagination = await getPostsWithPaginationService(
         currentPage,
-        postsPerPage
+        postsPerPage,
+        keyword,
+        time,
+        alphabet,
+        categorySlug,
+        username
       );
 
       if (postsWithPagination == null) {
         setPosts([]);
       } else {
         setPosts(postsWithPagination);
-        setTotalPages(Math.ceil(postCount / postsPerPage));
+        const totalPages = Math.ceil(postsCount / postsPerPage);
+        setTotalPages(totalPages);
+        if (totalPages == 1) setCurrentPage(1);
       }
     } catch (err) {
       console.log(err);
@@ -142,12 +158,21 @@ const Overview = () => {
     const validPasswordPattern = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
     if (!validNamePattern.test(name)) {
-      console.log('Tên không hợp lệ.');
+      createToast({
+        type: 'warning',
+        title: 'Cảnh báo',
+        message: 'Tên không được chứa ký tự đặc biệt.',
+      });
       return;
     }
 
     if (!validPasswordPattern.test(password)) {
-      console.log('Mật khẩu không hợp lệ.');
+      createToast({
+        type: 'warning',
+        title: 'Cảnh báo',
+        message:
+          'Mật khẩu phải có ít nhất 8 ký tự và bao gồm cả chữ cái và số.',
+      });
       return;
     }
 
@@ -195,6 +220,7 @@ const Overview = () => {
   };
 
   const openConfirmUpdateModal = () => {
+    console.log('openConfirmUpdateModal is running');
     setModal({
       title: 'Xác nhận',
       cancelLabel: 'Hủy',
@@ -357,7 +383,7 @@ const Overview = () => {
             <div className="loading">Đang tải...</div>
           )
         ) : (
-          <div className="notLoggedIn">Chưa đăng nhập.</div>
+          <div className="not-logged-in">Chưa đăng nhập.</div>
         )}
       </div>
       <Modal

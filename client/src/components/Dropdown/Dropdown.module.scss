@@ -62,6 +62,17 @@
       i {
         margin-right: 15px;
       }
+
+      &:active {
+        background-color: colors.$primary-active-color;
+        color: #fff;
+        transition: 0.3s background-color ease;
+
+        p {
+          background-color: colors.$primary-active-color;
+          transition: 0.3s background-color ease;
+        }
+      }
     }
   }
 }

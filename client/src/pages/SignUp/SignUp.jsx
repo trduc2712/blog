@@ -97,43 +97,45 @@ const SignUp = () => {
     <>
       <Header isDashboard={false} />
       <div className="container">
-        <div className="card">
-          <div className="card-header">
-            <h3>Đăng ký</h3>
-          </div>
-          <div className="card-body">
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label>Tên người dùng</label>
-                <Input
-                  variant="text"
-                  placeholder="Tên người dùng"
-                  value={username}
-                  onChangeValue={(e) => handleChangeUsername(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label>Mật khẩu</label>
-                <Input
-                  variant="password"
-                  placeholder="Mật khẩu"
-                  value={password}
-                  onChangeValue={(e) => handleChangePassword(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label>Tên</label>
-                <Input
-                  variant="text"
-                  placeholder="Tên"
-                  value={name}
-                  onChangeValue={(e) => handleChangeName(e.target.value)}
-                />
-              </div>
-              <button type="submit" className="primary-btn">
-                Đăng ký
-              </button>
-            </form>
+        <div className={styles.cardWrapper}>
+          <div className="card">
+            <div className="card-header">
+              <h3>Đăng ký</h3>
+            </div>
+            <div className="card-body">
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label>Tên người dùng</label>
+                  <Input
+                    variant="text"
+                    placeholder="Tên người dùng"
+                    value={username}
+                    onChangeValue={(e) => handleChangeUsername(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Mật khẩu</label>
+                  <Input
+                    variant="password"
+                    placeholder="Mật khẩu"
+                    value={password}
+                    onChangeValue={(e) => handleChangePassword(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Tên</label>
+                  <Input
+                    variant="text"
+                    placeholder="Tên"
+                    value={name}
+                    onChangeValue={(e) => handleChangeName(e.target.value)}
+                  />
+                </div>
+                <button type="submit" className="primary-btn">
+                  Đăng ký
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
