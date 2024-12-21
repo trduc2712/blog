@@ -78,25 +78,85 @@ export const createPost = (
   });
 };
 
-export const getPostsCount = () => {
+export const getPostsCount = (
+  keyword,
+  time,
+  alphabet,
+  categorySlug,
+  username
+) => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT COUNT(*) AS count FROM posts';
+    let query = 'SELECT COUNT(*) AS count FROM posts';
+    let queryParams = [];
 
-    _query(query, (err, results) => {
-      if (err) return reject(err);
-      resolve(results[0].count);
-    });
-  });
-};
+    const whereClauses = [];
+    let orderQuery = '';
 
-export const getPostsCountByUsername = (username) => {
-  return new Promise((resolve, reject) => {
-    const query = `
-    SELECT COUNT(*) AS count FROM posts
-    JOIN users ON posts.user_id = users.id 
-    WHERE username = '${username}'`;
+    if (keyword) {
+      whereClauses.push('title LIKE ?');
+      queryParams.push(`%${keyword}%`);
+    }
+    if (categorySlug) {
+      whereClauses.push('category_slug = ?');
+      queryParams.push(categorySlug);
+    }
+    if (username) {
+      query += ' JOIN users ON posts.user_id = users.id';
+      whereClauses.push('users.username = ?');
+      queryParams.push(username);
+    }
+    if (time) {
+      switch (time) {
+        case 'today':
+          whereClauses.push(
+            'created_at >= CURDATE() AND created_at < CURDATE() + INTERVAL 1 DAY'
+          );
+          break;
+        case 'this-week':
+          whereClauses.push(
+            `created_at >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY 
+           AND created_at < CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY + INTERVAL 7 DAY`
+          );
+          break;
+        case 'this-month':
+          whereClauses.push(
+            `created_at >= DATE_FORMAT(CURDATE(), '%Y-%m-01') 
+           AND created_at < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')`
+          );
+          break;
+        case 'oldest':
+          orderQuery = ' ORDER BY created_at DESC';
+          break;
+        case 'newest':
+          orderQuery = ' ORDER BY created_at ASC';
+          break;
+        default:
+          break;
+      }
+    }
 
-    _query(query, (err, results) => {
+    if (alphabet) {
+      switch (alphabet) {
+        case 'asc':
+          orderQuery = ' ORDER BY title ASC';
+          break;
+        case 'desc':
+          orderQuery = ' ORDER BY title DESC';
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (whereClauses.length > 0) {
+      query += ` WHERE ${whereClauses.join(' AND ')}`;
+    }
+
+    if (orderQuery) {
+      query += orderQuery;
+    }
+
+    _query(query, queryParams, (err, results) => {
       if (err) return reject(err);
       resolve(results[0].count);
     });
@@ -106,40 +166,74 @@ export const getPostsCountByUsername = (username) => {
 export const getPostsWithPagination = (
   page,
   limit,
-  filter,
+  keyword,
+  time,
+  alphabet,
   categorySlug,
   username
 ) => {
   return new Promise((resolve, reject) => {
     const offset = (page - 1) * limit;
 
-    let categoryQuery = '';
-    if (categorySlug)
-      categoryQuery = `WHERE posts.category_slug = '${categorySlug}'`;
+    let whereClauses = [];
+    let orderQuery = '';
 
-    let usernameQuery = '';
-    if (username)
-      usernameQuery = categoryQuery
-        ? `AND users.username = '${username}'`
-        : `WHERE users.username = '${username}'`;
-
-    let filterQuery = '';
-    switch (filter) {
-      case 'alphaAsc':
-        filterQuery = 'ORDER BY title ASC';
-        break;
-      case 'alphaDesc':
-        filterQuery = 'ORDER BY title DESC';
-        break;
-      case 'newest':
-        filterQuery = 'ORDER BY created_at DESC';
-        break;
-      case 'oldest':
-        filterQuery = 'ORDER BY created_at ASC';
-        break;
-      default:
-        break;
+    if (keyword) {
+      whereClauses.push('posts.title LIKE ?');
     }
+    if (categorySlug) {
+      whereClauses.push('posts.category_slug = ?');
+    }
+    if (username) {
+      whereClauses.push('users.username = ?');
+    }
+
+    if (time) {
+      switch (time) {
+        case 'today':
+          whereClauses.push(
+            'posts.created_at >= CURDATE() AND posts.created_at < CURDATE() + INTERVAL 1 DAY'
+          );
+          break;
+        case 'this-week':
+          whereClauses.push(
+            'posts.created_at >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY AND ' +
+              'posts.created_at < CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY + INTERVAL 7 DAY'
+          );
+          break;
+        case 'this-month':
+          whereClauses.push(
+            'posts.created_at >= DATE_FORMAT(CURDATE(), "%Y-%m-01") AND ' +
+              'posts.created_at < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, "%Y-%m-01")'
+          );
+          break;
+        case 'oldest':
+          orderQuery = ' ORDER BY created_at ASC';
+          break;
+        case 'newest':
+          orderQuery = ' ORDER BY created_at DESC';
+          break;
+        default:
+          break;
+          break;
+      }
+    }
+
+    if (alphabet) {
+      switch (alphabet) {
+        case 'asc':
+          orderQuery = ' ORDER BY posts.title ASC';
+          break;
+        case 'desc':
+          orderQuery = ' ORDER BY posts.title DESC';
+          break;
+        default:
+          break;
+      }
+    }
+
+    const whereQuery =
+      whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
 
     const query = `
       SELECT 
@@ -158,13 +252,18 @@ export const getPostsWithPagination = (
       FROM posts
       JOIN users ON posts.user_id = users.id
       JOIN categories ON posts.category_slug = categories.slug
-      ${categoryQuery}
-      ${usernameQuery} 
-      ${filterQuery} 
+      ${whereQuery}
+      ${orderQuery}
       LIMIT ? OFFSET ?
     `;
 
-    _query(query, [limit, offset], (err, results) => {
+    const queryValues = [];
+    if (keyword) queryValues.push(`%${keyword}%`);
+    if (categorySlug) queryValues.push(categorySlug);
+    if (username) queryValues.push(username);
+    queryValues.push(limit, offset);
+
+    _query(query, queryValues, (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
@@ -239,79 +338,53 @@ export const getPostById = (id) => {
     });
   });
 };
+//   return new Promise((resolve, reject) => {
+//     const offset = (page - 1) * limit;
 
-export const searchPostsByKeyword = (keyword, page, limit, filter) => {
-  return new Promise((resolve, reject) => {
-    const offset = (page - 1) * limit;
+//     let filterQuery;
+//     switch (filter) {
+//       case 'alphaAsc':
+//         filterQuery = 'ORDER BY title ASC';
+//         break;
+//       case 'alphaDesc':
+//         filterQuery = 'ORDER BY title DESC';
+//         break;
+//       case 'newest':
+//         filterQuery = 'ORDER BY created_at DESC';
+//         break;
+//       case 'oldest':
+//         filterQuery = 'ORDER BY created_at ASC';
+//         break;
+//       default:
+//         filterQuery = '';
+//         break;
+//     }
 
-    let filterQuery;
-    switch (filter) {
-      case 'alphaAsc':
-        filterQuery = 'ORDER BY title ASC';
-        break;
-      case 'alphaDesc':
-        filterQuery = 'ORDER BY title DESC';
-        break;
-      case 'newest':
-        filterQuery = 'ORDER BY created_at DESC';
-        break;
-      case 'oldest':
-        filterQuery = 'ORDER BY created_at ASC';
-        break;
-      default:
-        filterQuery = '';
-        break;
-    }
+//     const query = `
+//        SELECT
+//         posts.id,
+//         posts.title,
+//         posts.thumbnail AS thumbnail,
+//         posts.slug,
+//         posts.created_at,
+//         users.name AS user_name,
+//         users.username as user_username,
+//         users.avatar AS user_avatar,
+//         categories.name AS category_name,
+//         categories.slug AS category_slug
+//       FROM posts
+//       JOIN users ON posts.user_id = users.id
+//       JOIN categories ON posts.category_slug = categories.slug
+//       WHERE title LIKE ?
+//       ${filterQuery}
+//       LIMIT ? OFFSET ?
+//     `;
 
-    const query = `
-       SELECT 
-        posts.id, 
-        posts.title, 
-        posts.thumbnail AS thumbnail, 
-        posts.slug,
-        posts.created_at,
-        users.name AS user_name,
-        users.username as user_username,
-        users.avatar AS user_avatar,
-        categories.name AS category_name,
-        categories.slug AS category_slug
-      FROM posts
-      JOIN users ON posts.user_id = users.id
-      JOIN categories ON posts.category_slug = categories.slug
-      WHERE title LIKE ?
-      ${filterQuery} 
-      LIMIT ? OFFSET ?
-    `;
+//     const searchKeyword = `%${keyword}%`;
 
-    const searchKeyword = `%${keyword}%`;
-
-    _query(query, [searchKeyword, limit, offset], (err, results) => {
-      if (err) return reject(err);
-      resolve(results);
-    });
-  });
-};
-
-export const getFoundPostsCount = (keyword) => {
-  return new Promise((resolve, reject) => {
-    const query = 'SELECT COUNT(*) AS count FROM posts WHERE title LIKE ?';
-
-    const searchKeyword = `%${keyword}%`;
-
-    _query(query, [searchKeyword], (err, results) => {
-      if (err) return reject(err);
-      resolve(results[0].count);
-    });
-  });
-};
-
-export const getPostsCountByCategory = (category) => {
-  return new Promise((resolve, reject) => {
-    const query = `SELECT COUNT(*) AS count FROM posts WHERE category_slug = ?`;
-
-    _query(query, [category], (err, results) => {
-      if (err) return reject(err);
-      resolve(results[0].count);
-    });
-  });
-};
+//     _query(query, [searchKeyword, limit, offset], (err, results) => {
+//       if (err) return reject(err);
+//       resolve(results);
+//     });
+//   });
+// };

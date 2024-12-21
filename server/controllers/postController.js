@@ -7,72 +7,28 @@ import {
   getPostsWithPagination as getPostsWithPaginationFromModel,
   deletePostById as deletePostByIdFromModel,
   updatePost as updatePostFromModel,
-  searchPostsByKeyword as searchPostsByKeywordFromModel,
-  getFoundPostsCount as getFoundPostsCountFromModel,
-  getPostsCountByCategory as getPostsCountByCategoryFromModel,
-  getPostsCountByUsername as getPostsCountByUsernameFromModel,
 } from '../models/post.js';
 
 export const getPosts = async (req, res) => {
   try {
-    let page = parseInt(req.query.page);
-    const limit = parseInt(req.query.limit);
-    const keyword = req.query.keyword;
-    const filter = req.query.filter;
-    const categorySlug = req.query.categorySlug;
-    const username = req.query.username;
+    let { page, limit, keyword, time, alphabet, categorySlug, username } =
+      req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
 
     if (page <= 0 || limit <= 0) {
       return res.status(400).json({ error: 'Tham số không hợp lệ.' });
     }
 
-    if (keyword) {
-      try {
-        const foundPosts = await searchPostsByKeywordFromModel(
-          keyword,
-          page,
-          limit,
-          filter
-        );
-        const foundPostsCount = await getFoundPostsCountFromModel(keyword);
-        const totalPages = Math.ceil(foundPostsCount / limit);
+    const postsCount = await getPostsCountFromModel(
+      keyword,
+      time,
+      alphabet,
+      categorySlug,
+      username
+    );
 
-        if (page > totalPages) {
-          page = 1;
-        }
-
-        if (foundPosts.length === 0) {
-          return res.status(404).json({ error: 'Không tìm thấy bài viết.' });
-        }
-
-        return res.json({
-          message: `Tìm kiếm bài viết với từ khóa "${keyword}" thành công`,
-          posts: foundPosts,
-          meta: {
-            foundPostsCount,
-            currentPage: page,
-            totalPages,
-          },
-        });
-      } catch (err) {
-        console.error(
-          `Lỗi khi tìm kiếm bài viết với từ khóa "${keyword}": `,
-          err
-        );
-        return res.status(500).json({ error: 'Lỗi máy chủ.' });
-      }
-    }
-
-    let postCount;
-    if (categorySlug) {
-      postCount = await getPostsCountByCategoryFromModel(categorySlug);
-    } else if (username) {
-      postCount = await getPostsCountByUsernameFromModel(username);
-    } else {
-      postCount = await getPostsCountFromModel();
-    }
-
-    const totalPages = Math.ceil(postCount / limit);
+    const totalPages = Math.ceil(postsCount / limit);
 
     if (page > totalPages) {
       page = 1;
@@ -83,26 +39,30 @@ export const getPosts = async (req, res) => {
         ? await getPostsWithPaginationFromModel(
             page,
             limit,
-            filter,
+            keyword,
+            time,
+            alphabet,
             categorySlug,
             username
           )
         : await getAllPostsFromModel();
 
     if (posts.length === 0) {
+      if (categorySlug) {
+        return res.status(404).json({
+          error: `Không có bài viết nào thuộc chủ đề ${categorySlug}`,
+        });
+      }
       return res.status(404).json({ error: 'Không có bài viết nào.' });
     }
 
     return res.json({
-      message:
-        page && limit
-          ? `Lấy các bài viết ở trang ${page} thành công.`
-          : 'Lấy tất cả bài viết thành công.',
+      message: page && limit ? `Lấy các bài viết thành công.` : '',
       posts,
       meta: {
-        postCount,
-        currentPage: page || undefined,
-        totalPages: page && limit ? totalPages : undefined,
+        postsCount,
+        currentPage: page,
+        totalPages,
       },
     });
   } catch (err) {

@@ -45,6 +45,4 @@ app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 
-app.listen(port, () => {
-  console.log(`Máy chủ đang chạy tại: http://localhost:${port}`);
-});
+app.listen(port, () => {});
