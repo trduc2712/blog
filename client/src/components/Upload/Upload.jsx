@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useToastContext } from '@contexts/ToastContext';
 import ToastList from '@components/ToastList';
 
-const Upload = ({ type, upload, setUpload }) => {
+const Upload = ({ type, upload, setUpload, username }) => {
   const { user } = useAuthContext();
   const [modal, setModal] = useState({});
 
@@ -70,9 +70,9 @@ const Upload = ({ type, upload, setUpload }) => {
             <label
               htmlFor="avatar"
               className={`${upload ? styles.avatarLabel : styles.notFoundAvatar}`}
-              // style={{
-              //   pointerEvents: `${user && username && user.username == userUsername ? 'auto' : 'none'}`,
-              // }}
+              style={{
+                pointerEvents: `${user && username && user.username == username ? 'auto' : 'none'}`,
+              }}
             >
               <img
                 src={`data:image/jpeg;base64,${upload}`}

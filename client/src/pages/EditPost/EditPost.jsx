@@ -213,10 +213,6 @@ const EditPost = () => {
             upload={thumbnail}
             setUpload={setThumbnail}
           />
-          <div className="form-group">
-            <label>Nội dung</label>
-            <TextEditor content={content} setContent={setContent} />
-          </div>
           {user.role == 'ADMIN' && (
             <div className="select">
               <p>Tác giả</p>
@@ -229,8 +225,12 @@ const EditPost = () => {
               )}
             </div>
           )}
+          <div className="form-group">
+            <label>Nội dung</label>
+            <TextEditor content={content} setContent={setContent} />
+          </div>
         </div>
-        <div className="card-footer end">
+        <div className="card-footer-end">
           <button className="primary-btn" onClick={openConfirmUpdateModal}>
             Cập nhật
           </button>

@@ -304,6 +304,7 @@ const Overview = () => {
                       type="avatar"
                       upload={avatar}
                       setUpload={setAvatar}
+                      username={userUsername}
                     />
                     <div className="form-group">
                       <label>Tên người dùng</label>
@@ -363,19 +364,19 @@ const Overview = () => {
                         posts={posts}
                         onDeletePost={handleDeletePost}
                       />
-                      <div className={styles.pagination}>
-                        <Pagination
-                          totalPages={totalPages}
-                          currentPage={currentPage}
-                          onPageChange={handlePageChange}
-                        />
-                      </div>
                     </div>
                   ) : (
                     <div className={styles.notFound}>
                       Không có bài viết nào.
                     </div>
                   )}
+                </div>
+                <div className="card-footer-center">
+                  <Pagination
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                  />
                 </div>
               </div>
             </>

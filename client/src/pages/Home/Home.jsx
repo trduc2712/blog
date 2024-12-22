@@ -134,14 +134,12 @@ const Home = () => {
                     )}
                   </div>
                 </div>
-                <div className="card-footer center">
-                  <div className={styles.pagination}>
-                    <Pagination
-                      totalPages={totalPages}
-                      currentPage={currentPage}
-                      onPageChange={handlePageChange}
-                    />
-                  </div>
+                <div className="card-footer-center">
+                  <Pagination
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                  />
                 </div>
               </div>
             </>

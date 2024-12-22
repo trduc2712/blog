@@ -58,13 +58,13 @@ const Categories = () => {
   return (
     <div className={styles.container}>
       <div className="card">
+        <div className="card-header">
+          <h3>Danh sách chủ đề</h3>
+        </div>
         {!loading ? (
           <>
-            <div className="card-header">
-              <h3>Danh sách chủ đề</h3>
-            </div>
             <div className="card-body">
-              <div className={styles.createWrapper}>
+              <div className={styles.createContainer}>
                 <button
                   className="primary-btn"
                   onClick={() => navigate('/dashboard/categories/new')}
@@ -74,20 +74,17 @@ const Categories = () => {
                 </button>
               </div>
               <Table columnLabels={columnLabels} initialData={categories} />
-              <div className={styles.pagination}>
-                <Pagination
-                  totalPages={totalPages}
-                  currentPage={currentPage}
-                  onPageChange={handlePageChange}
-                />
-              </div>
+            </div>
+            <div className="card-footer-center">
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
             </div>
           </>
         ) : (
           <>
-            <div className="card-header">
-              <h3>Danh sách chủ đề</h3>
-            </div>
             <div className="card-body">
               <div className="loading">Đang tải...</div>
             </div>

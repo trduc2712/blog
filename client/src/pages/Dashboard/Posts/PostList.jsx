@@ -74,22 +74,22 @@ const PostList = () => {
         <div className="card-header">
           <h3>Danh sách bài viết</h3>
         </div>
-        <div className="card-body">
-          {loading ? (
-            <div className="loading">Đang tải...</div>
-          ) : (
-            <>
+        {loading ? (
+          <div className="loading">Đang tải...</div>
+        ) : (
+          <>
+            <div className="card-body">
               <Table columnLabels={columnLabels} initialData={posts} />
-              <div className={styles.pagination}>
-                <Pagination
-                  totalPages={totalPages}
-                  currentPage={currentPage}
-                  onPageChange={handlePageChange}
-                />
-              </div>
-            </>
-          )}
-        </div>
+            </div>
+            <div className="card-footer-center">
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

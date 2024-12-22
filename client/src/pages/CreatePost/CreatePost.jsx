@@ -162,7 +162,7 @@ const CreatePost = () => {
                 <TextEditor content={content} setContent={setContent} />
               </div>
             </div>
-            <div className="card-footer end">
+            <div className="card-footer-end">
               <button className="secondary-btn" onClick={() => navigate('/')}>
                 Hủy
               </button>

@@ -143,7 +143,7 @@ const CreateUser = () => {
             />
           </div>
         </div>
-        <div className="card-footer end">
+        <div className="card-footer-end">
           <button className="primary-btn" onClick={openConfirmCreateModal}>
             Thêm
           </button>

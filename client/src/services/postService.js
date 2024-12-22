@@ -69,14 +69,6 @@ export const getPostsWithPagination = async (
   categorySlug,
   username
 ) => {
-  console.log('-------------------------');
-  console.log('Trang hiện tại: ', page);
-  console.log('Số bài viết trên 1 trang: ', limit);
-  console.log('Keyword: ', keyword);
-  console.log('Time: ', time);
-  console.log('Alphabet: ', alphabet);
-  console.log('CategorySlug: ', categorySlug);
-  console.log('Username: ', username);
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/posts?alphabet=${alphabet ? alphabet : ''}&time=${time ? time : ''}&keyword=${keyword ? keyword : ''}&page=${page}&limit=${limit}&categorySlug=${categorySlug ? categorySlug : ''}&username=${username ? username : ''}`,

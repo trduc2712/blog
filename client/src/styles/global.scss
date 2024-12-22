@@ -28,39 +28,46 @@ i {
   border-radius: 7.5px;
   border: 1px solid #ccc;
   background-color: #fff;
-  overflow: hidden;
   width: 100%;
   box-shadow: rgba(86, 86, 88, 0.1) 0px 7px 7px 0px;
+  overflow: hidden;
 
   .card-header {
     text-align: center;
-
-    h3 {
-      background-color: colors.$primary-color;
-      color: #fff;
-      padding: 10px;
-    }
+    padding: 10px;
+    background-color: colors.$primary-color;
+    color: #fff;
   }
 
   .card-body {
     padding: 20px;
   }
 
-  .card-footer {
+  .card-footer-start {
     display: flex;
     padding: 20px;
-  }
-
-  .start {
+    padding-top: 0;
     justify-content: flex-start;
   }
 
-  .center {
+  .card-footer-center {
+    display: flex;
+    padding: 20px;
+    padding-top: 0;
     justify-content: center;
   }
 
-  .end {
+  .card-footer-end {
+    display: flex;
+    padding: 20px;
+    padding-top: 0;
     justify-content: flex-end;
+
+    button {
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
   }
 }
 

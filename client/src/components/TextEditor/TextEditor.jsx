@@ -1,74 +1,101 @@
-import styles from './TextEditor.module.scss';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { useRef } from 'react';
+import React, { useEffect } from 'react';
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Image from '@tiptap/extension-image';
+import Underline from '@tiptap/extension-underline';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import styles from './TextEditor.module.scss';
 
 const TextEditor = ({ content, setContent }) => {
-  const quillRef = useRef(null);
-
-  const customToolbar = (
-    <div className="custom-toolbar">
-      <select className="ql-header">
-        <option value="1">Tiêu đề 1</option>
-        <option value="2">Tiêu đề 2</option>
-        <option value="3">Tiêu đề 3</option>
-        <option value="">Văn bản</option>
-      </select>
-      <button className="ql-bold" aria-label="In đậm">
-        <i className="bi bi-type-bold"></i> {/* Bootstrap Bold Icon */}
-      </button>
-      <button className="ql-italic" aria-label="In nghiêng">
-        <i className="bi bi-type-italic"></i> {/* Bootstrap Italic Icon */}
-      </button>
-      <button className="ql-underline" aria-label="Gạch chân">
-        <i className="bi bi-type-underline"></i>{' '}
-        {/* Bootstrap Underline Icon */}
-      </button>
-      <button
-        className="ql-list"
-        value="ordered"
-        aria-label="Danh sách có thứ tự"
-      >
-        <i className="bi bi-list-ol"></i> {/* Bootstrap Ordered List Icon */}
-      </button>
-      <button
-        className="ql-list"
-        value="bullet"
-        aria-label="Danh sách không thứ tự"
-      >
-        <i className="bi bi-list-ul"></i> {/* Bootstrap Unordered List Icon */}
-      </button>
-      <button className="ql-image" aria-label="Chèn ảnh">
-        <i className="bi bi-image"></i> {/* Bootstrap Image Icon */}
-      </button>
-      <button className="ql-clean" aria-label="Xóa định dạng">
-        <i className="bi bi-x-circle"></i> {/* Bootstrap Eraser/Clear Icon */}
-      </button>
-    </div>
-  );
-
-  const modules = {
-    toolbar: {
-      container: '.custom-toolbar', // Attach to custom toolbar
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Image.configure({ inline: true, allowBase64: true }),
+      Underline,
+    ],
+    content: content || '',
+    onUpdate: ({ editor }) => {
+      setContent(editor.getHTML());
     },
+  });
+
+  useEffect(() => {
+    if (editor && content) {
+      editor.commands.setContent(content);
+    }
+  }, [editor, content]);
+
+  const addImageFromFile = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const url = reader.result;
+      if (editor) {
+        editor.chain().focus().setImage({ src: url }).run();
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
-  const handleChangeContent = (value) => {
-    setContent(value);
-  };
+  const isButtonActive = (type) =>
+    editor?.isActive(type) ? styles.active : '';
 
   return (
-    <div className={styles.container} spellCheck="false">
-      {customToolbar}
-      <ReactQuill
-        ref={quillRef}
-        value={content}
-        modules={modules}
-        onChange={handleChangeContent}
-        placeholder=""
-        spellCheck={false}
-      />
+    <div className={styles.container}>
+      {editor && (
+        <>
+          <div className="toolbar">
+            <button
+              className={isButtonActive('bold')}
+              onClick={() => editor.chain().focus().toggleBold().run()}
+            >
+              <i className="bi bi-type-bold"></i>
+            </button>
+            <button
+              className={isButtonActive('italic')}
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+            >
+              <i className="bi bi-type-italic"></i>
+            </button>
+            <button
+              className={isButtonActive('underline')}
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+            >
+              <i className="bi bi-type-underline"></i>
+            </button>
+            <button
+              className={isButtonActive('bulletList')}
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+            >
+              <i className="bi bi-list-ul"></i>
+            </button>
+            <button
+              className={isButtonActive('orderedList')}
+              onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            >
+              <i className="bi bi-list-ol"></i>
+            </button>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={addImageFromFile}
+              style={{ display: 'none' }}
+              id="file-input"
+            />
+            <label htmlFor="file-input">
+              <i className="bi bi-image" style={{ cursor: 'pointer' }}></i>
+            </label>
+            <button onClick={() => editor.chain().focus().clearNodes().run()}>
+              <i className="bi bi-x"></i>
+            </button>
+          </div>
+          <div className="content" spellCheck={false}>
+            <EditorContent editor={editor} />
+          </div>
+        </>
+      )}
     </div>
   );
 };

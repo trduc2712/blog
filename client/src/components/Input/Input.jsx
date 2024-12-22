@@ -34,7 +34,7 @@ const Input = ({ value, placeholder, onChangeValue, variant, isDisabled }) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.inputWrapper}>
+      <div className={styles.inputContainer}>
         <input
           className={`${error.length == 0 ? '' : styles.redBorder}`}
           type={type}

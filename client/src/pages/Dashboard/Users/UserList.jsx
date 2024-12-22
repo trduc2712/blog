@@ -66,22 +66,15 @@ const Users = () => {
   return (
     <div className={styles.container}>
       <div className="card">
+        <div className="card-header">
+          <h3>Danh sách người dùng</h3>
+        </div>
         {loading ? (
-          <>
-            <div className="card-header">
-              <h3>Danh sách người dùng</h3>
-            </div>
-            <div className="card-body">
-              <div className="loading">Đang tải...</div>
-            </div>
-          </>
+          <div className="loading">Đang tải...</div>
         ) : (
           <>
-            <div className="card-header">
-              <h3>Danh sách người dùng</h3>
-            </div>
             <div className="card-body">
-              <div className={styles.createWrapper}>
+              <div className={styles.createContainer}>
                 <button
                   className={`${styles.create} primary-btn`}
                   onClick={() => navigate('/dashboard/users/new')}
@@ -91,13 +84,13 @@ const Users = () => {
                 </button>
               </div>
               <Table columnLabels={columnLabels} initialData={users} />
-              <div className={styles.pagination}>
-                <Pagination
-                  totalPages={totalPages}
-                  currentPage={currentPage}
-                  onPageChange={handlePageChange}
-                />
-              </div>
+            </div>
+            <div className="card-footer-center">
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
             </div>
           </>
         )}

@@ -97,7 +97,7 @@ const SignUp = () => {
     <>
       <Header isDashboard={false} />
       <div className="container">
-        <div className={styles.cardWrapper}>
+        <div className={styles.cardContainer}>
           <div className="card">
             <div className="card-header">
               <h3>Đăng ký</h3>

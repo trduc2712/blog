@@ -3,17 +3,7 @@
 .container {
   background-color: colors.$bg-color;
 
-  h2 {
-    margin-bottom: 20px;
-    background-color: inherit;
-  }
-
-  .pagination {
-    margin-top: 20px;
-    background-color: inherit;
-  }
-
-  .createWrapper {
+  .createContainer {
     margin-bottom: 20px;
     background-color: inherit;
     display: flex;
