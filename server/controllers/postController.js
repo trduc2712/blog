@@ -57,7 +57,7 @@ export const getPosts = async (req, res) => {
     }
 
     return res.json({
-      message: page && limit ? `Lấy các bài viết thành công.` : '',
+      message: 'Lấy các bài viết thành công.',
       posts,
       meta: {
         postsCount,
