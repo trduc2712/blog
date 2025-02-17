@@ -1,11 +1,11 @@
-import { query as _query } from '../config/db.js';
+import { query as _query } from "../config/db.js";
 
 export const createUser = (username, password, name, avatar, role) => {
-  if (!role) role = 'USER';
+  if (!role) role = "USER";
 
   return new Promise((resolve, reject) => {
     const query =
-      'INSERT INTO users (username, password, name, avatar, role) VALUES (?, ?, ?, ?, ?)';
+      "INSERT INTO users (username, password, name, avatar, role) VALUES (?, ?, ?, ?, ?)";
 
     _query(query, [username, password, name, avatar, role], (err, results) => {
       if (err) return reject(err);
@@ -16,10 +16,10 @@ export const createUser = (username, password, name, avatar, role) => {
 
 export const getUserByUsername = (username) => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT * FROM users WHERE username = ?';
+    const query = "SELECT * FROM users WHERE username = ?";
 
     _query(query, [username], (err, results) => {
-      if (err) return reject({ error: 'Lỗi máy chủ' });
+      if (err) return reject({ error: "Lỗi máy chủ" });
       resolve(results[0]);
     });
   });
@@ -27,7 +27,7 @@ export const getUserByUsername = (username) => {
 
 export const getUserByCredentials = (username, password) => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
+    const query = "SELECT * FROM users WHERE username = ? AND password = ?";
 
     _query(query, [username, password], (err, results) => {
       if (err) return reject(err);
@@ -63,7 +63,7 @@ export const updateUser = (id, username, password, name, avatar, role) => {
 
 export const getUserCount = () => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT COUNT(*) AS count FROM users';
+    const query = "SELECT COUNT(*) AS count FROM users";
 
     _query(query, (err, results) => {
       if (err) return reject(err);
@@ -96,7 +96,7 @@ export const getUsersWithPagination = (page, limit) => {
 
 export const deleteUserById = (id) => {
   return new Promise((resolve, reject) => {
-    const query = 'DELETE FROM users WHERE id = ?';
+    const query = "DELETE FROM users WHERE id = ?";
 
     _query(query, [id], (err, results) => {
       if (err) return reject(err);
@@ -107,10 +107,10 @@ export const deleteUserById = (id) => {
 
 export const getAllUsers = () => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT * FROM users';
+    const query = "SELECT * FROM users";
 
     _query(query, (err, results) => {
-      if (err) return reject({ error: 'Lỗi máy chủ' });
+      if (err) return reject({ error: "Lỗi máy chủ" });
       resolve(results);
     });
   });

@@ -1,11 +1,11 @@
-import { query as _query } from '../config/db.js';
+import { query as _query } from "../config/db.js";
 
 export const getAllCategories = () => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT * FROM categories';
+    const query = "SELECT * FROM categories";
 
     _query(query, (err, results) => {
-      if (err) return reject({ error: 'Lỗi máy chủ' });
+      if (err) return reject({ error: "Lỗi máy chủ" });
       resolve(results);
     });
   });
@@ -13,7 +13,7 @@ export const getAllCategories = () => {
 
 export const getCategoryCount = () => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT COUNT(*) AS count FROM categories';
+    const query = "SELECT COUNT(*) AS count FROM categories";
 
     _query(query, (err, results) => {
       if (err) return reject(err);
@@ -44,7 +44,7 @@ export const getCategoriesWithPagination = (page, limit) => {
 
 export const deleteCategoryById = (id) => {
   return new Promise((resolve, reject) => {
-    const query = 'DELETE FROM categories WHERE id = ?';
+    const query = "DELETE FROM categories WHERE id = ?";
 
     _query(query, [id], (err, results) => {
       if (err) return reject(err);
@@ -125,7 +125,7 @@ export const updateCategory = (id, name, slug) => {
 
 export const createCategory = (name, slug) => {
   return new Promise((resolve, reject) => {
-    const query = 'INSERT INTO categories (name, slug) VALUES (?, ?)';
+    const query = "INSERT INTO categories (name, slug) VALUES (?, ?)";
 
     _query(query, [name, slug], (err, results) => {
       if (err) return reject(err);

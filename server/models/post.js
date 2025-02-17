@@ -1,4 +1,4 @@
-import { query as _query } from '../config/db.js';
+import { query as _query } from "../config/db.js";
 
 export const getAllPosts = () => {
   return new Promise((resolve, reject) => {
@@ -63,7 +63,7 @@ export const createPost = (
 ) => {
   return new Promise((resolve, reject) => {
     const query =
-      'INSERT INTO posts (title, content, user_id, thumbnail, category_slug, slug) VALUES (?, ?, ?, ?, ?, ?)';
+      "INSERT INTO posts (title, content, user_id, thumbnail, category_slug, slug) VALUES (?, ?, ?, ?, ?, ?)";
 
     _query(
       query,
@@ -86,49 +86,49 @@ export const getPostsCount = (
   username
 ) => {
   return new Promise((resolve, reject) => {
-    let query = 'SELECT COUNT(*) AS count FROM posts';
+    let query = "SELECT COUNT(*) AS count FROM posts";
     let queryParams = [];
 
     const whereClauses = [];
-    let orderQuery = '';
+    let orderQuery = "";
 
     if (keyword) {
-      whereClauses.push('title LIKE ?');
+      whereClauses.push("title LIKE ?");
       queryParams.push(`%${keyword}%`);
     }
     if (categorySlug) {
-      whereClauses.push('category_slug = ?');
+      whereClauses.push("category_slug = ?");
       queryParams.push(categorySlug);
     }
     if (username) {
-      query += ' JOIN users ON posts.user_id = users.id';
-      whereClauses.push('users.username = ?');
+      query += " JOIN users ON posts.user_id = users.id";
+      whereClauses.push("users.username = ?");
       queryParams.push(username);
     }
     if (time) {
       switch (time) {
-        case 'today':
+        case "today":
           whereClauses.push(
-            'created_at >= CURDATE() AND created_at < CURDATE() + INTERVAL 1 DAY'
+            "created_at >= CURDATE() AND created_at < CURDATE() + INTERVAL 1 DAY"
           );
           break;
-        case 'this-week':
+        case "this-week":
           whereClauses.push(
             `created_at >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY 
            AND created_at < CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY + INTERVAL 7 DAY`
           );
           break;
-        case 'this-month':
+        case "this-month":
           whereClauses.push(
             `created_at >= DATE_FORMAT(CURDATE(), '%Y-%m-01') 
            AND created_at < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')`
           );
           break;
-        case 'oldest':
-          orderQuery = ' ORDER BY created_at DESC';
+        case "oldest":
+          orderQuery = " ORDER BY created_at DESC";
           break;
-        case 'newest':
-          orderQuery = ' ORDER BY created_at ASC';
+        case "newest":
+          orderQuery = " ORDER BY created_at ASC";
           break;
         default:
           break;
@@ -137,11 +137,11 @@ export const getPostsCount = (
 
     if (alphabet) {
       switch (alphabet) {
-        case 'asc':
-          orderQuery = ' ORDER BY title ASC';
+        case "asc":
+          orderQuery = " ORDER BY title ASC";
           break;
-        case 'desc':
-          orderQuery = ' ORDER BY title DESC';
+        case "desc":
+          orderQuery = " ORDER BY title DESC";
           break;
         default:
           break;
@@ -149,7 +149,7 @@ export const getPostsCount = (
     }
 
     if (whereClauses.length > 0) {
-      query += ` WHERE ${whereClauses.join(' AND ')}`;
+      query += ` WHERE ${whereClauses.join(" AND ")}`;
     }
 
     if (orderQuery) {
@@ -176,56 +176,55 @@ export const getPostsWithPagination = (
     const offset = (page - 1) * limit;
 
     let whereClauses = [];
-    let orderQuery = '';
+    let orderQuery = "";
 
     if (keyword) {
-      whereClauses.push('posts.title LIKE ?');
+      whereClauses.push("posts.title LIKE ?");
     }
     if (categorySlug) {
-      whereClauses.push('posts.category_slug = ?');
+      whereClauses.push("posts.category_slug = ?");
     }
     if (username) {
-      whereClauses.push('users.username = ?');
+      whereClauses.push("users.username = ?");
     }
 
     if (time) {
       switch (time) {
-        case 'today':
+        case "today":
           whereClauses.push(
-            'posts.created_at >= CURDATE() AND posts.created_at < CURDATE() + INTERVAL 1 DAY'
+            "posts.created_at >= CURDATE() AND posts.created_at < CURDATE() + INTERVAL 1 DAY"
           );
           break;
-        case 'this-week':
+        case "this-week":
           whereClauses.push(
-            'posts.created_at >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY AND ' +
-              'posts.created_at < CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY + INTERVAL 7 DAY'
+            "posts.created_at >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY AND " +
+              "posts.created_at < CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY + INTERVAL 7 DAY"
           );
           break;
-        case 'this-month':
+        case "this-month":
           whereClauses.push(
             'posts.created_at >= DATE_FORMAT(CURDATE(), "%Y-%m-01") AND ' +
               'posts.created_at < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, "%Y-%m-01")'
           );
           break;
-        case 'oldest':
-          orderQuery = ' ORDER BY created_at ASC';
+        case "oldest":
+          orderQuery = " ORDER BY created_at ASC";
           break;
-        case 'newest':
-          orderQuery = ' ORDER BY created_at DESC';
+        case "newest":
+          orderQuery = " ORDER BY created_at DESC";
           break;
         default:
-          break;
           break;
       }
     }
 
     if (alphabet) {
       switch (alphabet) {
-        case 'asc':
-          orderQuery = ' ORDER BY posts.title ASC';
+        case "asc":
+          orderQuery = " ORDER BY posts.title ASC";
           break;
-        case 'desc':
-          orderQuery = ' ORDER BY posts.title DESC';
+        case "desc":
+          orderQuery = " ORDER BY posts.title DESC";
           break;
         default:
           break;
@@ -233,7 +232,7 @@ export const getPostsWithPagination = (
     }
 
     const whereQuery =
-      whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
+      whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
 
     const query = `
       SELECT 
@@ -272,7 +271,7 @@ export const getPostsWithPagination = (
 
 export const deletePostById = (id) => {
   return new Promise((resolve, reject) => {
-    const query = 'DELETE FROM posts WHERE id = ?';
+    const query = "DELETE FROM posts WHERE id = ?";
 
     _query(query, [id], (err, results) => {
       if (err) return reject(err);

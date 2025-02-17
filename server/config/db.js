@@ -1,5 +1,6 @@
-import { createConnection } from 'mysql2';
-import dotenv from 'dotenv';
+import { createConnection } from "mysql2";
+import dotenv from "dotenv";
+
 dotenv.config();
 
 const db = createConnection({
@@ -11,10 +12,10 @@ const db = createConnection({
 
 db.connect((err) => {
   if (err) {
-    console.log('Kết nối thất bại, lỗi: ', err.stack);
+    console.log("Kết nối thất bại, lỗi: ", err.stack);
     return;
   }
-  console.log('Kết nối thành công.');
+  console.log("Kết nối thành công.");
 });
 
 export const query = db.query.bind(db);
